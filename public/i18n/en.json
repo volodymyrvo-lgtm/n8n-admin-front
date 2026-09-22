@@ -1,0 +1,331 @@
+{
+  "common": {
+    "loading": "Loading..."
+  },
+  "app": {
+    "title": "n8n Admin Panel"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ru": "Russian"
+  },
+  "nav": {
+    "allJobs": "All Jobs",
+    "addJob": "Add Job",
+    "ruleSets": "Rule Sets",
+    "users": "Users",
+    "logout": "Log out",
+    "prompts": "Prompts",
+    "glossary": "Glossary"
+  },
+  "login": {
+    "title": "Sign in to the console",
+    "subtitle": "Manage workflows, credentials and executions.",
+    "password": "Password",
+    "passwordError": "Password must be at least 6 characters",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "error": "Something went wrong. Please try again.",
+    "username": "Email",
+    "usernameError": "Enter a valid email address"
+  },
+  "auth": {
+    "sessionExpired": "Your session has expired. Please sign in again."
+  },
+  "jobs": {
+    "title": "All Jobs",
+    "subtitle": "Every scheduled and triggered job in this workspace.",
+    "newJob": "New job",
+    "columnJob": "Job",
+    "columnSchedule": "Schedule",
+    "columnStatus": "Status",
+    "columnLastRun": "Last run",
+    "emptyTitle": "Nothing here yet",
+    "emptyDescription": "Jobs you create will show up here.",
+    "status": {
+      "active": "Active",
+      "paused": "Paused",
+      "failed": "Failed",
+      "success": "Success",
+      "pending": "Pending"
+    },
+    "toast": {
+      "created": "Job created"
+    },
+    "filterTypeLabel": "Filter by type",
+    "filterUserLabel": "Filter by user",
+    "filterClear": "Clear filter",
+    "emptyFilteredTitle": "No matches",
+    "emptyFilteredDescription": "No job runs match the selected filters.",
+    "card": {
+      "runBy": "Run by",
+      "runDate": "Run date",
+      "messageType": "Message type",
+      "taskStatus": "Task status",
+      "steps": "Steps",
+      "ruleSets": "Rule sets",
+      "noRuleSets": "No linked rule sets"
+    }
+  },
+  "addJob": {
+    "title": "Add Job",
+    "subtitle": "Configure a new job run and trigger it via n8n.",
+    "jobType": "Job type",
+    "taskStatus": "Task status",
+    "messageType": "Message type",
+    "board": "Board",
+    "taskDescription": "Task description",
+    "taskDescriptionPlaceholder": "e.g. Welcome message for new signups",
+    "taskDescriptionError": "Task description is required",
+    "systemMessage": "System message",
+    "systemMessagePlaceholder": "Select a system message",
+    "systemMessageError": "Select a system message",
+    "mainRuleSet": "Main rule set",
+    "mainRuleSetError": "Select a main rule set",
+    "glossary": "Glossary",
+    "glossaryPlaceholder": "Select a glossary",
+    "glossaryError": "Select a glossary",
+    "toneOfVoice": "Tone of voice",
+    "humanizer": "Humanizer",
+    "ruleSetPlaceholder": "Select a rule set",
+    "submit": "Create job",
+    "cancel": "Cancel",
+    "backendError": "Failed to save the job",
+    "n8nError": "Job saved, but the n8n trigger failed"
+  },
+  "ruleSets": {
+    "title": "Rule Sets",
+    "subtitle": "Rules that decide how jobs are matched and routed.",
+    "columnName": "Name",
+    "emptyTitle": "Nothing here yet",
+    "emptyDescription": "Rule sets you create will show up here.",
+    "newRuleSet": "New rule set",
+    "columnFields": "Fields",
+    "add": {
+      "title": "New Rule Set",
+      "subtitle": "Define the keys and values for this rule set. Add nested groups for structured values like bonus tiers.",
+      "name": "Rule set name",
+      "namePlaceholder": "e.g. Deposit Count = 0",
+      "nameError": "Rule set name is required",
+      "fieldsLabel": "Fields",
+      "submit": "Create rule set",
+      "cancel": "Cancel",
+      "setTypeLabel": "Send via",
+      "setTypeError": "Select at least one channel"
+    },
+    "columnActions": "Actions",
+    "delete": "Delete",
+    "deleteConfirm": "Delete rule set \"{{name}}\"? This cannot be undone.",
+    "edit": {
+      "title": "Edit Rule Set",
+      "subtitle": "Update the keys and values for this rule set.",
+      "submit": "Save changes"
+    },
+    "toast": {
+      "created": "Rule set created",
+      "updated": "Rule set updated",
+      "deleted": "Rule set deleted"
+    },
+    "setType": {
+      "email": "Email",
+      "sms": "SMS",
+      "push": "Push",
+      "toneOfVoice": "Tone of Voice",
+      "humanaizer": "Humanizer",
+      "web_push": "Web Push",
+      "in_app": "In-App",
+      "notification_center": "Notification Center"
+    },
+    "filterLabel": "Filter by type",
+    "filterClear": "Clear filter",
+    "emptyFilteredTitle": "No matches",
+    "emptyFilteredDescription": "No rule sets match the selected type filter.",
+    "copyName": "{{name}} (copy)",
+    "duplicate": {
+      "action": "Duplicate",
+      "title": "Duplicate Rule Set",
+      "subtitle": "Review and adjust the copied fields, then save as a new rule set."
+    }
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "People with access to this workspace.",
+    "newUser": "New user",
+    "columnUsername": "Username",
+    "columnRole": "Role",
+    "emptyTitle": "Nothing here yet",
+    "emptyDescription": "Users you invite will show up here.",
+    "role": {
+      "admin": "Admin",
+      "user": "User",
+      "ADMIN": "Admin",
+      "USER": "User"
+    },
+    "add": {
+      "title": "New User",
+      "subtitle": "Invite a teammate and set their access level.",
+      "username": "Username",
+      "usernamePlaceholder": "e.g. ada.lovelace",
+      "usernameError": "Username is required",
+      "role": "Role",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••••",
+      "passwordError": "Password must be at least 6 characters",
+      "submit": "Create user",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "created": "User created",
+      "deleted": "User deleted"
+    },
+    "columnActions": "Actions",
+    "delete": "Delete",
+    "deleteConfirm": "Delete user \"{{name}}\"? This cannot be undone."
+  },
+  "keyValueEditor": {
+    "keyPlaceholder": "Key",
+    "valuePlaceholder": "Value",
+    "group": "Group",
+    "addField": "+ Add field",
+    "addGroup": "+ Add group",
+    "remove": "Remove"
+  },
+  "toast": {
+    "genericError": "Something went wrong. Please try again."
+  },
+  "prompts": {
+    "title": "Prompts",
+    "subtitle": "Prompts used across your n8n flows.",
+    "newPrompt": "New prompt",
+    "columnName": "Name",
+    "columnActions": "Actions",
+    "emptyTitle": "Nothing here yet",
+    "emptyDescription": "Prompts you create will show up here.",
+    "add": {
+      "title": "New Prompt",
+      "subtitle": "Give this prompt a name and its text. More options will land here later.",
+      "name": "Prompt name",
+      "namePlaceholder": "e.g. Welcome message",
+      "nameError": "Prompt name is required",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Write the prompt text...",
+      "contentError": "Prompt content is required",
+      "submit": "Create prompt",
+      "cancel": "Cancel"
+    },
+    "edit": {
+      "title": "Edit Prompt",
+      "subtitle": "Update this prompt's name and text.",
+      "submit": "Save changes"
+    },
+    "toast": {
+      "created": "Prompt created",
+      "updated": "Prompt updated",
+      "deleted": "Prompt deleted"
+    },
+    "delete": "Delete",
+    "deleteConfirm": "Delete prompt \"{{name}}\"? This cannot be undone."
+  },
+  "glossary": {
+    "title": "Glossaries",
+    "subtitle": "Manage glossaries and their terms.",
+    "newGlossary": "New glossary",
+    "editGlossary": "Edit glossary",
+    "backToList": "← Back to glossaries",
+    "delete": "Delete",
+    "deleteConfirm": "Delete glossary \"{{name}}\"? This also deletes all of its terms and cannot be undone.",
+    "columnName": "Name",
+    "columnLanguagePair": "Language pair",
+    "columnEntries": "Terms",
+    "columnUpdated": "Updated",
+    "columnActions": "Actions",
+    "emptyTitle": "Nothing here yet",
+    "emptyDescription": "Glossaries you create will show up here.",
+    "toast": {
+      "created": "Glossary created",
+      "updated": "Glossary updated",
+      "deleted": "Glossary deleted"
+    },
+    "add": {
+      "title": "New glossary",
+      "subtitle": "Define the glossary and the rules that apply to all of its terms.",
+      "glossaryName": "Glossary name",
+      "glossaryNamePlaceholder": "e.g. en_az_glossary",
+      "glossaryNameError": "Glossary name is required",
+      "languagePair": "Language pair",
+      "languagePairPlaceholder": "e.g. en_az",
+      "languagePairError": "Language pair is required",
+      "sourceLanguage": "Source language",
+      "sourceLanguagePlaceholder": "e.g. EN",
+      "sourceLanguageError": "Source language is required",
+      "targetLanguage": "Target language",
+      "targetLanguagePlaceholder": "e.g. AZ",
+      "targetLanguageError": "Target language is required",
+      "schemaVersion": "Schema version",
+      "schemaVersionError": "Schema version is required",
+      "setType": "Tags",
+      "setTypePlaceholder": "One tag per line",
+      "setTypeHint": "One tag per line, e.g. localization, glossary, en_az.",
+      "purpose": "Purpose",
+      "purposePlaceholder": "What this glossary is for",
+      "instructions": "Instructions",
+      "submit": "Create glossary",
+      "cancel": "Cancel"
+    },
+    "edit": {
+      "title": "Edit glossary",
+      "subtitle": "Update this glossary's fields.",
+      "submit": "Save changes"
+    },
+    "entry": {
+      "new": "New term",
+      "delete": "Delete",
+      "deleteConfirm": "Delete term \"{{name}}\"? This cannot be undone.",
+      "lastEntryError": "This is the last term in the glossary and cannot be deleted.",
+      "columnEnglishTerm": "English term",
+      "columnRecommended": "Recommended",
+      "columnUsageNote": "Usage note",
+      "columnStatus": "Status",
+      "emptyTitle": "No terms yet",
+      "emptyDescription": "Terms you add to this glossary will show up here.",
+      "status": {
+        "standardized": "Standardized",
+        "normalize": "Needs normalization",
+        "context_dependent": "Context dependent"
+      },
+      "toast": {
+        "created": "Term created",
+        "updated": "Term updated",
+        "deleted": "Term deleted"
+      },
+      "add": {
+        "title": "New term",
+        "englishTerm": "English term",
+        "englishTermPlaceholder": "e.g. Deposit",
+        "englishTermError": "English term is required",
+        "statusLabel": "Status",
+        "recommended": "Recommended terms",
+        "recommendedPlaceholder": "One recommended term per line",
+        "recommendedHint": "One recommended term per line.",
+        "recommendedError": "At least one recommended term is required",
+        "doNotUse": "Do not use",
+        "doNotUsePlaceholder": "One forbidden form per line",
+        "doNotUseHint": "One forbidden form per line.",
+        "sourceForms": "Source forms found",
+        "sourceFormsPlaceholder": "One form per line",
+        "sourceFormsHint": "One form per line.",
+        "usageNote": "Usage note",
+        "usageNotePlaceholder": "Optional guidance on when to use this term",
+        "submit": "Create term",
+        "cancel": "Cancel"
+      },
+      "edit": {
+        "title": "Edit term",
+        "submit": "Save changes"
+      }
+    }
+  }
+}

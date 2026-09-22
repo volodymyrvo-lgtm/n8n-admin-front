@@ -1,0 +1,40 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form__error {
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(68% 0.19 25);
+}
+
+.form__hint {
+  font: 400 12px 'Work Sans', system-ui, sans-serif;
+  color: oklch(55% 0.01 260);
+  margin: 0;
+}
+
+.form__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.field-control--invalid {
+  border-color: oklch(62% 0.19 25);
+}

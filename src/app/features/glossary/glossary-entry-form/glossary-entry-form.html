@@ -1,0 +1,69 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ (isEditMode ? 'glossary.entry.edit.title' : 'glossary.entry.add.title') | translate }}</h1>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="englishTerm">{{ 'glossary.entry.add.englishTerm' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.englishTerm.invalid && form.controls.englishTerm.touched">
+        <input id="englishTerm" type="text" formControlName="englishTerm" [placeholder]="'glossary.entry.add.englishTermPlaceholder' | translate" />
+      </div>
+      @if (form.controls.englishTerm.invalid && form.controls.englishTerm.touched) {
+        <span class="form__error">{{ 'glossary.entry.add.englishTermError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="statusSelect">{{ 'glossary.entry.add.statusLabel' | translate }}</label>
+      <div class="field-control">
+        <select id="statusSelect" formControlName="status">
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ 'glossary.entry.status.' + status | translate }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="recommended">{{ 'glossary.entry.add.recommended' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="recommended" formControlName="recommended" rows="3" [placeholder]="'glossary.entry.add.recommendedPlaceholder' | translate"></textarea>
+      </div>
+      <p class="form__hint">{{ 'glossary.entry.add.recommendedHint' | translate }}</p>
+      @if (form.controls.recommended.invalid && form.controls.recommended.touched) {
+        <span class="form__error">{{ 'glossary.entry.add.recommendedError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="doNotUse">{{ 'glossary.entry.add.doNotUse' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="doNotUse" formControlName="doNotUse" rows="3" [placeholder]="'glossary.entry.add.doNotUsePlaceholder' | translate"></textarea>
+      </div>
+      <p class="form__hint">{{ 'glossary.entry.add.doNotUseHint' | translate }}</p>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="sourceForms">{{ 'glossary.entry.add.sourceForms' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="sourceForms" formControlName="sourceForms" rows="3" [placeholder]="'glossary.entry.add.sourceFormsPlaceholder' | translate"></textarea>
+      </div>
+      <p class="form__hint">{{ 'glossary.entry.add.sourceFormsHint' | translate }}</p>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="usageNote">{{ 'glossary.entry.add.usageNote' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="usageNote" formControlName="usageNote" rows="3" [placeholder]="'glossary.entry.add.usageNotePlaceholder' | translate"></textarea>
+      </div>
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">
+        {{ (isEditMode ? 'glossary.entry.edit.submit' : 'glossary.entry.add.submit') | translate }}
+      </button>
+      <a [routerLink]="['/glossary', glossaryId]" class="link-muted">{{ 'glossary.entry.add.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

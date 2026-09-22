@@ -1,0 +1,85 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ (isEditMode ? 'glossary.edit.title' : 'glossary.add.title') | translate }}</h1>
+    <p class="page-subtitle">{{ (isEditMode ? 'glossary.edit.subtitle' : 'glossary.add.subtitle') | translate }}</p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="glossaryName">{{ 'glossary.add.glossaryName' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.glossaryName.invalid && form.controls.glossaryName.touched">
+        <input id="glossaryName" type="text" formControlName="glossaryName" [placeholder]="'glossary.add.glossaryNamePlaceholder' | translate" />
+      </div>
+      @if (form.controls.glossaryName.invalid && form.controls.glossaryName.touched) {
+        <span class="form__error">{{ 'glossary.add.glossaryNameError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="languagePair">{{ 'glossary.add.languagePair' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.languagePair.invalid && form.controls.languagePair.touched">
+        <input id="languagePair" type="text" formControlName="languagePair" [placeholder]="'glossary.add.languagePairPlaceholder' | translate" />
+      </div>
+      @if (form.controls.languagePair.invalid && form.controls.languagePair.touched) {
+        <span class="form__error">{{ 'glossary.add.languagePairError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="sourceLanguage">{{ 'glossary.add.sourceLanguage' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.sourceLanguage.invalid && form.controls.sourceLanguage.touched">
+        <input id="sourceLanguage" type="text" formControlName="sourceLanguage" [placeholder]="'glossary.add.sourceLanguagePlaceholder' | translate" />
+      </div>
+      @if (form.controls.sourceLanguage.invalid && form.controls.sourceLanguage.touched) {
+        <span class="form__error">{{ 'glossary.add.sourceLanguageError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="targetLanguage">{{ 'glossary.add.targetLanguage' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.targetLanguage.invalid && form.controls.targetLanguage.touched">
+        <input id="targetLanguage" type="text" formControlName="targetLanguage" [placeholder]="'glossary.add.targetLanguagePlaceholder' | translate" />
+      </div>
+      @if (form.controls.targetLanguage.invalid && form.controls.targetLanguage.touched) {
+        <span class="form__error">{{ 'glossary.add.targetLanguageError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="schemaVersion">{{ 'glossary.add.schemaVersion' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.schemaVersion.invalid && form.controls.schemaVersion.touched">
+        <input id="schemaVersion" type="text" formControlName="schemaVersion" />
+      </div>
+      @if (form.controls.schemaVersion.invalid && form.controls.schemaVersion.touched) {
+        <span class="form__error">{{ 'glossary.add.schemaVersionError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="setType">{{ 'glossary.add.setType' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="setType" formControlName="setType" rows="3" [placeholder]="'glossary.add.setTypePlaceholder' | translate"></textarea>
+      </div>
+      <p class="form__hint">{{ 'glossary.add.setTypeHint' | translate }}</p>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="purpose">{{ 'glossary.add.purpose' | translate }}</label>
+      <div class="field-textarea">
+        <textarea id="purpose" formControlName="purpose" rows="3" [placeholder]="'glossary.add.purposePlaceholder' | translate"></textarea>
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label">{{ 'glossary.add.instructions' | translate }}</label>
+      <app-key-value-editor [(rows)]="instructions" />
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">
+        {{ (isEditMode ? 'glossary.edit.submit' : 'glossary.add.submit') | translate }}
+      </button>
+      <a routerLink="/glossary" class="link-muted">{{ 'glossary.add.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

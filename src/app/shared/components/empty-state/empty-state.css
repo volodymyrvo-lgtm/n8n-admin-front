@@ -1,0 +1,34 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 1px dashed oklch(30% 0.015 260);
+  border-radius: 12px;
+  padding: 72px 24px;
+}
+
+.empty-state__icon {
+  display: flex;
+  color: oklch(45% 0.012 260);
+}
+
+.empty-state__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  max-width: 320px;
+}
+
+.empty-state__title {
+  font: 600 16px 'Space Grotesk', system-ui, sans-serif;
+  color: oklch(80% 0.006 260);
+}
+
+.empty-state__description {
+  font: 400 13.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(55% 0.01 260);
+}

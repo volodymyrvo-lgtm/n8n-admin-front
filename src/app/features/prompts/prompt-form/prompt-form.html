@@ -1,0 +1,44 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ (isEditMode ? 'prompts.edit.title' : 'prompts.add.title') | translate }}</h1>
+    <p class="page-subtitle">{{ (isEditMode ? 'prompts.edit.subtitle' : 'prompts.add.subtitle') | translate }}</p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="promptName">{{ 'prompts.add.name' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.name.invalid && form.controls.name.touched">
+        <input id="promptName" type="text" formControlName="name" [placeholder]="'prompts.add.namePlaceholder' | translate" />
+      </div>
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <span class="form__error">{{ 'prompts.add.nameError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="promptContent">{{ 'prompts.add.contentLabel' | translate }}</label>
+      <div
+        class="field-textarea"
+        [class.field-control--invalid]="form.controls.message.invalid && form.controls.message.touched"
+      >
+        <textarea
+          id="promptContent"
+          formControlName="message"
+          rows="8"
+          [placeholder]="'prompts.add.contentPlaceholder' | translate"
+          (input)="onMessageInput($event)"
+        ></textarea>
+      </div>
+      @if (form.controls.message.invalid && form.controls.message.touched) {
+        <span class="form__error">{{ 'prompts.add.messageError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">
+        {{ (isEditMode ? 'prompts.edit.submit' : 'prompts.add.submit') | translate }}
+      </button>
+      <a routerLink="/prompts" class="link-muted">{{ 'prompts.add.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

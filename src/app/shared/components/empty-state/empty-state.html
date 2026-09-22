@@ -1,0 +1,11 @@
+<div class="empty-state">
+  <div class="empty-state__icon">
+    <ng-content></ng-content>
+  </div>
+  <div class="empty-state__text">
+    <span class="empty-state__title">{{ title }}</span>
+    @if (description) {
+      <span class="empty-state__description">{{ description }}</span>
+    }
+  </div>
+</div>

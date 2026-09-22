@@ -1,0 +1,49 @@
+<div class="kv-editor">
+  @for (row of rows(); track row.id) {
+    <div class="kv-row">
+      <div class="kv-row__main">
+        <input
+          class="kv-input kv-input--key"
+          type="text"
+          [value]="row.key"
+          (input)="row.key = $any($event.target).value"
+          [placeholder]="'keyValueEditor.keyPlaceholder' | translate"
+        />
+
+        @if (!row.isGroup) {
+          <textarea
+            class="kv-input kv-input--value kv-textarea"
+            rows="1"
+            [value]="row.value"
+            (input)="row.value = $any($event.target).value"
+            [placeholder]="'keyValueEditor.valuePlaceholder' | translate"
+          ></textarea>
+        } @else {
+          <span class="kv-group-badge">{{ 'keyValueEditor.group' | translate }}</span>
+        }
+
+        <button
+          type="button"
+          class="kv-remove"
+          (click)="removeRow(row.id)"
+          [attr.aria-label]="'keyValueEditor.remove' | translate"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6l12 12"></path><path d="M18 6l-12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      @if (row.isGroup) {
+        <div class="kv-nested">
+          <app-key-value-editor [(rows)]="row.children" [depth]="depth() + 1" />
+        </div>
+      }
+    </div>
+  }
+
+  <div class="kv-actions">
+    <button type="button" class="kv-add" (click)="addField()">{{ 'keyValueEditor.addField' | translate }}</button>
+    <button type="button" class="kv-add" (click)="addGroup()">{{ 'keyValueEditor.addGroup' | translate }}</button>
+  </div>
+</div>

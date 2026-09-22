@@ -1,0 +1,61 @@
+<div class="page">
+  <div class="page__header-row">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'users.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'users.subtitle' | translate }}</p>
+    </div>
+    @if (authService.isAdmin()) {
+      <a routerLink="/users/new" class="page-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14"></path><path d="M5 12h14"></path>
+        </svg>
+        {{ 'users.newUser' | translate }}
+      </a>
+    }
+  </div>
+
+  @if (usersService.loading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (usersService.users().length > 0) {
+    <div class="data-table">
+      <div class="data-table__head" style="grid-template-columns: 2fr 1fr auto;">
+        <span class="field-label">{{ 'users.columnUsername' | translate }}</span>
+        <span class="field-label">{{ 'users.columnRole' | translate }}</span>
+        <span class="field-label">{{ 'users.columnActions' | translate }}</span>
+      </div>
+      @for (user of usersService.users(); track user.id) {
+        <div class="data-table__row" style="grid-template-columns: 2fr 1fr auto;">
+          <span class="data-table__cell-primary">{{ user.username }}</span>
+          <span><span [class]="roleBadgeClass(user.role)">{{ 'users.role.' + user.role | translate }}</span></span>
+          <span class="row-actions">
+            @if (authService.isAdmin()) {
+              <button
+                type="button"
+                class="icon-btn icon-btn--danger"
+                (click)="deleteUser(user)"
+                [attr.aria-label]="'users.delete' | translate"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+              </button>
+            }
+          </span>
+        </div>
+      }
+    </div>
+  } @else {
+    <app-empty-state [title]="'users.emptyTitle' | translate" [description]="'users.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8" r="3"></circle>
+        <path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"></path>
+        <path d="M16.3 8.5a2.5 2.5 0 1 0-.8-4.9"></path>
+        <path d="M19.5 19c0-2.3-1.5-4.2-3.6-4.8"></path>
+      </svg>
+    </app-empty-state>
+  }
+</div>

@@ -1,0 +1,112 @@
+<div class="page">
+  <div class="page__header-row">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'ruleSets.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'ruleSets.subtitle' | translate }}</p>
+    </div>
+    @if (authService.isAdmin()) {
+      <a routerLink="/rule-sets/new" class="page-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14"></path><path d="M5 12h14"></path>
+        </svg>
+        {{ 'ruleSets.newRuleSet' | translate }}
+      </a>
+    }
+  </div>
+
+  @if (!ruleSetsService.loading()) {
+    <div class="type-filter">
+      <span class="field-label type-filter__label">{{ 'ruleSets.filterLabel' | translate }}</span>
+      <div class="type-filter__chips">
+        @for (type of setTypes; track type) {
+          <button
+            type="button"
+            class="type-filter__chip"
+            [attr.data-type]="type"
+            [class.type-filter__chip--active]="selectedTypes().includes(type)"
+            (click)="toggleTypeFilter(type)"
+          >
+            {{ 'ruleSets.setType.' + type | translate }}
+          </button>
+        }
+      </div>
+      @if (selectedTypes().length > 0) {
+        <button type="button" class="type-filter__clear" (click)="clearTypeFilter()">
+          {{ 'ruleSets.filterClear' | translate }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (ruleSetsService.loading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (filteredRuleSets().length > 0) {
+    <div class="data-table">
+      <div class="data-table__head" style="grid-template-columns: 2fr 1fr auto;">
+        <span class="field-label">{{ 'ruleSets.columnName' | translate }}</span>
+        <span class="field-label">{{ 'ruleSets.columnFields' | translate }}</span>
+        <span class="field-label">{{ 'ruleSets.columnActions' | translate }}</span>
+      </div>
+      @for (ruleSet of filteredRuleSets(); track ruleSet.id) {
+        <div class="data-table__row" style="grid-template-columns: 2fr 1fr auto;">
+          <span class="data-table__cell-primary">{{ ruleSet.ruleName }}</span>
+          <span class="data-table__cell-muted">{{ fieldCount(ruleSet) }}</span>
+          <span class="row-actions">
+            @if (authService.isAdmin()) {
+              <a
+                class="icon-btn"
+                [routerLink]="['/rule-sets', ruleSet.id, 'edit']"
+                [attr.aria-label]="'ruleSets.edit.title' | translate"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                </svg>
+              </a>
+              <a
+                class="icon-btn"
+                routerLink="/rule-sets/new"
+                [queryParams]="{ duplicateFrom: ruleSet.id }"
+                [attr.aria-label]="'ruleSets.duplicate.action' | translate"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </a>
+              <button
+                type="button"
+                class="icon-btn icon-btn--danger"
+                (click)="deleteRuleSet(ruleSet)"
+                [attr.aria-label]="'ruleSets.delete' | translate"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+              </button>
+            }
+          </span>
+        </div>
+      }
+    </div>
+  } @else if (selectedTypes().length > 0) {
+    <app-empty-state
+      [title]="'ruleSets.emptyFilteredTitle' | translate"
+      [description]="'ruleSets.emptyFilteredDescription' | translate"
+    >
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
+      </svg>
+    </app-empty-state>
+  } @else {
+    <app-empty-state [title]="'ruleSets.emptyTitle' | translate" [description]="'ruleSets.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
+      </svg>
+    </app-empty-state>
+  }
+</div>

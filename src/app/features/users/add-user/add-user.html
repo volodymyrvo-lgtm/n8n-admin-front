@@ -1,0 +1,54 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'users.add.title' | translate }}</h1>
+    <p class="page-subtitle">{{ 'users.add.subtitle' | translate }}</p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="userUsername">{{ 'users.add.username' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.username.invalid && form.controls.username.touched">
+        <input
+          id="userUsername"
+          type="text"
+          formControlName="username"
+          [placeholder]="'users.add.usernamePlaceholder' | translate"
+        />
+      </div>
+      @if (form.controls.username.invalid && form.controls.username.touched) {
+        <span class="form__error">{{ 'users.add.usernameError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="userRole">{{ 'users.add.role' | translate }}</label>
+      <div class="field-control">
+        <select id="userRole" formControlName="role">
+          <option value="admin">{{ 'users.role.admin' | translate }}</option>
+          <option value="user">{{ 'users.role.user' | translate }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="userPassword">{{ 'users.add.password' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.password.invalid && form.controls.password.touched">
+        <input
+          id="userPassword"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+          [placeholder]="'users.add.passwordPlaceholder' | translate"
+        />
+      </div>
+      @if (form.controls.password.invalid && form.controls.password.touched) {
+        <span class="form__error">{{ 'users.add.passwordError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">{{ 'users.add.submit' | translate }}</button>
+      <a routerLink="/users" class="link-muted">{{ 'users.add.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

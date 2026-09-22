@@ -1,0 +1,67 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 100%;
+}
+
+.page__header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.type-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.type-filter__label {
+  flex: none;
+}
+
+.type-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.type-filter__chip {
+  border: 1.5px solid oklch(32% 0.015 260);
+  background: oklch(20% 0.015 260);
+  color: oklch(68% 0.008 260);
+  border-radius: 999px;
+  height: 32px;
+  padding: 0 14px;
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.type-filter__chip:hover {
+  border-color: var(--accent, #ff6b4a);
+  color: var(--accent, #ff6b4a);
+}
+
+.type-filter__chip--active {
+  border-color: var(--accent, #ff6b4a);
+  background: color-mix(in oklch, var(--accent, #ff6b4a) 16%, transparent);
+  color: oklch(96% 0.004 260);
+}
+
+.type-filter__clear {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: oklch(55% 0.01 260);
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.type-filter__clear:hover {
+  color: var(--accent, #ff6b4a);
+}

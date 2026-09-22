@@ -1,0 +1,13 @@
+<div class="language-switcher">
+  @for (lang of languages; track lang) {
+    <button
+      type="button"
+      class="language-switcher__option"
+      [class.language-switcher__option--active]="languageService.currentLanguage() === lang"
+      [attr.aria-label]="('language.' + lang) | translate"
+      (click)="selectLanguage(lang)"
+    >
+      {{ lang.toUpperCase() }}
+    </button>
+  }
+</div>

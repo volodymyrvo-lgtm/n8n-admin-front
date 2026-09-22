@@ -1,0 +1,200 @@
+<div class="page">
+  <div class="page__header-row">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'jobs.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'jobs.subtitle' | translate }}</p>
+    </div>
+    <a routerLink="/jobs/new" class="page-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14"></path><path d="M5 12h14"></path>
+      </svg>
+      {{ 'jobs.newJob' | translate }}
+    </a>
+  </div>
+
+  @if (!jobsService.jobRunsLoading() && jobsService.jobRuns().length > 0) {
+    <div class="type-filter">
+      <span class="field-label type-filter__label">{{ 'jobs.filterTypeLabel' | translate }}</span>
+      <div class="type-filter__chips">
+        @for (jobType of jobTypeOptions(); track jobType) {
+          <button
+            type="button"
+            class="type-filter__chip"
+            [class.type-filter__chip--active]="selectedJobTypes().includes(jobType)"
+            (click)="toggleJobTypeFilter(jobType)"
+          >
+            {{ jobType }}
+          </button>
+        }
+      </div>
+      @if (selectedJobTypes().length > 0) {
+        <button type="button" class="type-filter__clear" (click)="clearJobTypeFilter()">
+          {{ 'jobs.filterClear' | translate }}
+        </button>
+      }
+    </div>
+
+    <div class="type-filter">
+      <span class="field-label type-filter__label">{{ 'jobs.filterUserLabel' | translate }}</span>
+      <div class="type-filter__chips">
+        @for (userId of runnerOptions(); track userId) {
+          <button
+            type="button"
+            class="type-filter__chip"
+            [class.type-filter__chip--active]="selectedUserId() === userId"
+            (click)="toggleUserFilter(userId)"
+          >
+            {{ runnerName(userId) }}
+          </button>
+        }
+      </div>
+      @if (selectedUserId()) {
+        <button type="button" class="type-filter__clear" (click)="clearUserFilter()">
+          {{ 'jobs.filterClear' | translate }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (jobsService.jobRunsLoading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (filteredJobRuns().length > 0) {
+    <div class="job-cards">
+      @for (run of filteredJobRuns(); track trackJobRun($index, run)) {
+        <div class="job-card" [class]="cardStatusClass(run.status)">
+          <button
+            type="button"
+            class="job-card__header"
+            (click)="toggleExpanded(run.id)"
+            [attr.aria-expanded]="isExpanded(run.id)"
+          >
+            <span class="job-card__status-icon" [class]="'job-card__status-icon--' + run.status">
+              @if (run.status === 'success') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              } @else if (run.status === 'failed') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                </svg>
+              } @else {
+                <app-spinner [size]="18" />
+              }
+            </span>
+
+            <span class="job-card__title-group">
+              <span class="job-card__title">{{ run.taskDescription }}</span>
+              <span class="job-card__subtitle">{{ run.board }} · {{ run.jobType }}</span>
+            </span>
+
+            <span class="job-card__steps">
+              @for (step of stepEntries(run.steps); track step.key) {
+                <span
+                  class="job-card__step-icon"
+                  [class]="'job-card__step-icon--' + step.status"
+                  [attr.title]="step.key"
+                >
+                  @if (step.status === 'success') {
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 6 9 17l-5-5"></path>
+                    </svg>
+                  } @else if (step.status === 'failed') {
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                    </svg>
+                  } @else {
+                    <app-spinner [size]="14" />
+                  }
+                </span>
+              }
+            </span>
+
+            <svg
+              class="job-card__chevron"
+              [class.job-card__chevron--open]="isExpanded(run.id)"
+              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+
+          @if (isExpanded(run.id)) {
+            <div class="job-card__body">
+              <div class="job-card__meta">
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.runBy' | translate }}</span>
+                  <span>{{ runnerName(run.runnedById) }}</span>
+                </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.runDate' | translate }}</span>
+                  <span>{{ run.runDate ? (run.runDate | date: 'medium') : '—' }}</span>
+                </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.messageType' | translate }}</span>
+                  <span>{{ run.messageType }}</span>
+                </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.taskStatus' | translate }}</span>
+                  <span>{{ run.taskStatus }}</span>
+                </div>
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'jobs.card.steps' | translate }}</span>
+                <div class="job-card__step-list">
+                  @for (step of stepEntries(run.steps); track step.key) {
+                    <div class="job-card__step-row">
+                      <span class="job-card__step-icon" [class]="'job-card__step-icon--' + step.status">
+                        @if (step.status === 'success') {
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6 9 17l-5-5"></path>
+                          </svg>
+                        } @else if (step.status === 'failed') {
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                          </svg>
+                        } @else {
+                          <app-spinner [size]="14" />
+                        }
+                      </span>
+                      <span>{{ step.key }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'jobs.card.ruleSets' | translate }}</span>
+                @if (run.ruleIds.length > 0) {
+                  <div class="job-card__rule-links">
+                    @for (ruleId of run.ruleIds; track ruleId) {
+                      <a class="job-card__rule-link" [routerLink]="['/rule-sets', ruleId, 'edit']">{{ ruleSetName(ruleId) }}</a>
+                    }
+                  </div>
+                } @else {
+                  <span class="job-card__empty-note">{{ 'jobs.card.noRuleSets' | translate }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  } @else if (selectedJobTypes().length > 0 || selectedUserId()) {
+    <app-empty-state
+      [title]="'jobs.emptyFilteredTitle' | translate"
+      [description]="'jobs.emptyFilteredDescription' | translate"
+    >
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
+      </svg>
+    </app-empty-state>
+  } @else {
+    <app-empty-state [title]="'jobs.emptyTitle' | translate" [description]="'jobs.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path>
+        <path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path>
+      </svg>
+    </app-empty-state>
+  }
+</div>

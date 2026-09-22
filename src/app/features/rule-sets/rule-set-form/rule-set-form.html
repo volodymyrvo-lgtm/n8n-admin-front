@@ -1,0 +1,59 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">
+      {{ (isEditMode ? 'ruleSets.edit.title' : isDuplicateMode ? 'ruleSets.duplicate.title' : 'ruleSets.add.title') | translate }}
+    </h1>
+    <p class="page-subtitle">
+      {{ (isEditMode ? 'ruleSets.edit.subtitle' : isDuplicateMode ? 'ruleSets.duplicate.subtitle' : 'ruleSets.add.subtitle') | translate }}
+    </p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="ruleSetName">{{ 'ruleSets.add.name' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.name.invalid && form.controls.name.touched">
+        <input
+          id="ruleSetName"
+          type="text"
+          formControlName="name"
+          [placeholder]="'ruleSets.add.namePlaceholder' | translate"
+        />
+      </div>
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <span class="form__error">{{ 'ruleSets.add.nameError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label">{{ 'ruleSets.add.setTypeLabel' | translate }}</label>
+      <div class="set-type-options" formGroupName="setType">
+        @for (type of setTypes; track type) {
+          <label class="set-type-option">
+            <input type="checkbox" [formControlName]="type" />
+            <span class="set-type-option__box">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12l5 5L20 7"></path>
+              </svg>
+            </span>
+            <span class="set-type-option__label">{{ 'ruleSets.setType.' + type | translate }}</span>
+          </label>
+        }
+      </div>
+      @if (form.controls.setType.invalid && form.controls.setType.touched) {
+        <span class="form__error">{{ 'ruleSets.add.setTypeError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label">{{ 'ruleSets.add.fieldsLabel' | translate }}</label>
+      <app-key-value-editor [(rows)]="fields" />
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid">
+        {{ (isEditMode ? 'ruleSets.edit.submit' : 'ruleSets.add.submit') | translate }}
+      </button>
+      <a routerLink="/rule-sets" class="link-muted">{{ 'ruleSets.add.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

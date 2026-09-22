@@ -1,0 +1,113 @@
+:host {
+  --accent: #ff6b4a;
+  display: block;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.shell {
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  display: flex;
+  background: oklch(14.5% 0.014 260);
+  font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+}
+
+.sidebar {
+  flex: 0 0 260px;
+  background: oklch(18% 0.015 260);
+  border-right: 1px solid oklch(28% 0.015 260);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  gap: 24px;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+  color: var(--accent);
+}
+
+.sidebar__brand-name {
+  font: 600 15px 'Space Grotesk', system-ui, sans-serif;
+  color: oklch(95% 0.004 260);
+  letter-spacing: -0.01em;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav-item {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: 500 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(72% 0.008 260);
+  transition: background 0.15s ease, color 0.15s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item svg {
+  flex: none;
+}
+
+.nav-item:hover {
+  background: oklch(22% 0.015 260);
+}
+
+.nav-item.nav-item--active {
+  background: color-mix(in oklch, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.sidebar__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 4px;
+}
+
+.logout-item {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: 500 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(62% 0.01 260);
+  transition: background 0.15s ease, color 0.15s ease;
+  width: 100%;
+  text-align: left;
+  margin: 0 -8px;
+}
+
+.logout-item:hover {
+  background: color-mix(in oklch, oklch(65% 0.19 25) 12%, transparent);
+  color: oklch(72% 0.17 25);
+}
+
+.content {
+  flex: 1 1 auto;
+  padding: 44px 48px;
+  overflow: auto;
+}

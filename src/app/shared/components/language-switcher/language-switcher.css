@@ -1,0 +1,26 @@
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.language-switcher__option {
+  border: 1.5px solid oklch(32% 0.015 260);
+  background: transparent;
+  color: oklch(65% 0.008 260);
+  border-radius: 7px;
+  padding: 5px 11px;
+  font: 600 12px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.language-switcher__option:hover {
+  border-color: oklch(45% 0.015 260);
+}
+
+.language-switcher__option--active {
+  border-color: var(--accent, #ff6b4a);
+  color: var(--accent, #ff6b4a);
+  background: color-mix(in oklch, var(--accent, #ff6b4a) 12%, transparent);
+}

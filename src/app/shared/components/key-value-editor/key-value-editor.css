@@ -1,0 +1,123 @@
+.kv-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kv-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kv-row__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.kv-input {
+  border: 1.5px solid oklch(32% 0.015 260);
+  border-radius: 7px;
+  background: oklch(20% 0.015 260);
+  height: 38px;
+  padding: 0 12px;
+  font: 500 13.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(94% 0.004 260);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kv-input::placeholder {
+  color: oklch(50% 0.01 260);
+}
+
+.kv-input:focus {
+  border-color: var(--accent, #ff6b4a);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent, #ff6b4a) 22%, transparent);
+}
+
+.kv-input--key {
+  flex: 0 0 34%;
+}
+
+.kv-input--value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.kv-textarea {
+  height: auto;
+  min-height: 38px;
+  max-height: 220px;
+  padding: 8px 12px;
+  line-height: 1.4;
+  resize: vertical;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  field-sizing: content;
+}
+
+.kv-group-badge {
+  flex: 1 1 auto;
+  font: 600 11.5px 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(65% 0.008 260);
+  background: oklch(24% 0.015 260);
+  border-radius: 7px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.kv-remove {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: oklch(55% 0.01 260);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.kv-remove:hover {
+  background: color-mix(in oklch, oklch(65% 0.19 25) 14%, transparent);
+  color: oklch(72% 0.17 25);
+}
+
+.kv-nested {
+  margin-left: 16px;
+  padding: 12px 0 0 16px;
+  border-left: 1.5px dashed oklch(30% 0.015 260);
+}
+
+.kv-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.kv-add {
+  border: 1px dashed oklch(34% 0.015 260);
+  background: transparent;
+  color: oklch(68% 0.008 260);
+  border-radius: 7px;
+  height: 32px;
+  padding: 0 12px;
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.kv-add:hover {
+  border-color: var(--accent, #ff6b4a);
+  color: var(--accent, #ff6b4a);
+}

@@ -1,0 +1,331 @@
+{
+  "common": {
+    "loading": "Загрузка..."
+  },
+  "app": {
+    "title": "Панель администратора n8n"
+  },
+  "language": {
+    "label": "Язык",
+    "en": "Английский",
+    "ru": "Русский"
+  },
+  "nav": {
+    "allJobs": "Все задачи",
+    "addJob": "Добавить задачу",
+    "ruleSets": "Наборы правил",
+    "users": "Пользователи",
+    "logout": "Выйти",
+    "prompts": "Промпты",
+    "glossary": "Глоссарий"
+  },
+  "login": {
+    "title": "Вход в консоль",
+    "subtitle": "Управляйте workflow, учётными данными и выполнениями.",
+    "password": "Пароль",
+    "passwordError": "Пароль должен содержать минимум 6 символов",
+    "rememberMe": "Запомнить меня",
+    "forgotPassword": "Забыли пароль?",
+    "submit": "Войти",
+    "submitting": "Выполняется вход…",
+    "error": "Что-то пошло не так. Попробуйте ещё раз.",
+    "username": "Email",
+    "usernameError": "Введите корректный email"
+  },
+  "auth": {
+    "sessionExpired": "Ваша сессия истекла. Пожалуйста, войдите снова."
+  },
+  "jobs": {
+    "title": "Все задачи",
+    "subtitle": "Все запланированные и запускаемые задачи в этом воркспейсе.",
+    "newJob": "Новая задача",
+    "columnJob": "Задача",
+    "columnSchedule": "Расписание",
+    "columnStatus": "Статус",
+    "columnLastRun": "Последний запуск",
+    "emptyTitle": "Здесь пока пусто",
+    "emptyDescription": "Созданные задачи появятся здесь.",
+    "status": {
+      "active": "Активна",
+      "paused": "Приостановлена",
+      "failed": "Ошибка",
+      "success": "Успешно",
+      "pending": "В ожидании"
+    },
+    "toast": {
+      "created": "Задача создана"
+    },
+    "filterTypeLabel": "Фильтр по типу",
+    "filterUserLabel": "Фильтр по пользователю",
+    "filterClear": "Сбросить фильтр",
+    "emptyFilteredTitle": "Нет совпадений",
+    "emptyFilteredDescription": "Ни один запуск не соответствует выбранным фильтрам.",
+    "card": {
+      "runBy": "Запустил(а)",
+      "runDate": "Дата запуска",
+      "messageType": "Тип сообщения",
+      "taskStatus": "Статус задачи",
+      "steps": "Шаги",
+      "ruleSets": "Наборы правил",
+      "noRuleSets": "Нет связанных наборов правил"
+    }
+  },
+  "addJob": {
+    "title": "Добавить задачу",
+    "subtitle": "Настройте новый запуск задачи и передайте его в n8n.",
+    "jobType": "Тип задачи",
+    "taskStatus": "Статус задачи",
+    "messageType": "Тип сообщения",
+    "board": "Борд",
+    "taskDescription": "Описание задачи",
+    "taskDescriptionPlaceholder": "например, Приветственное сообщение для новых пользователей",
+    "taskDescriptionError": "Укажите описание задачи",
+    "systemMessage": "Системное сообщение",
+    "systemMessagePlaceholder": "Выберите системное сообщение",
+    "systemMessageError": "Выберите системное сообщение",
+    "mainRuleSet": "Основной набор правил",
+    "mainRuleSetError": "Выберите основной набор правил",
+    "glossary": "Глоссарий",
+    "glossaryPlaceholder": "Выберите глоссарий",
+    "glossaryError": "Выберите глоссарий",
+    "toneOfVoice": "Тон общения",
+    "humanizer": "Хьюманайзер",
+    "ruleSetPlaceholder": "Выберите набор правил",
+    "submit": "Создать задачу",
+    "cancel": "Отмена",
+    "backendError": "Не удалось сохранить задачу",
+    "n8nError": "Задача сохранена, но запуск в n8n не удался"
+  },
+  "ruleSets": {
+    "title": "Наборы правил",
+    "subtitle": "Правила, определяющие сопоставление и маршрутизацию задач.",
+    "columnName": "Название",
+    "emptyTitle": "Здесь пока пусто",
+    "emptyDescription": "Созданные наборы правил появятся здесь.",
+    "newRuleSet": "Новый набор правил",
+    "columnFields": "Поля",
+    "add": {
+      "title": "Новый набор правил",
+      "subtitle": "Задайте ключи и значения для этого набора правил. Добавляйте вложенные группы для структурированных значений, например уровней бонусов.",
+      "name": "Название набора правил",
+      "namePlaceholder": "например, Deposit Count = 0",
+      "nameError": "Укажите название набора правил",
+      "fieldsLabel": "Поля",
+      "submit": "Создать набор правил",
+      "cancel": "Отмена",
+      "setTypeLabel": "Отправлять через",
+      "setTypeError": "Выберите хотя бы один канал"
+    },
+    "columnActions": "Действия",
+    "delete": "Удалить",
+    "deleteConfirm": "Удалить набор правил «{{name}}»? Это действие нельзя отменить.",
+    "edit": {
+      "title": "Редактирование набора правил",
+      "subtitle": "Обновите ключи и значения для этого набора правил.",
+      "submit": "Сохранить изменения"
+    },
+    "toast": {
+      "created": "Набор правил создан",
+      "updated": "Набор правил обновлён",
+      "deleted": "Набор правил удалён"
+    },
+    "setType": {
+      "email": "Email",
+      "sms": "SMS",
+      "push": "Push",
+      "toneOfVoice": "Тон общения",
+      "humanaizer": "Хьюманайзер",
+      "web_push": "Веб-пуш",
+      "in_app": "В приложении",
+      "notification_center": "Центр уведомлений"
+    },
+    "filterLabel": "Фильтр по типу",
+    "filterClear": "Сбросить фильтр",
+    "emptyFilteredTitle": "Ничего не найдено",
+    "emptyFilteredDescription": "Нет рулсетов, соответствующих выбранному фильтру.",
+    "copyName": "{{name}} (копия)",
+    "duplicate": {
+      "action": "Дублировать",
+      "title": "Дубликат набора правил",
+      "subtitle": "Проверьте и при необходимости измените скопированные поля, затем сохраните как новый набор правил."
+    }
+  },
+  "users": {
+    "title": "Пользователи",
+    "subtitle": "Люди с доступом к этому воркспейсу.",
+    "newUser": "Новый пользователь",
+    "columnUsername": "Имя пользователя",
+    "columnRole": "Роль",
+    "emptyTitle": "Здесь пока пусто",
+    "emptyDescription": "Приглашённые пользователи появятся здесь.",
+    "role": {
+      "admin": "Администратор",
+      "user": "Пользователь",
+      "ADMIN": "Администратор",
+      "USER": "Пользователь"
+    },
+    "add": {
+      "title": "Новый пользователь",
+      "subtitle": "Пригласите коллегу и задайте уровень доступа.",
+      "username": "Имя пользователя",
+      "usernamePlaceholder": "например, ada.lovelace",
+      "usernameError": "Укажите имя пользователя",
+      "role": "Роль",
+      "password": "Пароль",
+      "passwordPlaceholder": "••••••••••",
+      "passwordError": "Пароль должен содержать не менее 6 символов",
+      "submit": "Создать пользователя",
+      "cancel": "Отмена"
+    },
+    "toast": {
+      "created": "Пользователь создан",
+      "deleted": "Пользователь удалён"
+    },
+    "columnActions": "Действия",
+    "delete": "Удалить",
+    "deleteConfirm": "Удалить пользователя \"{{name}}\"? Это действие нельзя отменить."
+  },
+  "keyValueEditor": {
+    "keyPlaceholder": "Ключ",
+    "valuePlaceholder": "Значение",
+    "group": "Группа",
+    "addField": "+ Добавить поле",
+    "addGroup": "+ Добавить группу",
+    "remove": "Удалить"
+  },
+  "toast": {
+    "genericError": "Что-то пошло не так. Попробуйте ещё раз."
+  },
+  "prompts": {
+    "title": "Промпты",
+    "subtitle": "Промпты, используемые в ваших n8n флоу.",
+    "newPrompt": "Новый промпт",
+    "columnName": "Название",
+    "columnActions": "Действия",
+    "emptyTitle": "Пока пусто",
+    "emptyDescription": "Созданные промпты появятся здесь.",
+    "add": {
+      "title": "Новый промпт",
+      "subtitle": "Задайте название и текст промпта. Остальные опции появятся позже.",
+      "name": "Название промпта",
+      "namePlaceholder": "например, Приветственное сообщение",
+      "nameError": "Название промпта обязательно",
+      "contentLabel": "Содержимое",
+      "contentPlaceholder": "Введите текст промпта...",
+      "contentError": "Содержимое промпта обязательно",
+      "submit": "Создать промпт",
+      "cancel": "Отмена"
+    },
+    "edit": {
+      "title": "Редактировать промпт",
+      "subtitle": "Обновите название и текст промпта.",
+      "submit": "Сохранить изменения"
+    },
+    "toast": {
+      "created": "Промпт создан",
+      "updated": "Промпт обновлён",
+      "deleted": "Промпт удалён"
+    },
+    "delete": "Удалить",
+    "deleteConfirm": "Удалить промпт «{{name}}»? Это действие нельзя отменить."
+  },
+  "glossary": {
+    "title": "Глоссарии",
+    "subtitle": "Управление глоссариями и их терминами.",
+    "newGlossary": "Новый глоссарий",
+    "editGlossary": "Редактировать глоссарий",
+    "backToList": "← Назад к глоссариям",
+    "delete": "Удалить",
+    "deleteConfirm": "Удалить глоссарий «{{name}}»? Это также удалит все его термины, действие необратимо.",
+    "columnName": "Название",
+    "columnLanguagePair": "Языковая пара",
+    "columnEntries": "Термины",
+    "columnUpdated": "Обновлено",
+    "columnActions": "Действия",
+    "emptyTitle": "Пока пусто",
+    "emptyDescription": "Созданные глоссарии появятся здесь.",
+    "toast": {
+      "created": "Глоссарий создан",
+      "updated": "Глоссарий обновлён",
+      "deleted": "Глоссарий удалён"
+    },
+    "add": {
+      "title": "Новый глоссарий",
+      "subtitle": "Задайте глоссарий и правила, применяемые ко всем его терминам.",
+      "glossaryName": "Название глоссария",
+      "glossaryNamePlaceholder": "например, en_az_glossary",
+      "glossaryNameError": "Название глоссария обязательно",
+      "languagePair": "Языковая пара",
+      "languagePairPlaceholder": "например, en_az",
+      "languagePairError": "Языковая пара обязательна",
+      "sourceLanguage": "Исходный язык",
+      "sourceLanguagePlaceholder": "например, EN",
+      "sourceLanguageError": "Исходный язык обязателен",
+      "targetLanguage": "Целевой язык",
+      "targetLanguagePlaceholder": "например, AZ",
+      "targetLanguageError": "Целевой язык обязателен",
+      "schemaVersion": "Версия схемы",
+      "schemaVersionError": "Версия схемы обязательна",
+      "setType": "Теги",
+      "setTypePlaceholder": "По одному тегу на строку",
+      "setTypeHint": "По одному тегу на строку, например: localization, glossary, en_az.",
+      "purpose": "Назначение",
+      "purposePlaceholder": "Для чего нужен этот глоссарий",
+      "instructions": "Инструкции",
+      "submit": "Создать глоссарий",
+      "cancel": "Отмена"
+    },
+    "edit": {
+      "title": "Редактировать глоссарий",
+      "subtitle": "Обновите поля этого глоссария.",
+      "submit": "Сохранить изменения"
+    },
+    "entry": {
+      "new": "Новый термин",
+      "delete": "Удалить",
+      "deleteConfirm": "Удалить термин «{{name}}»? Действие необратимо.",
+      "lastEntryError": "Это последний термин в глоссарии, его нельзя удалить.",
+      "columnEnglishTerm": "Английский термин",
+      "columnRecommended": "Рекомендуемые",
+      "columnUsageNote": "Примечание",
+      "columnStatus": "Статус",
+      "emptyTitle": "Терминов пока нет",
+      "emptyDescription": "Добавленные термины появятся здесь.",
+      "status": {
+        "standardized": "Стандартизировано",
+        "normalize": "Требует нормализации",
+        "context_dependent": "Зависит от контекста"
+      },
+      "toast": {
+        "created": "Термин создан",
+        "updated": "Термин обновлён",
+        "deleted": "Термин удалён"
+      },
+      "add": {
+        "title": "Новый термин",
+        "englishTerm": "Английский термин",
+        "englishTermPlaceholder": "например, Deposit",
+        "englishTermError": "Английский термин обязателен",
+        "statusLabel": "Статус",
+        "recommended": "Рекомендуемые варианты",
+        "recommendedPlaceholder": "По одному варианту на строку",
+        "recommendedHint": "По одному варианту на строку.",
+        "recommendedError": "Нужен хотя бы один рекомендуемый вариант",
+        "doNotUse": "Не использовать",
+        "doNotUsePlaceholder": "По одной запрещённой форме на строку",
+        "doNotUseHint": "По одной запрещённой форме на строку.",
+        "sourceForms": "Найденные исходные формы",
+        "sourceFormsPlaceholder": "По одной форме на строку",
+        "sourceFormsHint": "По одной форме на строку.",
+        "usageNote": "Примечание по использованию",
+        "usageNotePlaceholder": "Необязательное пояснение, когда использовать этот термин",
+        "submit": "Создать термин",
+        "cancel": "Отмена"
+      },
+      "edit": {
+        "title": "Редактировать термин",
+        "submit": "Сохранить изменения"
+      }
+    }
+  }
+}

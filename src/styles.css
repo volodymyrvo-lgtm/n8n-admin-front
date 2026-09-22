@@ -1,0 +1,269 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a, img {
+  display: block;
+  max-width: 100%;
+}
+
+/* Dark "console" theme primitives shared across dashboard pages
+   (job list, add job, rule sets, users). Mirrors the tokens used by
+   the login page: oklch dark palette, Space Grotesk / Work Sans /
+   JetBrains Mono, single --accent color. */
+
+:root {
+  --accent: #ff6b4a;
+}
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.page-title {
+  margin: 0;
+  font: 600 24px 'Space Grotesk', system-ui, sans-serif;
+  color: oklch(96% 0.004 260);
+  letter-spacing: -0.01em;
+}
+
+.page-subtitle {
+  margin: 0;
+  font: 400 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(62% 0.008 260);
+}
+
+.field-label {
+  font: 600 11.5px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  color: oklch(60% 0.008 260);
+  text-transform: uppercase;
+}
+
+.field-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid oklch(32% 0.015 260);
+  border-radius: 8px;
+  background: oklch(20% 0.015 260);
+  padding: 0 14px;
+  height: 46px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field-control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 22%, transparent);
+}
+
+.field-control input,
+.field-control select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: 500 14.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(94% 0.004 260);
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0;
+  appearance: none;
+}
+
+.field-control input::placeholder {
+  color: oklch(50% 0.01 260);
+}
+
+.field-textarea {
+  border: 1.5px solid oklch(32% 0.015 260);
+  border-radius: 8px;
+  background: oklch(20% 0.015 260);
+  padding: 12px 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field-textarea:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 22%, transparent);
+}
+
+.field-textarea textarea {
+  border: none;
+  outline: none;
+  background: transparent;
+  resize: vertical;
+  width: 100%;
+  min-height: 68px;
+  font: 500 14.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(94% 0.004 260);
+  padding: 0;
+}
+
+.field-textarea textarea::placeholder {
+  color: oklch(50% 0.01 260);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #14151a;
+  border: none;
+  border-radius: 8px;
+  height: 46px;
+  padding: 0 22px;
+  font: 600 14.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.page-btn {
+  background: var(--accent);
+  color: #14151a;
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  padding: 0 16px;
+  font: 600 13.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: filter 0.15s ease;
+}
+
+.page-btn:hover {
+  filter: brightness(1.08);
+}
+
+.link-muted {
+  color: oklch(65% 0.008 260);
+  font: 500 14px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.link-muted:hover {
+  color: oklch(85% 0.006 260);
+}
+
+.data-table {
+  border: 1px solid oklch(28% 0.015 260);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.data-table__head {
+  display: grid;
+  padding: 12px 20px;
+  background: oklch(20% 0.014 260);
+  border-bottom: 1px solid oklch(28% 0.015 260);
+}
+
+.data-table__row {
+  display: grid;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid oklch(24% 0.014 260);
+  transition: background 0.15s ease;
+}
+
+.data-table__row:last-child {
+  border-bottom: none;
+}
+
+.data-table__row:hover {
+  background: oklch(20% 0.014 260);
+}
+
+.data-table__cell-primary {
+  font: 500 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(92% 0.004 260);
+}
+
+.data-table__cell-muted {
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+}
+
+.data-table__cell-mono {
+  font: 500 12.5px 'JetBrains Mono', monospace;
+  color: oklch(62% 0.008 260);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font: 600 11.5px 'Work Sans', system-ui, sans-serif;
+}
+
+.status-badge--active {
+  color: oklch(74% 0.15 150);
+  background: color-mix(in oklch, oklch(74% 0.15 150) 16%, transparent);
+}
+
+.status-badge--paused {
+  color: oklch(68% 0.008 260);
+  background: oklch(24% 0.015 260);
+}
+
+.status-badge--failed {
+  color: oklch(70% 0.19 25);
+  background: color-mix(in oklch, oklch(70% 0.19 25) 16%, transparent);
+}
+
+.status-badge--admin {
+  color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 16%, transparent);
+}
+
+.status-badge--neutral {
+  color: oklch(68% 0.008 260);
+  background: oklch(24% 0.015 260);
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: oklch(60% 0.008 260);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background: oklch(26% 0.015 260);
+  color: oklch(90% 0.004 260);
+}
+
+.icon-btn--danger:hover {
+  background: color-mix(in oklch, oklch(70% 0.19 25) 18%, transparent);
+  color: oklch(78% 0.17 25);
+}
