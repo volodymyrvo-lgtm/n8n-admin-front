@@ -41,6 +41,24 @@
   letter-spacing: -0.01em;
 }
 
+.back-to-hub {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 12px;
+  margin: 0 -4px;
+  border-radius: 8px;
+  font: 500 13px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.01 260);
+  border-bottom: 1px solid oklch(26% 0.015 260);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.back-to-hub:hover {
+  background: oklch(22% 0.015 260);
+  color: oklch(85% 0.006 260);
+}
+
 .sidebar__nav {
   display: flex;
   flex-direction: column;

@@ -16,6 +16,14 @@ export const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     children: [
+      // Landing page right after login: pick which generation flow to
+      // work in (see FlowHubComponent). Only "Content Generation" - the
+      // dashboard layout below - actually exists yet.
+      { path: '', pathMatch: 'full', redirectTo: 'flows' },
+      {
+        path: 'flows',
+        loadComponent: () => import('./features/flows/flow-hub/flow-hub').then((m) => m.FlowHubComponent),
+      },
       {
         path: '',
         loadComponent: () =>

@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { finalize } from 'rxjs';
 import { environment } from '@env';
-import { CreateGlossaryInput, Glossary, GlossaryEntry, GlossaryEntryInput } from '../models/glossary.model';
+import {
+  CreateGlossaryInput,
+  Glossary,
+  GlossaryEntry,
+  GlossaryEntryInput,
+  UpdateGlossaryInput,
+} from '../models/glossary.model';
 
 const GLOSSARIES_URL = `${environment.apiBaseUrl}/glossaries`;
 
@@ -54,7 +60,7 @@ export class GlossariesService {
     });
   }
 
-  updateGlossary(id: string, input: CreateGlossaryInput, callbacks?: GlossaryCallbacks<Glossary>): void {
+  updateGlossary(id: string, input: UpdateGlossaryInput, callbacks?: GlossaryCallbacks<Glossary>): void {
     this.http.patch<Glossary>(`${GLOSSARIES_URL}/${id}`, input).subscribe({
       next: (updated) => {
         this.glossaries.update((items) => items.map((item) => (item.id === id ? updated : item)));

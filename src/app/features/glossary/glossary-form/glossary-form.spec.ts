@@ -15,7 +15,17 @@ function makeGlossary(overrides: Partial<Glossary> = {}): Glossary {
     glossaryName: 'en_az_glossary',
     setType: ['localization', 'glossary', 'en_az'],
     allGlossRules: {
-      entries: [],
+      entries: [
+        {
+          id: 'entry-1',
+          status: 'standardized',
+          usage_note: null,
+          english_term: 'onboarding',
+          source_forms_found: ['onboarding'],
+          recommended_azerbaijani: ['qeydiyyat'],
+          do_not_use_azerbaijani: [],
+        },
+      ],
       purpose: 'Standardize EN -> AZ terminology.',
       instructions: { tone: 'formal', register: 'neutral' },
       language_pair: 'en_az',
@@ -138,5 +148,17 @@ describe('GlossaryFormComponent (edit mode)', () => {
     req.flush(makeGlossary({ glossaryName: 'en_az_glossary_v2' }));
 
     expect(navigateSpy).toHaveBeenCalledWith('/glossary/g-1');
+  });
+
+  it('echoes the glossary\'s current entries back on PATCH, so editing its fields never wipes its terms', () => {
+    const fixture = TestBed.createComponent(GlossaryFormComponent);
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/glossaries/g-1`);
+    expect(req.request.body.allGlossRules.entries).toEqual(makeGlossary().allGlossRules.entries);
+    req.flush(makeGlossary());
   });
 });

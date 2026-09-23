@@ -71,6 +71,30 @@ export interface CreateGlossaryInput {
 }
 
 /**
+ * Body for PATCH /glossaries/:id. Same shape as CreateGlossaryInput
+ * except `allGlossRules.entries` must be included, echoing back the
+ * glossary's current terms unchanged.
+ *
+ * This directly contradicts GlossaryRulesInput's own doc comment
+ * ("entries is intentionally left out") - that comment describes the
+ * contract this app was originally built against, where PATCHing the
+ * glossary's own fields would never touch `entries`. In production the
+ * backend was observed doing a full replace of `allGlossRules` on this
+ * endpoint instead of a partial merge: a PATCH that omits `entries`
+ * (the normal case, since entries are meant to be managed only through
+ * POST/PATCH/DELETE /glossaries/:id/entries) silently wipes every term
+ * in the glossary. Sending the array back unchanged is a workaround for
+ * that backend behavior, not the "correct" contract - remove this (and
+ * go back to using CreateGlossaryInput for updates too) once the
+ * backend merges instead of replacing.
+ */
+export interface UpdateGlossaryInput {
+  glossaryName: string;
+  setType: string[];
+  allGlossRules: GlossaryRulesInput & { entries: GlossaryEntry[] };
+}
+
+/**
  * Body for POST/PATCH /glossaries/:id/entries[/:entryId]. The
  * language-specific `do_not_use_*`/`recommended_*` keys are built
  * dynamically (see targetLanguageFieldKey()), so this is intentionally

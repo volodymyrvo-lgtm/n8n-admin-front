@@ -7,6 +7,7 @@ import {
   BOARD_OPTIONS,
   CreateJobFormValue,
   JOB_TYPE_OPTIONS,
+  LLM_OPTIONS,
   MESSAGE_TYPE_OPTIONS,
   TASK_STATUS_OPTIONS,
 } from '../../../core/models/job.model';
@@ -36,6 +37,7 @@ export class AddJobComponent implements  OnInit {
   protected readonly taskStatusOptions = TASK_STATUS_OPTIONS;
   protected readonly messageTypeOptions = MESSAGE_TYPE_OPTIONS;
   protected readonly boardOptions = BOARD_OPTIONS;
+  protected readonly llmOptions = LLM_OPTIONS;
 
   protected readonly form = this.fb.nonNullable.group({
     jobType: [this.jobTypeOptions[0], Validators.required],
@@ -48,6 +50,7 @@ export class AddJobComponent implements  OnInit {
     humanizerRuleSetId: [''],
     promptId: ['', Validators.required],
     glossaryId: [''],
+    llm: ['', Validators.required],
   });
 
   /** Kept in sync with the jobType control so `mainRuleSets` can react to it. */
@@ -150,6 +153,7 @@ export class AddJobComponent implements  OnInit {
       humanizerRuleSetId: raw.humanizerRuleSetId || null,
       promptId: raw.promptId || null,
       glossaryId: raw.glossaryId || null,
+      llm: raw.llm || null,
     };
 
     this.jobsService.createJob(value, {

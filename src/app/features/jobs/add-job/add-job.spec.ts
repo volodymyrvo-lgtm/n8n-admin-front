@@ -39,6 +39,24 @@ describe('AddJobComponent', () => {
     fixture.componentInstance.submit();
 
     expect(fixture.componentInstance['form'].controls.mainRuleSetId.touched).toBe(true);
+    expect(fixture.componentInstance['form'].controls.llm.touched).toBe(true);
+  });
+
+  it('offers the four LLM options, none picked by default', () => {
+    const fixture = TestBed.createComponent(AddJobComponent);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/rules').flush([]);
+    httpMock.expectOne('http://localhost:3000/prompts').flush([]);
+    httpMock.expectOne('http://localhost:3000/glossaries').flush([]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const options = Array.from(el.querySelector('#llm')!.querySelectorAll('option')).map((o) =>
+      o.getAttribute('value'),
+    );
+
+    expect(options).toEqual(['', 'claude_sonnet_5', 'gpt_5_6_sol', 'gpt_6_astra', 'gpt_6_sol']);
+    expect(fixture.componentInstance['form'].controls.llm.valid).toBe(false);
   });
 
   it('creates a job on valid submit: posts the backend and n8n bodies and navigates to /jobs', () => {
@@ -62,6 +80,7 @@ describe('AddJobComponent', () => {
       humanizerRuleSetId: 'rule-3',
       promptId: 'prompt-1',
       glossaryId: '',
+      llm: 'claude_sonnet_5',
     });
     fixture.componentInstance.submit();
 
@@ -76,6 +95,7 @@ describe('AddJobComponent', () => {
       taskDescription: 'Welcome message',
       ruleIds: ['rule-1', 'rule-2', 'rule-3'],
       sm: 'prompt-1',
+      llm: 'claude_sonnet_5',
     });
     backendReq.flush({
       id: 'new-1',
@@ -104,6 +124,7 @@ describe('AddJobComponent', () => {
       toneOfVoice: 'rule-2',
       humanizer: 'rule-3',
       sm: 'prompt-1',
+      llm: 'claude_sonnet_5',
       jobId: 'new-1',
     });
     n8nReq.flush({});
@@ -131,6 +152,7 @@ describe('AddJobComponent', () => {
       humanizerRuleSetId: '',
       promptId: 'prompt-1',
       glossaryId: '',
+      llm: 'claude_sonnet_5',
     });
     fixture.componentInstance.submit();
 
@@ -292,6 +314,7 @@ describe('AddJobComponent', () => {
         humanizerRuleSetId: 'rule-3',
         promptId: 'prompt-1',
         glossaryId: 'glossary-1',
+        llm: 'gpt_6_astra',
       });
       // setValue() alone doesn't re-run syncLocalizationFields (an effect,
       // flushed by change detection) - without this, mainRuleSetId would
@@ -329,6 +352,7 @@ describe('AddJobComponent', () => {
         humanizer: 'rule-3',
         glossaries: 'glossary-1',
         sm: 'prompt-1',
+        llm: 'gpt_6_astra',
         jobId: 'new-2',
       });
       n8nReq.flush({});

@@ -2,7 +2,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CreateGlossaryInput, Glossary } from '../../../core/models/glossary.model';
+import { CreateGlossaryInput, Glossary, UpdateGlossaryInput } from '../../../core/models/glossary.model';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
 import {
@@ -36,6 +36,12 @@ export class GlossaryFormComponent {
 
   private readonly editingId = this.route.snapshot.paramMap.get('id');
   protected readonly isEditMode = !!this.editingId;
+  /**
+   * The glossary being edited, kept around so `submit()` can echo its
+   * current `entries` back on PATCH - see UpdateGlossaryInput's doc
+   * comment for why that's necessary.
+   */
+  private existingGlossary: Glossary | undefined;
 
   protected readonly form = this.fb.nonNullable.group({
     glossaryName: ['', Validators.required],
@@ -61,6 +67,7 @@ export class GlossaryFormComponent {
       return;
     }
 
+    this.existingGlossary = existing;
     this.patchFrom(existing);
   }
 
@@ -98,7 +105,16 @@ export class GlossaryFormComponent {
     };
 
     if (this.editingId) {
-      this.glossariesService.updateGlossary(this.editingId, input, {
+      const updateInput: UpdateGlossaryInput = {
+        ...input,
+        allGlossRules: {
+          ...input.allGlossRules,
+          // Echo the glossary's current terms back unchanged - omitting
+          // this wipes every entry, see UpdateGlossaryInput's doc comment.
+          entries: this.existingGlossary?.allGlossRules.entries ?? [],
+        },
+      };
+      this.glossariesService.updateGlossary(this.editingId, updateInput, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('glossary.toast.updated'));
           this.router.navigateByUrl(`/glossary/${this.editingId}`);

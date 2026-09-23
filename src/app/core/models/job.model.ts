@@ -48,6 +48,10 @@ export const MESSAGE_TYPE_OPTIONS: readonly MessageTypeOption[] = JOB_TYPE_OPTIO
 export type BoardOption = 'ONBOARDING' | 'Onboarding_2_not_ready' | 'CHURN_15';
 export const BOARD_OPTIONS: readonly BoardOption[] = ['ONBOARDING', 'Onboarding_2_not_ready', 'CHURN_15'];
 
+/** The LLM that runs the job - required on every task status, sent to both our backend and n8n as `llm`. */
+export type LlmOption = 'claude_sonnet_5' | 'gpt_5_6_sol' | 'gpt_6_astra' | 'gpt_6_sol';
+export const LLM_OPTIONS: readonly LlmOption[] = ['claude_sonnet_5', 'gpt_5_6_sol', 'gpt_6_astra', 'gpt_6_sol'];
+
 /**
  * The new-job form's raw values. `mainRuleSetId`/`toneOfVoiceRuleSetId`/
  * `humanizerRuleSetId` each pick an existing rule set by role (the latter
@@ -62,6 +66,10 @@ export const BOARD_OPTIONS: readonly BoardOption[] = ['ONBOARDING', 'Onboarding_
  * (`glossaryId`) - see AddJobComponent's `isLocalization` and
  * JobsService.buildN8nPayload, which builds an entirely different body
  * for the n8n webhook in that case.
+ *
+ * `llm` picks which model runs the job (see LlmOption) - unlike
+ * `mainRuleSetId`/`glossaryId`, it's shown and required for every task
+ * status, "new"/"update" and "localization" alike.
  */
 export interface CreateJobFormValue {
   jobType: JobTypeOption;
@@ -74,13 +82,15 @@ export interface CreateJobFormValue {
   humanizerRuleSetId: string | null;
   promptId: string | null;
   glossaryId: string | null;
+  llm: string | null;
 }
 
 /**
  * Body posted to our own backend to create the job run record. `sm`
  * ("system message") is the id of the prompt picked in the form
  * (`CreateJobFormValue.promptId`) - the backend validates it as a UUID,
- * same as it validates `ruleIds`.
+ * same as it validates `ruleIds`. `llm` is the model picked in the form
+ * (`CreateJobFormValue.llm`, one of LlmOption) - required, same as `sm`.
  */
 export interface CreateJobBackendPayload {
   steps: JobSteps;
@@ -91,6 +101,7 @@ export interface CreateJobBackendPayload {
   taskDescription: string;
   ruleIds: string[];
   sm: string;
+  llm: string;
 }
 
 /**
@@ -112,6 +123,7 @@ export interface CreateJobN8nPayload {
   toneOfVoice: string;
   humanizer: string;
   sm: string;
+  llm: string;
   jobId: string;
 }
 
@@ -133,5 +145,6 @@ export interface CreateJobN8nLocalizationPayload {
   humanizer: string;
   glossaries: string;
   sm: string;
+  llm: string;
   jobId: string;
 }

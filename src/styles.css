@@ -4,6 +4,22 @@
   box-sizing: border-box;
 }
 
+/* Without this, html/body/app-root have no definite height, so a
+   layout like DashboardLayoutComponent's .shell (height: 100%) can't
+   actually pin itself to the viewport - it grows to match its
+   content instead, stretching the sidebar along with it and pushing
+   the logout button/language switcher down with whatever's in
+   .content, rather than keeping them in view while .content scrolls
+   on its own. */
+html, body {
+  height: 100%;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
 a, img {
   display: block;
   max-width: 100%;

@@ -1,0 +1,2024 @@
+[
+  {
+    "id": "46857561-128d-48f7-96e7-1d54b9b82baa",
+    "glossaryName": "en_az_glossary",
+    "allGlossRules": {
+      "entries": [
+        {
+          "id": "f387e65b-d757-4fc3-963b-c0591bac21ea",
+          "status": "standardized",
+          "usage_note": "Use depozit as the noun; use depozit etmək for the action.",
+          "english_term": "Deposit",
+          "source_forms_found": [
+            "depozit",
+            "depozitiniz",
+            "depozitinizi"
+          ],
+          "do_not_use_azerbaijani": [
+            "əmanət"
+          ],
+          "recommended_azerbaijani": [
+            "depozit"
+          ]
+        },
+        {
+          "id": "36735aad-a998-4168-8e55-d05bbff9572a",
+          "status": "normalize",
+          "usage_note": "Avoid çıxarış here: it usually means a statement/extract. Build the sentence around vəsaitin çıxarılması or vəsait çıxarmaq.",
+          "english_term": "Withdrawal",
+          "source_forms_found": [
+            "vəsait çıxarışı",
+            "vəsaitin çıxarılması",
+            "vəsait çıxarışınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "pul çıxarışı"
+          ],
+          "recommended_azerbaijani": [
+            "vəsaitin çıxarılması (noun)",
+            "vəsait çıxarmaq (verb)"
+          ]
+        },
+        {
+          "id": "d2b2e62e-17a7-4c43-971e-6dae6fcbd4fb",
+          "status": "standardized",
+          "usage_note": "Use üsul consistently for payment method.",
+          "english_term": "Payment method",
+          "source_forms_found": [
+            "ödəniş üsulu",
+            "ödəniş üsulundan"
+          ],
+          "do_not_use_azerbaijani": [
+            "ödəniş metodu"
+          ],
+          "recommended_azerbaijani": [
+            "ödəniş üsulu"
+          ]
+        },
+        {
+          "id": "2d63d81a-600b-4d74-a5ee-60283e00254d",
+          "status": "standardized",
+          "usage_note": "Preferred generic term for player funds.",
+          "english_term": "Funds",
+          "source_forms_found": [
+            "vəsait",
+            "vəsaitiniz",
+            "müvafiq vəsait"
+          ],
+          "do_not_use_azerbaijani": [
+            "fond",
+            "pul",
+            "fondlar",
+            "pullar"
+          ],
+          "recommended_azerbaijani": [
+            "vəsait"
+          ]
+        },
+        {
+          "id": "476f595c-f6ca-4c07-952a-c11ad7bb6c1d",
+          "status": "standardized",
+          "usage_note": "Use hesab balansı where the account context is not already clear.",
+          "english_term": "Balance",
+          "source_forms_found": [
+            "balans",
+            "hesab balansı",
+            "cari balans"
+          ],
+          "do_not_use_azerbaijani": [
+            "hesab qalığı"
+          ],
+          "recommended_azerbaijani": [
+            "balans"
+          ]
+        },
+        {
+          "id": "9a3be089-d5bf-4e96-8aef-c9eb3c78abba",
+          "status": "standardized",
+          "usage_note": "Use for a manual or system-applied change to the balance.",
+          "english_term": "Balance adjustment",
+          "source_forms_found": [
+            "balans düzəlişi"
+          ],
+          "do_not_use_azerbaijani": [
+            "balans korreksiyası"
+          ],
+          "recommended_azerbaijani": [
+            "balans düzəlişi"
+          ]
+        },
+        {
+          "id": "73108e95-6f81-4be9-9992-1534eb8a8095",
+          "status": "context_dependent",
+          "usage_note": "Use limit for the configured feature; hədd is natural when describing the threshold reached.",
+          "english_term": "Limit",
+          "source_forms_found": [
+            "limit",
+            "limitlər",
+            "hədd"
+          ],
+          "do_not_use_azerbaijani": [],
+          "recommended_azerbaijani": [
+            "limit"
+          ]
+        },
+        {
+          "id": "10edac6f-3a9e-49fd-af50-bbdb855a3075",
+          "status": "standardized",
+          "usage_note": "Use for a fee linked to an inactive player account.",
+          "english_term": "Inactivity fee",
+          "source_forms_found": [
+            "fəaliyyətsizlik haqqı"
+          ],
+          "do_not_use_azerbaijani": [
+            "hərəkətsizlik haqqı",
+            "passivlik haqqı"
+          ],
+          "recommended_azerbaijani": [
+            "fəaliyyətsizlik haqqı"
+          ]
+        },
+        {
+          "id": "f30786ce-081c-4c5e-9a65-2d18298304d5",
+          "status": "standardized",
+          "usage_note": "Use mərc for both sportsbook and general betting references.",
+          "english_term": "Bet",
+          "source_forms_found": [
+            "mərc",
+            "mərciniz",
+            "mərclər"
+          ],
+          "do_not_use_azerbaijani": [
+            "stavka"
+          ],
+          "recommended_azerbaijani": [
+            "mərc"
+          ]
+        },
+        {
+          "id": "6adfd2d8-10eb-432e-a848-2875b1902371",
+          "status": "standardized",
+          "usage_note": "Use the inflected form mərciniz ləğv edilib when addressing the player directly.",
+          "english_term": "Bet voided",
+          "source_forms_found": [
+            "mərciniz ləğv edilib",
+            "mərc ləğv edildi"
+          ],
+          "do_not_use_azerbaijani": [
+            "mərc etibarsızdır",
+            "mərc void edildi"
+          ],
+          "recommended_azerbaijani": [
+            "mərc ləğv edildi"
+          ]
+        },
+        {
+          "id": "92d00149-376b-46c1-a1cd-a109d2273ab6",
+          "status": "normalize",
+          "usage_note": "Use dövriyyə tələbi for the playthrough requirement attached to a bonus; mərc tələbi is too literal.",
+          "english_term": "Wagering requirement",
+          "source_forms_found": [
+            "mərc tələbi"
+          ],
+          "do_not_use_azerbaijani": [
+            "oynama tələbi",
+            "vecrinq tələbi"
+          ],
+          "recommended_azerbaijani": [
+            "dövriyyə tələbi"
+          ]
+        },
+        {
+          "id": "909fb278-1fc0-45cd-99a1-aa141e4bbc3d",
+          "status": "standardized",
+          "usage_note": "Use oyun for the game title or game reference.",
+          "english_term": "Game",
+          "source_forms_found": [
+            "oyun",
+            "oyunu"
+          ],
+          "do_not_use_azerbaijani": [
+            "matç"
+          ],
+          "recommended_azerbaijani": [
+            "oyun"
+          ]
+        },
+        {
+          "id": "7259376b-6b83-4121-8fa4-bd80a8d25df2",
+          "status": "standardized",
+          "usage_note": "CTA form: Oynamağa başlayın. In body copy, use the softer finite form when appropriate.",
+          "english_term": "Start playing",
+          "source_forms_found": [
+            "oynamağa başlayın",
+            "oynamağa başlaya bilərsiniz"
+          ],
+          "do_not_use_azerbaijani": [
+            "oyun başlasın"
+          ],
+          "recommended_azerbaijani": [
+            "oynamağa başlayın"
+          ]
+        },
+        {
+          "id": "89fbec3b-1ef7-4132-9160-c7d45b80082d",
+          "status": "standardized",
+          "usage_note": "Use turnir consistently in singular and plural forms.",
+          "english_term": "Tournament",
+          "source_forms_found": [
+            "turnir",
+            "turnirlər"
+          ],
+          "do_not_use_azerbaijani": [
+            "turnuva"
+          ],
+          "recommended_azerbaijani": [
+            "turnir"
+          ]
+        },
+        {
+          "id": "e58ebfa2-29ac-4d2a-977b-53662330ddb9",
+          "status": "normalize",
+          "usage_note": "Prefer qələbə as the natural default; keep casing in sentence case.",
+          "english_term": "Tournament win",
+          "source_forms_found": [
+            "turnir qalibiyyəti",
+            "turnir qələbəsi"
+          ],
+          "do_not_use_azerbaijani": [
+            "turnuva qələbəsi",
+            "turnuva qalibiyyəti"
+          ],
+          "recommended_azerbaijani": [
+            "turnir qələbəsi"
+          ]
+        },
+        {
+          "id": "81427843-44eb-44f3-96de-db24e6445cfd",
+          "status": "standardized",
+          "usage_note": "Use the noun phrase for labels and the full sentence for player-facing titles.",
+          "english_term": "Tournament winner",
+          "source_forms_found": [
+            "turnirin qalibi",
+            "turnirin qalibi oldunuz"
+          ],
+          "do_not_use_azerbaijani": [
+            "turnuva qalibi",
+            "turnuvanın qalibi"
+          ],
+          "recommended_azerbaijani": [
+            "turnirin qalibi"
+          ]
+        },
+        {
+          "id": "7d420af4-ce81-409d-b99b-d4e5ed30b35e",
+          "status": "standardized",
+          "usage_note": "Use the possessive form turnir mükafatınız when addressing the recipient.",
+          "english_term": "Tournament reward",
+          "source_forms_found": [
+            "turnir mükafatı",
+            "turnir mükafatınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "turnuva mükafatı",
+            "turnir ödülü",
+            "turnuva ödülü",
+            "turnir hədiyyəsi",
+            "turnuva hədiyyəsi"
+          ],
+          "recommended_azerbaijani": [
+            "turnir mükafatı"
+          ]
+        },
+        {
+          "id": "d111d4ef-cb07-4174-8146-7d1fe76fca38",
+          "status": "standardized",
+          "usage_note": "Use for the total rewards allocated to a tournament.",
+          "english_term": "Prize pool",
+          "source_forms_found": [
+            "mükafat fondu"
+          ],
+          "do_not_use_azerbaijani": [
+            "ödül fondu",
+            "priz fondu"
+          ],
+          "recommended_azerbaijani": [
+            "mükafat fondu"
+          ]
+        },
+        {
+          "id": "d626f7e5-f050-4717-8c5a-34a977e38556",
+          "status": "standardized",
+          "usage_note": "Both prize and reward map naturally to mükafat in the current email contexts.",
+          "english_term": "Prize / reward",
+          "source_forms_found": [
+            "mükafat",
+            "mükafatınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "ödül",
+            "priz"
+          ],
+          "recommended_azerbaijani": [
+            "mükafat"
+          ]
+        },
+        {
+          "id": "1c53ed2e-0820-4541-8ebb-7d1f2f189410",
+          "status": "context_dependent",
+          "usage_note": "Translate as a sentence element, not a standalone literal noun phrase.",
+          "english_term": "Finish place / position",
+          "source_forms_found": [
+            "%FINISH_PLACE% yeri tutdunuz",
+            "birinci yeri tutmağınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "finiş yeri",
+            "bitirmə mövqeyi"
+          ],
+          "recommended_azerbaijani": [
+            "tutduğunuz yer"
+          ]
+        },
+        {
+          "id": "0a2f1294-0b03-46d1-8d7d-8585bcace849",
+          "status": "standardized",
+          "usage_note": "Keep bonus as the established loanword.",
+          "english_term": "Bonus",
+          "source_forms_found": [
+            "bonus",
+            "bonusunuz"
+          ],
+          "do_not_use_azerbaijani": [],
+          "recommended_azerbaijani": [
+            "bonus"
+          ]
+        },
+        {
+          "id": "9ba4a938-44cf-495a-8b3d-5068d824e281",
+          "status": "standardized",
+          "usage_note": "Use nağd bonus consistently.",
+          "english_term": "Cash bonus",
+          "source_forms_found": [
+            "nağd bonus",
+            "nağd bonusunuz"
+          ],
+          "do_not_use_azerbaijani": [
+            "pul bonusu",
+            "keş bonus",
+            "cash bonus"
+          ],
+          "recommended_azerbaijani": [
+            "nağd bonus"
+          ]
+        },
+        {
+          "id": "faca1724-b534-4ce8-b5b8-99b0c3b5ddea",
+          "status": "standardized",
+          "usage_note": "Use sentence case except where the design system explicitly requires title case.",
+          "english_term": "Free spins",
+          "source_forms_found": [
+            "pulsuz fırlanmalar",
+            "pulsuz fırlanmanız"
+          ],
+          "do_not_use_azerbaijani": [
+            "pulsuz spinlər",
+            "free spinlər",
+            "azad fırlanmalar"
+          ],
+          "recommended_azerbaijani": [
+            "pulsuz fırlanmalar"
+          ]
+        },
+        {
+          "id": "b78f918c-aae7-4703-8095-1fa7e3ca73b2",
+          "status": "standardized",
+          "usage_note": "Use the localized spelling keşbek throughout.",
+          "english_term": "Cashback",
+          "source_forms_found": [
+            "keşbek",
+            "keşbekiniz"
+          ],
+          "do_not_use_azerbaijani": [
+            "cashback",
+            "kəşbək",
+            "nağd pul geri ödənişi"
+          ],
+          "recommended_azerbaijani": [
+            "keşbek"
+          ]
+        },
+        {
+          "id": "7242da55-00ed-4277-89db-37e35c98ea2d",
+          "status": "normalize",
+          "usage_note": "Use reykbek consistently. Inflect without a hyphen: reykbekiniz.",
+          "english_term": "Rakeback",
+          "source_forms_found": [
+            "reykbek-niz",
+            "reykbek",
+            "rakeback"
+          ],
+          "do_not_use_azerbaijani": [
+            "rakeback",
+            "reykbek-niz",
+            "rəykbək"
+          ],
+          "recommended_azerbaijani": [
+            "reykbek"
+          ]
+        },
+        {
+          "id": "0d0570c7-6b3f-4e71-b706-d296fc06e20d",
+          "status": "context_dependent",
+          "usage_note": "Use the noun for labels and the correctly inflected verb in status sentences.",
+          "english_term": "Activation",
+          "source_forms_found": [
+            "aktivləşdirmə",
+            "aktiv edildi",
+            "aktivləşdirildi"
+          ],
+          "do_not_use_azerbaijani": [
+            "aktivasiya",
+            "aktiv etmək"
+          ],
+          "recommended_azerbaijani": [
+            "aktivləşdirmə (noun)",
+            "aktivləşdirmək (verb)"
+          ]
+        },
+        {
+          "id": "d04c38d9-c2d8-4e27-bb2c-0d7d137f8c88",
+          "status": "standardized",
+          "usage_note": "Use şərtlər for the conditions that must be completed to activate a bonus.",
+          "english_term": "Activation requirements",
+          "source_forms_found": [
+            "aktivləşdirmə şərtləri"
+          ],
+          "do_not_use_azerbaijani": [],
+          "recommended_azerbaijani": [
+            "aktivləşdirmə şərtləri"
+          ]
+        },
+        {
+          "id": "4336b3d6-9028-469a-8df8-42b95ebd79c8",
+          "status": "standardized",
+          "usage_note": "Use when the placeholder returns a fixed date or timestamp.",
+          "english_term": "Expiry date / available until",
+          "source_forms_found": [
+            "istifadə üçün son tarix"
+          ],
+          "do_not_use_azerbaijani": [
+            "etibarlılıq müddəti"
+          ],
+          "recommended_azerbaijani": [
+            "istifadə üçün son tarix"
+          ]
+        },
+        {
+          "id": "3846ee12-954b-451c-9375-d69803b1bcef",
+          "status": "normalize",
+          "usage_note": "Use a remaining-time label when the placeholder returns a number of days, not a fixed date.",
+          "english_term": "Expires in (duration)",
+          "source_forms_found": [
+            "etibarlılıq müddəti",
+            "istifadə üçün son tarix"
+          ],
+          "do_not_use_azerbaijani": [],
+          "recommended_azerbaijani": [
+            "bitməsinə qalan müddət"
+          ]
+        },
+        {
+          "id": "e965d5be-7e86-4cce-977e-94d64964b6d8",
+          "status": "standardized",
+          "usage_note": "Reserve for a duration or period of validity; keep it distinct from a fixed expiry date.",
+          "english_term": "Validity period / valid for",
+          "source_forms_found": [
+            "etibarlılıq müddəti"
+          ],
+          "do_not_use_azerbaijani": [
+            "son tarix",
+            "istifadə üçün son tarix"
+          ],
+          "recommended_azerbaijani": [
+            "etibarlılıq müddəti"
+          ]
+        },
+        {
+          "id": "a56e215f-1247-4594-8fd2-2cb3671c47df",
+          "status": "standardized",
+          "usage_note": "Use sentence case unless the official product name is capitalized by brand rules.",
+          "english_term": "Loyalty Program",
+          "source_forms_found": [
+            "loyallıq proqramı"
+          ],
+          "do_not_use_azerbaijani": [
+            "sadiqliq proqramı"
+          ],
+          "recommended_azerbaijani": [
+            "loyallıq proqramı"
+          ]
+        },
+        {
+          "id": "416f6f68-0e2c-4083-9b53-e2cc5fe1d5b6",
+          "status": "standardized",
+          "usage_note": "Use sentence case in running copy.",
+          "english_term": "Loyalty Level",
+          "source_forms_found": [
+            "loyallıq səviyyəsi",
+            "loyallıq səviyyəniz"
+          ],
+          "do_not_use_azerbaijani": [
+            "sadiqliq səviyyəsi",
+            "sadiqliq səviyyəniz"
+          ],
+          "recommended_azerbaijani": [
+            "loyallıq səviyyəsi"
+          ]
+        },
+        {
+          "id": "cbae689c-f4d3-4c2c-afaf-7c14fb10e038",
+          "status": "context_dependent",
+          "usage_note": "Use üstünlüklər for general benefits; reserve imtiyazlar for exclusive privileges.",
+          "english_term": "Benefits",
+          "source_forms_found": [
+            "üstünlüklər",
+            "imtiyazlar"
+          ],
+          "do_not_use_azerbaijani": [
+            "fayda",
+            "faydalar"
+          ],
+          "recommended_azerbaijani": [
+            "üstünlüklər"
+          ]
+        },
+        {
+          "id": "425b17df-9632-4293-aa74-d1d9988a0eb6",
+          "status": "normalize",
+          "usage_note": "Use the compound form VIP klubu. For the CTA, use VIP klubu ilə tanış olun.",
+          "english_term": "VIP Club",
+          "source_forms_found": [
+            "VIP klubuna",
+            "VIP klubunun",
+            "VIP klubla"
+          ],
+          "do_not_use_azerbaijani": [
+            "VIP klub",
+            "VİP Klub",
+            "VİP Klubu",
+            "VİP klub"
+          ],
+          "recommended_azerbaijani": [
+            "VIP klubu"
+          ]
+        },
+        {
+          "id": "168a323b-764d-48d9-bf99-581aed690bbb",
+          "status": "standardized",
+          "usage_note": "Use for membership status or the set of membership entitlements.",
+          "english_term": "VIP membership",
+          "source_forms_found": [
+            "VIP üzvlüyü",
+            "VIP üzvlüyünüz"
+          ],
+          "do_not_use_azerbaijani": [
+            "VIP üzvlük",
+            "VİP üzvlük",
+            "VİP üzvlüyünüz"
+          ],
+          "recommended_azerbaijani": [
+            "VIP üzvlüyü"
+          ]
+        },
+        {
+          "id": "810496d1-a4c0-4d4c-b333-c45871e79626",
+          "status": "standardized",
+          "usage_note": "Use imtiyazlar for exclusive privileges; do not interchange automatically with general benefits.",
+          "english_term": "Privileges",
+          "source_forms_found": [
+            "eksklüziv imtiyazlar"
+          ],
+          "do_not_use_azerbaijani": [
+            "üstünlük",
+            "üstünlüklər",
+            "fayda",
+            "faydalar"
+          ],
+          "recommended_azerbaijani": [
+            "imtiyazlar"
+          ]
+        },
+        {
+          "id": "5bee8da7-fae1-4532-a18f-2668a5e3f132",
+          "status": "normalize",
+          "usage_note": "Use the possessive compound VIP mükafatları as the standalone term.",
+          "english_term": "VIP rewards",
+          "source_forms_found": [
+            "VIP mükafatlar"
+          ],
+          "do_not_use_azerbaijani": [
+            "VIP mükafatlar",
+            "VİP mükafatlar",
+            "VİP mükafatları"
+          ],
+          "recommended_azerbaijani": [
+            "VIP mükafatları"
+          ]
+        },
+        {
+          "id": "6b98fd91-eb8a-4c30-8d6b-6186aec8605e",
+          "status": "normalize",
+          "usage_note": "Use hesab consistently for a player account.",
+          "english_term": "Account",
+          "source_forms_found": [
+            "hesabınıza giriş edildi",
+            "hesabınızla bağlı vacib yeniləmə"
+          ],
+          "do_not_use_azerbaijani": [
+            "akkaunt"
+          ],
+          "recommended_azerbaijani": [
+            "hesab"
+          ]
+        },
+        {
+          "id": "a4d68fa2-e2a8-4b9e-82a0-e222121b90f0",
+          "status": "standardized",
+          "usage_note": "Use daxil olmaq as the action and giriş as the noun.",
+          "english_term": "Sign in / login",
+          "source_forms_found": [
+            "daxil ola",
+            "daxil olun"
+          ],
+          "do_not_use_azerbaijani": [
+            "login olmaq",
+            "daxilolma"
+          ],
+          "recommended_azerbaijani": [
+            "daxil olmaq",
+            "giriş"
+          ]
+        },
+        {
+          "id": "4667d3ed-3427-41f5-a063-ef0af78070b4",
+          "status": "standardized",
+          "usage_note": "Use cihaz rather than qurğu in player-facing CRM copy.",
+          "english_term": "New device",
+          "source_forms_found": [
+            "yeni cihazdan"
+          ],
+          "do_not_use_azerbaijani": [],
+          "recommended_azerbaijani": [
+            "yeni cihaz"
+          ]
+        },
+        {
+          "id": "36d21ded-7129-4942-9035-f6bb014763e2",
+          "status": "standardized",
+          "usage_note": "Use sentence case in running text and title case only where the design requires it.",
+          "english_term": "Security alert",
+          "source_forms_found": [
+            "təhlükəsizlik xəbərdarlığı"
+          ],
+          "do_not_use_azerbaijani": [
+            "təhlükəsizlik alarmı"
+          ],
+          "recommended_azerbaijani": [
+            "təhlükəsizlik xəbərdarlığı"
+          ]
+        },
+        {
+          "id": "022df9c4-f51b-4037-baea-845d993b9754",
+          "status": "context_dependent",
+          "usage_note": "Do not use bloklanıb unless the account is actually blocked rather than access being restricted.",
+          "english_term": "Account access restricted",
+          "source_forms_found": [
+            "hesaba giriş məhdudlaşdırılıb",
+            "hesabınıza giriş məhdudlaşdırılıb"
+          ],
+          "do_not_use_azerbaijani": [
+            "hesab bloklanıb"
+          ],
+          "recommended_azerbaijani": [
+            "hesaba giriş məhdudlaşdırılıb"
+          ]
+        },
+        {
+          "id": "e6f95b6f-d21c-433d-949b-b86b864a351f",
+          "status": "standardized",
+          "usage_note": "Use yenidən aktivləşdirildi for restored account access.",
+          "english_term": "Account reactivated",
+          "source_forms_found": [
+            "hesabınız yenidən aktivləşdirilib"
+          ],
+          "do_not_use_azerbaijani": [
+            "hesab reaktivasiya edildi"
+          ],
+          "recommended_azerbaijani": [
+            "hesab yenidən aktivləşdirildi"
+          ]
+        },
+        {
+          "id": "422a5158-d295-4f34-be80-b7f8e01e2ded",
+          "status": "normalize",
+          "usage_note": "Use şifrə consistently across CRM and UI unless the product UI has an approved exception.",
+          "english_term": "Password",
+          "source_forms_found": [
+            "şifrəni yeniləyin",
+            "şifrənizi sıfırlayın"
+          ],
+          "do_not_use_azerbaijani": [
+            "parol"
+          ],
+          "recommended_azerbaijani": [
+            "şifrə"
+          ]
+        },
+        {
+          "id": "4195abb8-1802-41f7-8c09-96810c0861c5",
+          "status": "normalize",
+          "usage_note": "Use e-poçt ünvanı in formal CRM copy.",
+          "english_term": "Email address",
+          "source_forms_found": [
+            "e-poçt ünvanınızı",
+            "e-poçt ünvanınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "email",
+            "elektron poçt adresi"
+          ],
+          "recommended_azerbaijani": [
+            "e-poçt ünvanı"
+          ]
+        },
+        {
+          "id": "28815877-eef2-4ae8-9a2b-a44ba207bd99",
+          "status": "standardized",
+          "usage_note": "Use Azerbaijani spelling nömrə.",
+          "english_term": "Phone number",
+          "source_forms_found": [
+            "telefon nömrəniz",
+            "telefon nömrəsi"
+          ],
+          "do_not_use_azerbaijani": [
+            "telefon nomrəsi"
+          ],
+          "recommended_azerbaijani": [
+            "telefon nömrəsi"
+          ]
+        },
+        {
+          "id": "df7c8783-5607-4e8a-af87-1472e03c73e6",
+          "status": "standardized",
+          "usage_note": "Use fəaliyyət rather than aktivlik in security messages.",
+          "english_term": "Don't recognize this activity",
+          "source_forms_found": [
+            "bu fəaliyyəti tanımırsınızsa"
+          ],
+          "do_not_use_azerbaijani": [
+            "bu aktivliyi tanımırsınızsa"
+          ],
+          "recommended_azerbaijani": [
+            "bu fəaliyyəti tanımırsınızsa"
+          ]
+        },
+        {
+          "id": "0da987b0-6f56-4778-b5cb-110af7cd79e7",
+          "status": "standardized",
+          "usage_note": "Preferred player-facing name for the support function.",
+          "english_term": "Support team",
+          "source_forms_found": [
+            "dəstək komandamızla"
+          ],
+          "do_not_use_azerbaijani": [
+            "support komandası",
+            "yardım komandası"
+          ],
+          "recommended_azerbaijani": [
+            "dəstək komandası"
+          ]
+        },
+        {
+          "id": "bf45ef92-e7ef-4673-9b73-bb48327e4bdd",
+          "status": "standardized",
+          "usage_note": "Use as the standard CTA for opening additional information.",
+          "english_term": "View details",
+          "source_forms_found": [
+            "təfərrüatlara baxın"
+          ],
+          "do_not_use_azerbaijani": [
+            "detallara baxın"
+          ],
+          "recommended_azerbaijani": [
+            "təfərrüatlara baxın"
+          ]
+        },
+        {
+          "id": "0fd9831a-7d6c-441c-9889-02d8dc8c3a0a",
+          "status": "normalize",
+          "usage_note": "Use the exact legal product name consistently and preserve approved capitalization.",
+          "english_term": "Terms and Conditions",
+          "source_forms_found": [
+            "Qaydalar və Şərtlərimizə əsasən"
+          ],
+          "do_not_use_azerbaijani": [
+            "İstifadə Şərtləri",
+            "Şərtlər və Qaydalar"
+          ],
+          "recommended_azerbaijani": [
+            "Qaydalar və Şərtlər"
+          ]
+        },
+        {
+          "id": "210fcabc-964f-49d3-9b9e-4126b732d9de",
+          "status": "context_dependent",
+          "usage_note": "Use bölmə for a section and bənd for a numbered legal clause.",
+          "english_term": "Section / clause",
+          "source_forms_found": [
+            "bölməsinə nəzər yetirin"
+          ],
+          "do_not_use_azerbaijani": [
+            "sekşn",
+            "klauza"
+          ],
+          "recommended_azerbaijani": [
+            "bölmə",
+            "bənd"
+          ]
+        },
+        {
+          "id": "0dbfaddd-6395-49c8-8deb-82aef34ced07",
+          "status": "normalize",
+          "usage_note": "Use təsdiqləmə in player-facing copy; KYC may remain as an internal or recognized abbreviation.",
+          "english_term": "Verification",
+          "source_forms_found": [
+            "təsdiqləmə prosesi tamamlandı"
+          ],
+          "do_not_use_azerbaijani": [
+            "verifikasiya"
+          ],
+          "recommended_azerbaijani": [
+            "təsdiqləmə"
+          ]
+        },
+        {
+          "id": "44b08784-df81-4bea-b62d-2873da9e57f0",
+          "status": "normalize",
+          "usage_note": "Use the full object when clarity is needed.",
+          "english_term": "Confirm email address",
+          "source_forms_found": [
+            "e-poçt ünvanınızı təsdiqləyin"
+          ],
+          "do_not_use_azerbaijani": [
+            "emaili təsdiqləmək"
+          ],
+          "recommended_azerbaijani": [
+            "e-poçt ünvanını təsdiqləmək"
+          ]
+        },
+        {
+          "id": "82a2082b-eb74-4146-b9b9-d2350eed7f27",
+          "status": "context_dependent",
+          "usage_note": "Use uğurlu for status labels and uğurla tamamlandı in sentences.",
+          "english_term": "Successful",
+          "source_forms_found": [
+            "uğurla tamamlandı"
+          ],
+          "do_not_use_azerbaijani": [
+            "müvəffəqiyyətli"
+          ],
+          "recommended_azerbaijani": [
+            "uğurlu",
+            "uğurla tamamlandı"
+          ]
+        },
+        {
+          "id": "9f6cf0ea-648f-44d4-9d8c-2493c46af47a",
+          "status": "standardized",
+          "usage_note": "Use for a request or transaction approved by the system or team.",
+          "english_term": "Approved",
+          "source_forms_found": [
+            "çıxarış təsdiqləndi"
+          ],
+          "do_not_use_azerbaijani": [
+            "approve edildi"
+          ],
+          "recommended_azerbaijani": [
+            "təsdiqləndi"
+          ]
+        },
+        {
+          "id": "48cee16c-b7e3-4881-b927-1d87a980884a",
+          "status": "context_dependent",
+          "usage_note": "Use tamamlandı for a process or transaction; bitdi may be used for events.",
+          "english_term": "Completed",
+          "source_forms_found": [
+            "uğurla tamamlandı"
+          ],
+          "do_not_use_azerbaijani": [
+            "bitdi"
+          ],
+          "recommended_azerbaijani": [
+            "tamamlandı"
+          ]
+        },
+        {
+          "id": "15f6fbd2-8fd6-4fe9-9e3b-54e9122d218b",
+          "status": "standardized",
+          "usage_note": "Preferred confirmation wording for completed deposits.",
+          "english_term": "Deposit successful",
+          "source_forms_found": [
+            "depozitiniz uğurla həyata keçirildi."
+          ],
+          "do_not_use_azerbaijani": [
+            "depozit uğurludur"
+          ],
+          "recommended_azerbaijani": [
+            "depozit uğurla həyata keçirildi"
+          ]
+        },
+        {
+          "id": "bdd81353-4757-4f21-8c77-6f727197705d",
+          "status": "standardized",
+          "usage_note": "Use when the deposit could not be processed.",
+          "english_term": "Deposit failed",
+          "source_forms_found": [
+            "depozitinizi emal edə bilmədik."
+          ],
+          "do_not_use_azerbaijani": [
+            "depozit uğursuz oldu"
+          ],
+          "recommended_azerbaijani": [
+            "depozit baş tutmadı"
+          ]
+        },
+        {
+          "id": "b5351789-5731-4c1e-b6fc-e1037fa79b2d",
+          "status": "standardized",
+          "usage_note": "Use when a manual or system adjustment is applied.",
+          "english_term": "Balance adjusted",
+          "source_forms_found": [
+            "balans düzəlişi tətbiq edildi"
+          ],
+          "do_not_use_azerbaijani": [
+            "balans dəyişdirildi"
+          ],
+          "recommended_azerbaijani": [
+            "balansa düzəliş edildi"
+          ]
+        },
+        {
+          "id": "51f6d518-b7d8-4457-a096-f48e375701f5",
+          "status": "standardized",
+          "usage_note": "Use simple natural Azerbaijani wording.",
+          "english_term": "Tournament started",
+          "source_forms_found": [
+            "turniriniz başladı",
+            "turnir başladı"
+          ],
+          "do_not_use_azerbaijani": [
+            "turnir start götürdü"
+          ],
+          "recommended_azerbaijani": [
+            "turnir başladı"
+          ]
+        },
+        {
+          "id": "7153be89-dcef-44c8-b319-d2a9e6cdc845",
+          "status": "standardized",
+          "usage_note": "Use başa çatdı in formal CRM copy.",
+          "english_term": "Tournament ended",
+          "source_forms_found": [
+            "turnir başa çatdı."
+          ],
+          "do_not_use_azerbaijani": [
+            "turnir bitdi"
+          ],
+          "recommended_azerbaijani": [
+            "turnir başa çatdı"
+          ]
+        },
+        {
+          "id": "98541bd9-05e0-49f2-970b-e988230f4c44",
+          "status": "standardized",
+          "usage_note": "Use the dative case with qoşulmaq.",
+          "english_term": "Join tournament",
+          "source_forms_found": [
+            "turnirə qoşulun"
+          ],
+          "do_not_use_azerbaijani": [
+            "turniri qoşulun"
+          ],
+          "recommended_azerbaijani": [
+            "turnirə qoşulun"
+          ]
+        },
+        {
+          "id": "35887410-1a6d-49fb-8392-99101f84c7d5",
+          "status": "context_dependent",
+          "usage_note": "Use sıralama for the ranked list and yer for a player’s place.",
+          "english_term": "Ranking / position",
+          "source_forms_found": [
+            "yeri tutdunuz"
+          ],
+          "do_not_use_azerbaijani": [
+            "rankinq",
+            "pozisiya"
+          ],
+          "recommended_azerbaijani": [
+            "sıralama",
+            "yer"
+          ]
+        },
+        {
+          "id": "e8b26981-6c7f-420d-a95c-8779825e6dc4",
+          "status": "context_dependent",
+          "usage_note": "Use mükafat unless the reward is specifically a bonus.",
+          "english_term": "Birthday reward",
+          "source_forms_found": [
+            "ad günü mükafatınız"
+          ],
+          "do_not_use_azerbaijani": [
+            "doğum günü bonusu"
+          ],
+          "recommended_azerbaijani": [
+            "ad günü mükafatı"
+          ]
+        },
+        {
+          "id": "a1a10d77-b9e8-4b6f-bd27-d4b501f96349",
+          "status": "context_dependent",
+          "usage_note": "Use ildönümü for the anniversary of registration or membership.",
+          "english_term": "Anniversary",
+          "source_forms_found": [
+            "ildönümü mükafatınız hazırdır"
+          ],
+          "do_not_use_azerbaijani": [
+            "yubiley"
+          ],
+          "recommended_azerbaijani": [
+            "ildönümü"
+          ]
+        },
+        {
+          "id": "7d4f087b-68c1-4954-b43a-5bb1f1c11986",
+          "status": "normalize",
+          "usage_note": "Use for moving to a higher loyalty level.",
+          "english_term": "Level up",
+          "source_forms_found": [
+            "Loyallıq səviyyəsi yeniləndi"
+          ],
+          "do_not_use_azerbaijani": [
+            "level artdı"
+          ],
+          "recommended_azerbaijani": [
+            "səviyyə yüksəldi"
+          ]
+        },
+        {
+          "id": "ea26d05f-9bcf-4e1c-8ca6-f001ebb0a62e",
+          "status": "context_dependent",
+          "usage_note": "Use təbrik edirik in full sentences; təbriklər may work as a short heading.",
+          "english_term": "Congratulations",
+          "source_forms_found": [
+            "təbrik edirik"
+          ],
+          "do_not_use_azerbaijani": [
+            "təbriklər"
+          ],
+          "recommended_azerbaijani": [
+            "təbrik edirik"
+          ]
+        },
+        {
+          "id": "565ad81a-29e7-44d5-bbd3-4c9c731f0e8a",
+          "status": "standardized",
+          "usage_note": "Preferred return greeting.",
+          "english_term": "Welcome back",
+          "source_forms_found": [
+            "yenidən xoş gəlmisiniz"
+          ],
+          "do_not_use_azerbaijani": [
+            "geri xoş gəldiniz"
+          ],
+          "recommended_azerbaijani": [
+            "yenidən xoş gəlmisiniz"
+          ]
+        }
+      ],
+      "purpose": "Royalé CRM localization glossary for English-to-Azerbaijani content",
+      "instructions": {
+        "grammar": "Apply correct Azerbaijani case, possessive suffixes, vowel harmony, number, agreement, punctuation, and capitalization without changing the approved meaning.",
+        "normalize": "Replace inconsistent source wording with the recommended form and follow usage_note.",
+        "missing_term": "If a term is absent from this glossary, translate it naturally from confirmed context without inventing campaign facts.",
+        "placeholders": "Preserve every placeholder exactly. Never translate, rename, remove, wrap, split, inflect, or change its capitalization.",
+        "source_forms": "source_forms_found are approved contextual examples, not additional campaign facts or mandatory wording.",
+        "standardized": "Use the recommended term consistently, applying only grammatically necessary Azerbaijani inflection.",
+        "protected_latin": "Preserve approved Latin product names and abbreviations such as VIP and KYC exactly where required.",
+        "source_priority": "Use the active task as the only source of campaign facts. Use this glossary only to control terminology and localization.",
+        "prohibited_terms": "Never use expressions listed in do_not_use_azerbaijani unless the active task contains a protected proper name that must be preserved exactly.",
+        "context_dependent": "Select the recommended form that matches the exact field, action, grammatical role, product, or sentence context described in usage_note.",
+        "recommended_terms": "Use recommended_azerbaijani according to status and usage_note."
+      },
+      "language_pair": "en_az",
+      "schema_version": "1.0",
+      "source_language": "EN",
+      "target_language": "AZ"
+    },
+    "setType": [
+      "localization",
+      "glossary",
+      "en_az"
+    ],
+    "createdAt": "2026-09-16T19:11:51.854Z",
+    "updatedAt": "2026-09-16T19:11:51.854Z"
+  },
+  {
+    "id": "75164ab8-1610-4758-ab41-1ee6efae81ff",
+    "glossaryName": "en_ru_glossary",
+    "allGlossRules": {
+      "entries": [
+        {
+          "id": "91d5a6ad-4bf9-4509-b293-2279bd5d4386",
+          "status": "standardized",
+          "usage_note": "Use «депозит» as a noun. In an action or CTA, use «пополнить счет».",
+          "english_term": "Deposit",
+          "do_not_use_russian": [
+            "деп",
+            "дэп"
+          ],
+          "source_forms_found": [
+            "депозит",
+            "ваш депозит"
+          ],
+          "recommended_russian": [
+            "депозит",
+            "пополнить счет"
+          ]
+        },
+        {
+          "id": "5d541b0f-d1de-4d8c-9598-27c1e434bb1f",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Withdrawal",
+          "do_not_use_russian": [
+            "снятие средств"
+          ],
+          "source_forms_found": [
+            "вывод средств",
+            "вывод"
+          ],
+          "recommended_russian": [
+            "вывод средств"
+          ]
+        },
+        {
+          "id": "ea43aa0d-731c-4e1e-8243-57e06f4850fe",
+          "status": "context_dependent",
+          "usage_note": "For a deposit use «способ оплаты». For a withdrawal use «способ вывода». Never mix the two contexts.",
+          "english_term": "Payment method",
+          "do_not_use_russian": [
+            "метод оплаты"
+          ],
+          "source_forms_found": [
+            "способ оплаты",
+            "способ вывода"
+          ],
+          "recommended_russian": [
+            "способ оплаты",
+            "способ вывода"
+          ]
+        },
+        {
+          "id": "368843ee-40b9-4ec1-b9b1-5d624eaf2069",
+          "status": "standardized",
+          "usage_note": "Base term for a player's funds.",
+          "english_term": "Funds",
+          "do_not_use_russian": [
+            "деньги"
+          ],
+          "source_forms_found": [
+            "средства",
+            "ваши средства"
+          ],
+          "recommended_russian": [
+            "средства"
+          ]
+        },
+        {
+          "id": "2bb7adf9-bcff-495d-b670-fd403f6acf80",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Balance",
+          "do_not_use_russian": [
+            "остаток на счету"
+          ],
+          "source_forms_found": [
+            "баланс",
+            "текущий баланс"
+          ],
+          "recommended_russian": [
+            "баланс"
+          ]
+        },
+        {
+          "id": "518afae5-afb7-4ad7-9f21-77b834297986",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Balance adjustment",
+          "do_not_use_russian": [
+            "правка баланса"
+          ],
+          "source_forms_found": [
+            "корректировка баланса",
+            "баланс изменен"
+          ],
+          "recommended_russian": [
+            "корректировка баланса"
+          ]
+        },
+        {
+          "id": "c129039f-498e-46d1-8664-50664d0a21b4",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Limit",
+          "do_not_use_russian": [
+            "предел"
+          ],
+          "source_forms_found": [
+            "лимит",
+            "лимиты"
+          ],
+          "recommended_russian": [
+            "лимит"
+          ]
+        },
+        {
+          "id": "621051be-349a-4e64-8ee9-b62c026a2b63",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Inactivity fee",
+          "do_not_use_russian": [
+            "плата за бездействие аккаунта"
+          ],
+          "source_forms_found": [
+            "комиссия за неактивность"
+          ],
+          "recommended_russian": [
+            "комиссия за неактивность"
+          ]
+        },
+        {
+          "id": "8cbe2da1-0e9e-49a0-b237-0a7994d270c0",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Bet",
+          "do_not_use_russian": [
+            "пари"
+          ],
+          "source_forms_found": [
+            "ставка",
+            "ваша ставка"
+          ],
+          "recommended_russian": [
+            "ставка"
+          ]
+        },
+        {
+          "id": "b5a4a1e8-6c9a-4937-bce7-f494079308ed",
+          "status": "normalize",
+          "usage_note": "Use «ставка аннулирована» consistently instead of mixing «аннулирована» and «недействительная» across fields.",
+          "english_term": "Bet voided",
+          "do_not_use_russian": [
+            "ставка отменена",
+            "возврат"
+          ],
+          "source_forms_found": [
+            "ставка аннулирована",
+            "была рассчитана как недействительная"
+          ],
+          "recommended_russian": [
+            "ставка аннулирована"
+          ]
+        },
+        {
+          "id": "e9253b0e-6a57-4cbd-a3a7-027fad977fe1",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Game",
+          "do_not_use_russian": [],
+          "source_forms_found": [
+            "игра"
+          ],
+          "recommended_russian": [
+            "игра"
+          ]
+        },
+        {
+          "id": "8d4ef409-7d0b-46bb-826c-56b3ef3e33c9",
+          "status": "standardized",
+          "usage_note": "Use as the approved CTA form.",
+          "english_term": "Start playing",
+          "do_not_use_russian": [
+            "начинайте играть"
+          ],
+          "source_forms_found": [
+            "начать игру"
+          ],
+          "recommended_russian": [
+            "начать игру"
+          ]
+        },
+        {
+          "id": "e4443e38-17f4-42be-8d6d-a1e4ff79a061",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Tournament",
+          "do_not_use_russian": [
+            "турнамент"
+          ],
+          "source_forms_found": [
+            "турнир",
+            "турниры"
+          ],
+          "recommended_russian": [
+            "турнир"
+          ]
+        },
+        {
+          "id": "7f21dead-0136-4b55-83ba-c54b907288ce",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Tournament win / winner",
+          "do_not_use_russian": [
+            "турнирная победа"
+          ],
+          "source_forms_found": [
+            "победа в турнире"
+          ],
+          "recommended_russian": [
+            "победа в турнире"
+          ]
+        },
+        {
+          "id": "9f064404-6f12-4981-8d8d-91c90b4253fa",
+          "status": "standardized",
+          "usage_note": "Use «награда» as the universal term for tournament and bonus rewards.",
+          "english_term": "Tournament reward",
+          "do_not_use_russian": [
+            "приз"
+          ],
+          "source_forms_found": [
+            "награда",
+            "ваша награда"
+          ],
+          "recommended_russian": [
+            "награда"
+          ]
+        },
+        {
+          "id": "e8fee099-35d2-4685-9be2-e42cd6c2ba03",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Prize pool",
+          "do_not_use_russian": [
+            "приз-фонд",
+            "прайз пул"
+          ],
+          "source_forms_found": [
+            "призовой фонд"
+          ],
+          "recommended_russian": [
+            "призовой фонд"
+          ]
+        },
+        {
+          "id": "b612f599-6aa6-473c-97a7-193c22e17197",
+          "status": "standardized",
+          "usage_note": "Use as part of a sentence, not as a standalone term. Preserve %FINISH_PLACE% exactly.",
+          "english_term": "Finish place",
+          "do_not_use_russian": [
+            "позиция"
+          ],
+          "source_forms_found": [
+            "заняли %FINISH_PLACE% место"
+          ],
+          "recommended_russian": [
+            "место"
+          ]
+        },
+        {
+          "id": "a3adbb70-1ae6-419d-b8d1-7e7cb12492f2",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Bonus",
+          "do_not_use_russian": [
+            "приз"
+          ],
+          "source_forms_found": [
+            "бонус"
+          ],
+          "recommended_russian": [
+            "бонус"
+          ]
+        },
+        {
+          "id": "5ff654e9-8a60-4a0a-a19f-186bb9bff163",
+          "status": "standardized",
+          "usage_note": "In compact body labels, «Бонус:» may be used when the context clearly identifies a Cash Bonus.",
+          "english_term": "Cash bonus",
+          "do_not_use_russian": [
+            "наличный бонус",
+            "кэш бонус"
+          ],
+          "source_forms_found": [
+            "денежный бонус",
+            "Бонус:"
+          ],
+          "recommended_russian": [
+            "денежный бонус"
+          ]
+        },
+        {
+          "id": "a3e990ff-8f1f-4694-a21d-e38ba96cba1c",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Free spins",
+          "do_not_use_russian": [
+            "фриспины"
+          ],
+          "source_forms_found": [
+            "бесплатные вращения"
+          ],
+          "recommended_russian": [
+            "бесплатные вращения"
+          ]
+        },
+        {
+          "id": "d609e706-4040-4541-9d33-6835ef9963b4",
+          "status": "standardized",
+          "usage_note": "Always use «э» in the second syllable: «кешбэк».",
+          "english_term": "Cashback",
+          "do_not_use_russian": [
+            "кешбек",
+            "кэшбэк"
+          ],
+          "source_forms_found": [
+            "кешбэк"
+          ],
+          "recommended_russian": [
+            "кешбэк"
+          ]
+        },
+        {
+          "id": "b4ead00d-bbe7-4a46-adb9-e8028fee28d7",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Activation",
+          "do_not_use_russian": [
+            "активирование",
+            "активейшн"
+          ],
+          "source_forms_found": [
+            "активация"
+          ],
+          "recommended_russian": [
+            "активация"
+          ]
+        },
+        {
+          "id": "ddd3ff53-272d-4c8c-a9e6-1f9728a03e70",
+          "status": "standardized",
+          "usage_note": "Apply grammatically correct singular or plural agreement.",
+          "english_term": "Expiry / available until",
+          "do_not_use_russian": [
+            "до истечения срока"
+          ],
+          "source_forms_found": [
+            "действует до",
+            "действуют до"
+          ],
+          "recommended_russian": [
+            "действует до"
+          ]
+        },
+        {
+          "id": "6dd10c9b-bff1-4fe3-b546-291ffb9d9766",
+          "status": "standardized",
+          "usage_note": "Preserve capitalization when used as the program name.",
+          "english_term": "Loyalty Program",
+          "do_not_use_russian": [
+            "программа верности",
+            "лоялти программа",
+            "лоялка"
+          ],
+          "source_forms_found": [
+            "Программа лояльности"
+          ],
+          "recommended_russian": [
+            "Программа лояльности"
+          ]
+        },
+        {
+          "id": "dfc1f0f6-f406-4ceb-b665-5b2b977184e8",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Level",
+          "do_not_use_russian": [
+            "ранг",
+            "левел"
+          ],
+          "source_forms_found": [
+            "уровень",
+            "ваш уровень"
+          ],
+          "recommended_russian": [
+            "уровень"
+          ]
+        },
+        {
+          "id": "162aad94-7a4a-4901-8144-a53311574558",
+          "status": "context_dependent",
+          "usage_note": "Use «преимущества» where a broad benefit statement is natural, such as a preheader. Use «привилегии» for specific loyalty-level or membership benefits.",
+          "english_term": "Benefits / Privileges",
+          "do_not_use_russian": [
+            "плюшки",
+            "бенефиты"
+          ],
+          "source_forms_found": [
+            "привилегии",
+            "преимущества"
+          ],
+          "recommended_russian": [
+            "привилегии",
+            "преимущества"
+          ]
+        },
+        {
+          "id": "ec1dd75e-b8e8-4073-90c5-d99d824b9280",
+          "status": "standardized",
+          "usage_note": "The capitalized Latin spelling «VIP Club» is locked.",
+          "english_term": "VIP Club",
+          "do_not_use_russian": [
+            "Вип-клуб",
+            "ВИП клуб"
+          ],
+          "source_forms_found": [
+            "VIP Club",
+            "VIP-клуб"
+          ],
+          "recommended_russian": [
+            "VIP Club"
+          ]
+        },
+        {
+          "id": "69f1ba9f-0e22-4b5c-a513-c55e1199beaa",
+          "status": "context_dependent",
+          "usage_note": "Use «VIP-статус» in a Title or compact status statement. Use «участник VIP Club» in Body copy when referring to the player. Preserve VIP Club exactly.",
+          "english_term": "VIP membership / status",
+          "do_not_use_russian": [
+            "членство VIP"
+          ],
+          "source_forms_found": [
+            "VIP-статус активирован",
+            "участник VIP Club"
+          ],
+          "recommended_russian": [
+            "VIP-статус",
+            "участник VIP Club"
+          ]
+        },
+        {
+          "id": "dde2bae2-7ddd-40fb-9321-9d4e5978cb36",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Account",
+          "do_not_use_russian": [
+            "учетная запись"
+          ],
+          "source_forms_found": [
+            "аккаунт",
+            "ваш аккаунт"
+          ],
+          "recommended_russian": [
+            "аккаунт"
+          ]
+        },
+        {
+          "id": "70a5bac2-26f7-4156-9b9c-1ef1472d817c",
+          "status": "standardized",
+          "usage_note": "Use «войти» as a verb or CTA and «вход» as a noun.",
+          "english_term": "Sign in / login",
+          "do_not_use_russian": [
+            "залогиниться",
+            "сделать логин"
+          ],
+          "source_forms_found": [
+            "войти",
+            "вход"
+          ],
+          "recommended_russian": [
+            "войти",
+            "вход"
+          ]
+        },
+        {
+          "id": "299752ad-3a54-4edd-934f-c9c3aae83d3e",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "New device",
+          "do_not_use_russian": [
+            "новый девайс"
+          ],
+          "source_forms_found": [
+            "новое устройство"
+          ],
+          "recommended_russian": [
+            "новое устройство"
+          ]
+        },
+        {
+          "id": "21fa3ec1-ac39-4be4-b433-4643b7c208c1",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Security alert",
+          "do_not_use_russian": [
+            "оповещение безопасности"
+          ],
+          "source_forms_found": [
+            "уведомление о безопасности"
+          ],
+          "recommended_russian": [
+            "уведомление о безопасности"
+          ]
+        },
+        {
+          "id": "eb915fb5-0dbc-45b2-9dc1-e6c69d104f6a",
+          "status": "context_dependent",
+          "usage_note": "This means restricted access, not a complete account block. Never strengthen it to «аккаунт заблокирован».",
+          "english_term": "Account access restricted",
+          "do_not_use_russian": [
+            "аккаунт заблокирован"
+          ],
+          "source_forms_found": [
+            "доступ к аккаунту был ограничен"
+          ],
+          "recommended_russian": [
+            "доступ к аккаунту ограничен"
+          ]
+        },
+        {
+          "id": "fd74ee21-b7b8-499a-9f75-539ee3a258ea",
+          "status": "standardized",
+          "usage_note": "Choose the form that best matches whether the source emphasizes account status or restored access.",
+          "english_term": "Account reactivated",
+          "do_not_use_russian": [
+            "аккаунт реактивирован"
+          ],
+          "source_forms_found": [
+            "аккаунт снова активен",
+            "доступ к аккаунту восстановлен"
+          ],
+          "recommended_russian": [
+            "аккаунт снова активен",
+            "доступ к аккаунту восстановлен"
+          ]
+        },
+        {
+          "id": "b864d9a4-f435-4340-9127-50a1f471b798",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Password",
+          "do_not_use_russian": [
+            "пассворд"
+          ],
+          "source_forms_found": [
+            "пароль"
+          ],
+          "recommended_russian": [
+            "пароль"
+          ]
+        },
+        {
+          "id": "c53f1176-d8c3-45e1-bd87-7bad105a65dd",
+          "status": "standardized",
+          "usage_note": "The two recommended forms are interchangeable according to sentence context.",
+          "english_term": "Email address",
+          "do_not_use_russian": [
+            "имейл",
+            "email"
+          ],
+          "source_forms_found": [
+            "адрес электронной почты",
+            "электронная почта"
+          ],
+          "recommended_russian": [
+            "адрес электронной почты",
+            "электронная почта"
+          ]
+        },
+        {
+          "id": "6982d774-2a21-4725-92e8-c7fcfa62bb52",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Phone number",
+          "do_not_use_russian": [
+            "телефонный номер"
+          ],
+          "source_forms_found": [
+            "номер телефона"
+          ],
+          "recommended_russian": [
+            "номер телефона"
+          ]
+        },
+        {
+          "id": "614beeed-3697-4fb0-814b-caa3ddfb341c",
+          "status": "context_dependent",
+          "usage_note": "Adapt the sentence to the exact action: sign-in, password change, email change, or phone-number change. Do not force one generic phrase.",
+          "english_term": "Don't recognize this activity",
+          "do_not_use_russian": [
+            "если вы не узнаёте это действие"
+          ],
+          "source_forms_found": [
+            "если этот вход выполнен не вами",
+            "если вы не изменяли пароль",
+            "если вы не изменяли электронную почту",
+            "если вы не изменяли номер телефона"
+          ],
+          "recommended_russian": [
+            "если это были не вы",
+            "если вы не..."
+          ]
+        },
+        {
+          "id": "3f61b56b-7815-43f5-ad44-8a4cdb56b45f",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Support team",
+          "do_not_use_russian": [
+            "команда поддержки"
+          ],
+          "source_forms_found": [
+            "служба поддержки",
+            "наша служба поддержки"
+          ],
+          "recommended_russian": [
+            "служба поддержки"
+          ]
+        },
+        {
+          "id": "6e3c356b-35dc-4239-9350-c27e7d22839b",
+          "status": "standardized",
+          "usage_note": "Preserve capitalization when used as the document name.",
+          "english_term": "Terms and Conditions",
+          "do_not_use_russian": [
+            "Условия использования"
+          ],
+          "source_forms_found": [
+            "Правила и условия"
+          ],
+          "recommended_russian": [
+            "Правила и условия"
+          ]
+        },
+        {
+          "id": "68eda308-ff84-4dc7-9bee-d7d40e136a6f",
+          "status": "standardized",
+          "usage_note": "Preserve %TOS_CLAUSE% exactly.",
+          "english_term": "Section / clause",
+          "do_not_use_russian": [
+            "раздел",
+            "статья"
+          ],
+          "source_forms_found": [
+            "пунктом %TOS_CLAUSE%"
+          ],
+          "recommended_russian": [
+            "пункт"
+          ]
+        },
+        {
+          "id": "a7e0372b-b92a-4609-b03a-0ad24106eaf3",
+          "status": "context_dependent",
+          "usage_note": "Use «верификация» in Subject or Title. In Body copy, use natural constructions with «проверка», such as «завершили проверку вашего аккаунта».",
+          "english_term": "Verification",
+          "do_not_use_russian": [
+            "подтверждение личности"
+          ],
+          "source_forms_found": [
+            "верификация",
+            "завершили проверку вашего аккаунта"
+          ],
+          "recommended_russian": [
+            "верификация",
+            "проверка"
+          ]
+        },
+        {
+          "id": "89834468-0f6e-4403-ad97-155483927fa3",
+          "status": "standardized",
+          "usage_note": "Do not use the word «email» in Russian customer-facing copy.",
+          "english_term": "Confirm email address",
+          "do_not_use_russian": [
+            "подтвердить имейл",
+            "подтвердить email"
+          ],
+          "source_forms_found": [
+            "подтвердите адрес электронной почты"
+          ],
+          "recommended_russian": [
+            "подтвердить адрес электронной почты"
+          ]
+        },
+        {
+          "id": "e16ca487-518f-44fc-ba30-9b4d25da882d",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Deposit successful",
+          "do_not_use_russian": [
+            "депозит сделан"
+          ],
+          "source_forms_found": [
+            "депозит успешно зачислен"
+          ],
+          "recommended_russian": [
+            "депозит успешно зачислен"
+          ]
+        },
+        {
+          "id": "8b345ec6-b3be-44cf-9f39-f228923334fb",
+          "status": "context_dependent",
+          "usage_note": "Use «не удалось обработать депозит» in a Subject and «не удалось выполнить депозит» in a Title when these field distinctions apply.",
+          "english_term": "Deposit failed",
+          "do_not_use_russian": [
+            "депозит не прошёл"
+          ],
+          "source_forms_found": [
+            "не удалось обработать депозит",
+            "не удалось выполнить депозит"
+          ],
+          "recommended_russian": [
+            "не удалось обработать депозит",
+            "не удалось выполнить депозит"
+          ]
+        },
+        {
+          "id": "3211bed5-ddac-452f-a38b-40d88574f104",
+          "status": "context_dependent",
+          "usage_note": "Use «вывод средств обработан» in a Subject and «средства отправлены» in a Title when these field distinctions apply.",
+          "english_term": "Withdrawal approved",
+          "do_not_use_russian": [
+            "вывод одобрен",
+            "деньги выведены"
+          ],
+          "source_forms_found": [
+            "вывод средств обработан",
+            "средства отправлены"
+          ],
+          "recommended_russian": [
+            "средства отправлены",
+            "вывод средств обработан"
+          ]
+        },
+        {
+          "id": "1c96e6fa-2968-4cc5-a8c7-5aa0b08110a0",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Tournament started",
+          "do_not_use_russian": [
+            "турнир стартовал"
+          ],
+          "source_forms_found": [
+            "турнир начался"
+          ],
+          "recommended_russian": [
+            "турнир начался"
+          ]
+        },
+        {
+          "id": "97782b88-4d99-45b5-9311-131ec5b7d829",
+          "status": "normalize",
+          "usage_note": "Prefer «турнир завершился» in a sentence describing the event and «турнир завершен» in a compact status or Title. Avoid inconsistent switching without a field-based reason.",
+          "english_term": "Tournament ended",
+          "do_not_use_russian": [
+            "турнир закончился"
+          ],
+          "source_forms_found": [
+            "турнир завершился",
+            "турнир завершен"
+          ],
+          "recommended_russian": [
+            "турнир завершен",
+            "турнир завершился"
+          ]
+        },
+        {
+          "id": "db85a48b-12d7-4212-8d75-0cc3e8050857",
+          "status": "standardized",
+          "usage_note": "Approved CTA form.",
+          "english_term": "Join tournament",
+          "do_not_use_russian": [
+            "присоединиться к турниру",
+            "перейти к турниру"
+          ],
+          "source_forms_found": [
+            "участвовать в турнире"
+          ],
+          "recommended_russian": [
+            "участвовать в турнире"
+          ]
+        },
+        {
+          "id": "857c53bd-4647-4ea6-9547-e348e767d01e",
+          "status": "context_dependent",
+          "usage_note": "Use the full form in a Subject or introductory mention. Use «подарок» in Body copy when the birthday context is already clear.",
+          "english_term": "Birthday reward",
+          "do_not_use_russian": [
+            "бонус на день рождения"
+          ],
+          "source_forms_found": [
+            "подарок ко дню рождения",
+            "подарок"
+          ],
+          "recommended_russian": [
+            "подарок ко дню рождения",
+            "подарок"
+          ]
+        },
+        {
+          "id": "15871ea2-742e-4f63-af63-331526fce081",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Anniversary",
+          "do_not_use_russian": [
+            "юбилей"
+          ],
+          "source_forms_found": [
+            "годовщина",
+            "в честь этой особой даты"
+          ],
+          "recommended_russian": [
+            "годовщина"
+          ]
+        },
+        {
+          "id": "1f9827d2-7627-43d9-a909-bd4d41536a6e",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Congratulations",
+          "do_not_use_russian": [
+            "поздравления"
+          ],
+          "source_forms_found": [
+            "поздравляем"
+          ],
+          "recommended_russian": [
+            "поздравляем"
+          ]
+        },
+        {
+          "id": "f53b9b88-8235-41f9-a49b-a351dd610966",
+          "status": "standardized",
+          "usage_note": "",
+          "english_term": "Welcome back",
+          "do_not_use_russian": [
+            "добро пожаловать обратно"
+          ],
+          "source_forms_found": [
+            "с возвращением"
+          ],
+          "recommended_russian": [
+            "с возвращением"
+          ]
+        }
+      ],
+      "purpose": "Royalé CRM localization glossary for English-to-Russian content",
+      "instructions": {
+        "grammar": "Apply grammatically correct Russian case, number, gender, agreement, punctuation, and capitalization without changing the approved meaning.",
+        "normalize": "Resolve inconsistent source wording using the recommended form and usage_note.",
+        "missing_term": "If a term is not covered by this glossary, translate it naturally from confirmed context without inventing campaign facts.",
+        "placeholders": "Preserve placeholders exactly. Never translate, rename, remove, wrap, split, or change their capitalization.",
+        "source_forms": "source_forms_found are approved contextual examples, not additional campaign facts and not mandatory wording.",
+        "standardized": "Use the recommended term consistently unless grammar requires a safe inflection.",
+        "protected_latin": "Preserve locked Latin names such as VIP Club exactly where required.",
+        "source_priority": "Use the active task as the source of facts. Use this glossary only to control terminology and localization.",
+        "prohibited_terms": "Never use expressions listed in do_not_use_russian unless the active task explicitly contains a protected proper name that must be preserved.",
+        "context_dependent": "Select the recommended form that matches the exact field, action, product, or sentence context described in usage_note.",
+        "recommended_terms": "Use recommended_russian according to the supplied status and usage_note."
+      },
+      "language_pair": "en_ru",
+      "schema_version": "1.0",
+      "source_language": "EN",
+      "target_language": "RU"
+    },
+    "setType": [
+      "localization",
+      "glossary",
+      "en_ru"
+    ],
+    "createdAt": "2026-09-16T15:22:27.784Z",
+    "updatedAt": "2026-09-16T15:22:27.784Z"
+  }
+]

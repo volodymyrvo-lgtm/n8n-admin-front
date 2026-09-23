@@ -11,6 +11,7 @@
     "ru": "Russian"
   },
   "nav": {
+    "backToHub": "All Flows",
     "allJobs": "All Jobs",
     "addJob": "Add Job",
     "ruleSets": "Rule Sets",
@@ -83,6 +84,9 @@
     "systemMessage": "System message",
     "systemMessagePlaceholder": "Select a system message",
     "systemMessageError": "Select a system message",
+    "llm": "LLM",
+    "llmPlaceholder": "Select a model",
+    "llmError": "Select a model",
     "mainRuleSet": "Main rule set",
     "mainRuleSetError": "Select a main rule set",
     "glossary": "Glossary",
@@ -326,6 +330,36 @@
         "title": "Edit term",
         "submit": "Save changes"
       }
+    }
+  },
+  "flowHub": {
+    "eyebrow": "Choose a flow",
+    "title": "What are we generating?",
+    "subtitle": "Each flow is its own toolkit for its own job. Content is ready - the rest is on the way.",
+    "cta": "Open",
+    "badge": {
+      "active": "Active",
+      "comingSoon": "Coming soon"
+    },
+    "content": {
+      "title": "Content Generation",
+      "description": "Jobs, rule sets, prompts and glossaries - everything that's already live."
+    },
+    "design": {
+      "title": "Design Generation",
+      "description": "Visuals, banners and ad creatives."
+    },
+    "acquisition": {
+      "title": "Acquisition Generation",
+      "description": "Materials and funnels for acquiring new users."
+    },
+    "seo": {
+      "title": "SEO Generation",
+      "description": "SEO copy, metadata and content optimized for search."
+    },
+    "smm": {
+      "title": "SMM Generation",
+      "description": "Content and posts for social media."
     }
   }
 }

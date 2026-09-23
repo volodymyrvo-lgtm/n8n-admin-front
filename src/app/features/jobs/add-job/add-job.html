@@ -85,6 +85,24 @@
       }
     </div>
 
+    <div class="form__field">
+      <label class="field-label" for="llm">{{ 'addJob.llm' | translate }}</label>
+      <div
+        class="field-control"
+        [class.field-control--invalid]="form.controls.llm.invalid && form.controls.llm.touched"
+      >
+        <select id="llm" formControlName="llm">
+          <option value="">{{ 'addJob.llmPlaceholder' | translate }}</option>
+          @for (option of llmOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+      @if (form.controls.llm.invalid && form.controls.llm.touched) {
+        <span class="form__error">{{ 'addJob.llmError' | translate }}</span>
+      }
+    </div>
+
     @if (!isLocalization()) {
       <div class="form__field">
         <label class="field-label" for="mainRuleSet">{{ 'addJob.mainRuleSet' | translate }}</label>

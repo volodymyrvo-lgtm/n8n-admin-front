@@ -36,4 +36,12 @@ describe('DashboardLayoutComponent', () => {
     expect(authServiceStub.logout).toHaveBeenCalled();
     expect(navigateSpy).toHaveBeenCalledWith('/login');
   });
+
+  it('links back to the flow hub', () => {
+    const fixture = TestBed.createComponent(DashboardLayoutComponent);
+    fixture.detectChanges();
+
+    const backLink = fixture.nativeElement.querySelector('.back-to-hub');
+    expect(backLink?.getAttribute('href')).toBe('/flows');
+  });
 });

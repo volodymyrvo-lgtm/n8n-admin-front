@@ -47,6 +47,7 @@ function makeFormValue(overrides: Partial<CreateJobFormValue> = {}): CreateJobFo
     humanizerRuleSetId: 'rule-3',
     promptId: 'prompt-1',
     glossaryId: null,
+    llm: 'claude_sonnet_5',
     ...overrides,
   };
 }
@@ -156,6 +157,7 @@ describe('JobsService', () => {
         taskDescription: 'id 2',
         ruleIds: ['rule-1', 'rule-2', 'rule-3'],
         sm: 'prompt-1',
+        llm: 'claude_sonnet_5',
       });
     });
 
@@ -183,6 +185,7 @@ describe('JobsService', () => {
         toneOfVoice: 'rule-2',
         humanizer: 'rule-3',
         sm: 'prompt-1',
+        llm: 'claude_sonnet_5',
         jobId: 'job-1',
       });
       expect(payload).not.toHaveProperty('jobType');
@@ -207,6 +210,15 @@ describe('JobsService', () => {
       expect(service.buildN8nPayload(makeFormValue({ promptId: null }), 'job-1').sm).toBe('');
     });
 
+    it('sends the selected model as `llm`, defaulting to an empty string when none is picked', () => {
+      const service = TestBed.inject(JobsService);
+
+      expect(service.buildN8nPayload(makeFormValue({ llm: 'gpt_6_astra' }), 'job-1').llm).toBe('gpt_6_astra');
+      expect(service.buildN8nPayload(makeFormValue({ llm: null }), 'job-1').llm).toBe('');
+      expect(service.buildBackendPayload(makeFormValue({ llm: 'gpt_6_sol' })).llm).toBe('gpt_6_sol');
+      expect(service.buildBackendPayload(makeFormValue({ llm: null })).llm).toBe('');
+    });
+
     it('builds a differently-shaped n8n payload for a localization job, with glossaries alongside an empty mainRuleSet', () => {
       const service = TestBed.inject(JobsService);
 
@@ -225,6 +237,7 @@ describe('JobsService', () => {
         humanizer: 'rule-3',
         glossaries: 'glossary-1',
         sm: 'prompt-1',
+        llm: 'claude_sonnet_5',
         jobId: 'job-1',
       });
     });

@@ -74,6 +74,7 @@ export class JobsService {
         (id): id is string => !!id,
       ),
       sm: value.promptId ?? '',
+      llm: value.llm ?? '',
     };
   }
 
@@ -105,6 +106,7 @@ export class JobsService {
         glossaries: value.glossaryId ?? '',
         // sm: value.promptId ?? '',
         sm: 'sm_2',
+        llm: value.llm ?? '',
         jobId,
       };
     }
@@ -119,6 +121,7 @@ export class JobsService {
       humanizer: value.humanizerRuleSetId ?? '',
       // sm: value.promptId ?? '',
       sm: 'sm_2',
+      llm: value.llm ?? '',
       jobId,
     };
   }
