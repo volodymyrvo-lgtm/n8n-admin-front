@@ -104,8 +104,7 @@ export class JobsService {
         toneOfVoice: value.toneOfVoiceRuleSetId ?? '',
         humanizer: value.humanizerRuleSetId ?? '',
         glossaries: value.glossaryId ?? '',
-        // sm: value.promptId ?? '',
-        sm: 'sm_2',
+        sm: value.promptId ?? '',
         llm: value.llm ?? '',
         jobId,
       };
@@ -119,8 +118,7 @@ export class JobsService {
       mainRuleSet: value.mainRuleSetId ?? '',
       toneOfVoice: value.toneOfVoiceRuleSetId ?? '',
       humanizer: value.humanizerRuleSetId ?? '',
-      // sm: value.promptId ?? '',
-      sm: 'sm_2',
+      sm: value.promptId ?? '',
       llm: value.llm ?? '',
       jobId,
     };
