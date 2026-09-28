@@ -68,7 +68,13 @@
       "taskStatus": "Task status",
       "steps": "Steps",
       "ruleSets": "Rule sets",
-      "noRuleSets": "No linked rule sets"
+      "noRuleSets": "No linked rule sets",
+      "llm": "LLM",
+      "systemMessage": "System message",
+      "glossary": "Glossary",
+      "tableUrl": "Data table",
+      "spend": "Spend",
+      "spendTotal": "Total"
     }
   },
   "addJob": {

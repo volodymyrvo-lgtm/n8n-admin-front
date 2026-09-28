@@ -137,6 +137,42 @@
                   <span class="field-label">{{ 'jobs.card.taskStatus' | translate }}</span>
                   <span>{{ run.taskStatus }}</span>
                 </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.llm' | translate }}</span>
+                  <span>{{ run.llm }}</span>
+                </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.systemMessage' | translate }}</span>
+                  <span>{{ promptName(run.sm) }}</span>
+                </div>
+                @if (run.glossaryId) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.glossary' | translate }}</span>
+                    <span>{{ glossaryName(run.glossaryId) }}</span>
+                  </div>
+                }
+                @if (run.tableUrl) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.tableUrl' | translate }}</span>
+                    <a class="job-card__table-link" [href]="run.tableUrl" target="_blank" rel="noopener">{{ run.tableUrl }}</a>
+                  </div>
+                }
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'jobs.card.spend' | translate }}</span>
+                <div class="job-card__spend-list">
+                  @for (entry of spendEntries(run.spend); track entry.key) {
+                    <div class="job-card__spend-row">
+                      <span>{{ entry.key }}</span>
+                      <span>{{ entry.value | currency: 'USD' }}</span>
+                    </div>
+                  }
+                  <div class="job-card__spend-row job-card__spend-row--total">
+                    <span>{{ 'jobs.card.spendTotal' | translate }}</span>
+                    <span>{{ spendTotal(run.spend) | currency: 'USD' }}</span>
+                  </div>
+                </div>
               </div>
 
               <div class="job-card__section">

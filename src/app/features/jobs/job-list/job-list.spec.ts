@@ -35,6 +35,11 @@ function makeRun(overrides: Partial<JobRun> = {}): JobRun {
     runDate: '2026-09-10T17:06:05.331Z',
     createdAt: '2026-09-10T17:05:31.419Z',
     updatedAt: '2026-09-10T17:06:19.640Z',
+    sm: 'prompt-1',
+    glossaryId: null,
+    llm: 'gpt_6_astra',
+    spend: { gpt_6_astra: 0.34 },
+    tableUrl: 'https://google.com',
     runnedById: 'user-1',
     ruleIds: ['rule-1'],
     ...overrides,
@@ -73,6 +78,10 @@ describe('JobListComponent', () => {
     httpMock
       .expectOne('http://localhost:3000/rules')
       .flush([{ id: 'rule-1', ruleName: 'Default routing', ruleSet: {}, setType: ['email'] }]);
+    httpMock
+      .expectOne('http://localhost:3000/prompts')
+      .flush([{ id: 'prompt-1', name: 'Default', message: 'Hi' }]);
+    httpMock.expectOne('http://localhost:3000/glossaries').flush([]);
     fixture.detectChanges();
     return { fixture };
   }

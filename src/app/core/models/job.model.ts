@@ -17,6 +17,13 @@ export type JobRunStatus = 'success' | 'failed' | 'pending';
  * A single execution of a job, as returned by the backend - e.g. an
  * onboarding email run triggered against a set of rules. This is the
  * real run history shown on the jobs page.
+ *
+ * `sm` is the id of the prompt used as the job's system message (see
+ * PromptsService), `glossaryId` is the glossary used for a localization
+ * run (null otherwise), `llm` is the model that ran the job, `spend` is
+ * the cost incurred per LLM key (usually just the one model in `llm`,
+ * but kept as a map since a job can in principle involve more than
+ * one), and `tableUrl` links out to the run's underlying data table.
  */
 export interface JobRun {
   id: string;
@@ -30,6 +37,11 @@ export interface JobRun {
   runDate: string | null;
   createdAt: string;
   updatedAt: string;
+  sm: string;
+  glossaryId: string | null;
+  llm: string;
+  spend: Record<string, number>;
+  tableUrl: string;
   runnedById: string;
   ruleIds: string[];
 }

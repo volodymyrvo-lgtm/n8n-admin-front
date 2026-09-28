@@ -68,7 +68,13 @@
       "taskStatus": "Статус задачи",
       "steps": "Шаги",
       "ruleSets": "Наборы правил",
-      "noRuleSets": "Нет связанных наборов правил"
+      "noRuleSets": "Нет связанных наборов правил",
+      "llm": "LLM",
+      "systemMessage": "Системное сообщение",
+      "glossary": "Глоссарий",
+      "tableUrl": "Таблица данных",
+      "spend": "Расходы",
+      "spendTotal": "Итого"
     }
   },
   "addJob": {

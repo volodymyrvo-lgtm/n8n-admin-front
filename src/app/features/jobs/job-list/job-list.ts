@@ -1,9 +1,11 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { JobRun, JobRunStatus, JobSteps, StepStatus } from '../../../core/models/job.model';
+import { GlossariesService } from '../../../core/services/glossaries.service';
 import { JobsService } from '../../../core/services/jobs.service';
+import { PromptsService } from '../../../core/services/prompts.service';
 import { RuleSetsService } from '../../../core/services/rule-sets.service';
 import { UsersService } from '../../../core/services/users.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state';
@@ -16,7 +18,7 @@ interface StepEntry {
 
 @Component({
   selector: 'app-job-list',
-  imports: [RouterLink, TranslatePipe, DatePipe, EmptyStateComponent, SpinnerComponent],
+  imports: [RouterLink, TranslatePipe, DatePipe, CurrencyPipe, EmptyStateComponent, SpinnerComponent],
   templateUrl: './job-list.html',
   styleUrl: './job-list.css',
 })
@@ -24,6 +26,8 @@ export class JobListComponent implements OnInit, OnDestroy {
   protected readonly jobsService = inject(JobsService);
   protected readonly usersService = inject(UsersService);
   protected readonly ruleSetsService = inject(RuleSetsService);
+  protected readonly promptsService = inject(PromptsService);
+  protected readonly glossariesService = inject(GlossariesService);
 
   protected readonly selectedJobTypes = signal<string[]>([]);
   protected readonly selectedUserId = signal<string | null>(null);
@@ -62,6 +66,8 @@ export class JobListComponent implements OnInit, OnDestroy {
     this.jobsService.loadJobRuns();
     this.usersService.loadUsers();
     this.ruleSetsService.loadRuleSets();
+    this.promptsService.loadPrompts();
+    this.glossariesService.loadGlossaries();
     this.jobsService.connectJobUpdates();
   }
 
@@ -117,6 +123,23 @@ export class JobListComponent implements OnInit, OnDestroy {
 
   protected ruleSetName(ruleId: string): string {
     return this.ruleSetsService.ruleSets().find((ruleSet) => ruleSet.id === ruleId)?.ruleName ?? ruleId;
+  }
+
+  protected promptName(promptId: string): string {
+    return this.promptsService.prompts().find((prompt) => prompt.id === promptId)?.name ?? promptId;
+  }
+
+  protected glossaryName(glossaryId: string): string {
+    return this.glossariesService.glossaries().find((glossary) => glossary.id === glossaryId)?.glossaryName ?? glossaryId;
+  }
+
+  /** Per-key spend rows for the card's spend breakdown, e.g. { gpt_6_astra: 0.34 } -> [{ key: 'gpt_6_astra', value: 0.34 }]. */
+  protected spendEntries(spend: Record<string, number>): { key: string; value: number }[] {
+    return Object.entries(spend).map(([key, value]) => ({ key, value }));
+  }
+
+  protected spendTotal(spend: Record<string, number>): number {
+    return Object.values(spend).reduce((sum, value) => sum + value, 0);
   }
 
   protected cardStatusClass(status: JobRunStatus): string {

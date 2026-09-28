@@ -262,3 +262,39 @@
   font: 400 13px 'Work Sans', system-ui, sans-serif;
   color: oklch(55% 0.01 260);
 }
+
+.job-card__table-link {
+  font: 500 13.5px 'Work Sans', system-ui, sans-serif;
+  color: var(--accent, #ff6b4a);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.job-card__table-link:hover {
+  text-decoration: underline;
+}
+
+.job-card__spend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.job-card__spend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font: 500 13px 'JetBrains Mono', monospace;
+  color: oklch(80% 0.006 260);
+  padding: 2px 0;
+}
+
+.job-card__spend-row--total {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid oklch(28% 0.015 260);
+  color: oklch(92% 0.004 260);
+  font-weight: 700;
+}
+
