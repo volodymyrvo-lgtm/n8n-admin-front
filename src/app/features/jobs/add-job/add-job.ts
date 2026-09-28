@@ -51,6 +51,7 @@ export class AddJobComponent implements  OnInit {
     promptId: ['', Validators.required],
     glossaryId: [''],
     llm: ['', Validators.required],
+    isTesting: [false],
   });
 
   /** Kept in sync with the jobType control so `mainRuleSets` can react to it. */
@@ -154,6 +155,7 @@ export class AddJobComponent implements  OnInit {
       promptId: raw.promptId || null,
       glossaryId: raw.glossaryId || null,
       llm: raw.llm || null,
+      isTesting: raw.isTesting,
     };
 
     this.jobsService.createJob(value, {

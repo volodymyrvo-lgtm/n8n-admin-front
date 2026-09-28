@@ -70,6 +70,11 @@ export const LLM_OPTIONS: readonly LlmOption[] = ['claude_sonnet_5', 'gpt_5_6_so
  * `llm` picks which model runs the job (see LlmOption) - unlike
  * `mainRuleSetId`/`glossaryId`, it's shown and required for every task
  * status, "new"/"update" and "localization" alike.
+ *
+ * `isTesting` doesn't change either payload's shape - it only decides
+ * which n8n webhook JobsService.createJob posts to (the real one, or
+ * environment.testN8nWebhookUrl), so a job can be trial-run against
+ * the test workflow without touching production.
  */
 export interface CreateJobFormValue {
   jobType: JobTypeOption;
@@ -83,6 +88,7 @@ export interface CreateJobFormValue {
   promptId: string | null;
   glossaryId: string | null;
   llm: string | null;
+  isTesting: boolean;
 }
 
 /**

@@ -5,7 +5,8 @@ import { vi } from 'vitest';
 import { CreateJobFormValue, JobRun } from '../models/job.model';
 import { JobsService } from './jobs.service';
 
-const N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook-test/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
+const N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
+const TEST_N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook-test/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
 
 const { mockSocket, ioMock } = vi.hoisted(() => {
   const socket = { on: vi.fn(), disconnect: vi.fn() };
@@ -48,6 +49,7 @@ function makeFormValue(overrides: Partial<CreateJobFormValue> = {}): CreateJobFo
     promptId: 'prompt-1',
     glossaryId: null,
     llm: 'claude_sonnet_5',
+    isTesting: false,
     ...overrides,
   };
 }
@@ -302,6 +304,17 @@ describe('JobsService', () => {
 
       expect(onBackendError).toHaveBeenCalled();
       expect(service.jobRuns().length).toBe(0);
+    });
+
+    it('posts to the test n8n webhook instead of production when isTesting is set', () => {
+      const service = TestBed.inject(JobsService);
+
+      service.createJob(makeFormValue({ isTesting: true }));
+
+      httpMock.expectOne('http://localhost:3000/jobs').flush(makeRun({ id: 'new-1' }));
+
+      httpMock.expectNone(N8N_URL);
+      httpMock.expectOne(TEST_N8N_URL).flush({});
     });
   });
 });

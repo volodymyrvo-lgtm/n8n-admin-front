@@ -8,7 +8,8 @@ import { JobsService } from '../../../core/services/jobs.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AddJobComponent } from './add-job';
 
-const N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook-test/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
+const N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
+const TEST_N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook-test/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
 
 // AddJobComponent's JobsService dependency now injects AuthService (for
 // the jobs websocket, see JobsService.connectJobUpdates) and issues real
@@ -81,6 +82,7 @@ describe('AddJobComponent', () => {
       promptId: 'prompt-1',
       glossaryId: '',
       llm: 'claude_sonnet_5',
+      isTesting: false,
     });
     fixture.componentInstance.submit();
 
@@ -153,6 +155,7 @@ describe('AddJobComponent', () => {
       promptId: 'prompt-1',
       glossaryId: '',
       llm: 'claude_sonnet_5',
+      isTesting: false,
     });
     fixture.componentInstance.submit();
 
@@ -174,6 +177,46 @@ describe('AddJobComponent', () => {
     httpMock.expectOne(N8N_URL).flush('down', { status: 500, statusText: 'Error' });
 
     expect(toastService.toasts().some((toast) => toast.type === 'error')).toBe(true);
+  });
+
+  it('sends the n8n trigger to the test webhook instead of production when isTesting is on', () => {
+    const fixture = TestBed.createComponent(AddJobComponent);
+    vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentInstance['form'].setValue({
+      jobType: 'sms',
+      taskStatus: 'new',
+      messageType: 'email',
+      board: 'ONBOARDING',
+      taskDescription: 'Welcome message',
+      mainRuleSetId: 'rule-1',
+      toneOfVoiceRuleSetId: 'rule-2',
+      humanizerRuleSetId: 'rule-3',
+      promptId: 'prompt-1',
+      glossaryId: '',
+      llm: 'claude_sonnet_5',
+      isTesting: true,
+    });
+    fixture.componentInstance.submit();
+
+    httpMock.expectOne('http://localhost:3000/jobs').flush({
+      id: 'new-1',
+      steps: { step1: { status: 'pending' } },
+      jobType: 'sms',
+      taskStatus: 'new',
+      messageType: 'email',
+      board: 'ONBOARDING',
+      taskDescription: 'Welcome message',
+      status: 'pending',
+      runDate: null,
+      createdAt: '2026-09-14T00:00:00.000Z',
+      updatedAt: '2026-09-14T00:00:00.000Z',
+      runnedById: 'user-1',
+      ruleIds: ['rule-1', 'rule-2', 'rule-3'],
+    });
+
+    httpMock.expectNone(N8N_URL);
+    httpMock.expectOne(TEST_N8N_URL).flush({});
   });
 
   it('only offers rule sets tagged for the tone-of-voice / humanizer roles in those fields', () => {
@@ -315,6 +358,7 @@ describe('AddJobComponent', () => {
         promptId: 'prompt-1',
         glossaryId: 'glossary-1',
         llm: 'gpt_6_astra',
+        isTesting: false,
       });
       // setValue() alone doesn't re-run syncLocalizationFields (an effect,
       // flushed by change detection) - without this, mainRuleSetId would

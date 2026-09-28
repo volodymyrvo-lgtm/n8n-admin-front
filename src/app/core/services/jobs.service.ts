@@ -14,10 +14,13 @@ import { AuthService } from './auth.service';
 
 const JOBS_URL = `${environment.apiBaseUrl}/jobs`;
 
-// See .env.example / scripts/generate-env.js - this is the n8n webhook
-// that actually runs a job, sourced from N8N_WEBHOOK_URL so the real
-// value never lives in source control.
+// See .env.example / scripts/generate-env.js - these are the n8n
+// webhooks that actually run a job, sourced from N8N_WEBHOOK_URL /
+// TEST_N8N_WEBHOOK_URL so the real values never live in source control.
+// Which one a given job posts to is picked per-request in createJob(),
+// based on that job's `isTesting` flag (see AddJobComponent's toggle).
 const N8N_WEBHOOK_URL = environment.n8nWebhookUrl;
+const TEST_N8N_WEBHOOK_URL = environment.testN8nWebhookUrl;
 
 export interface CreateJobCallbacks {
   /** Called once the job run has been created on our backend and added to `jobRuns`. */
@@ -141,7 +144,8 @@ export class JobsService {
         callbacks?.onBackendSuccess?.(created);
 
         const n8nPayload = this.buildN8nPayload(value, created.id);
-        this.http.post(N8N_WEBHOOK_URL, n8nPayload).subscribe({
+        const n8nUrl = value.isTesting ? TEST_N8N_WEBHOOK_URL : N8N_WEBHOOK_URL;
+        this.http.post(n8nUrl, n8nPayload).subscribe({
           error: () => callbacks?.onN8nError?.(),
         });
       },

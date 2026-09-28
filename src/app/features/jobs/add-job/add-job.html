@@ -165,6 +165,15 @@
       </div>
     </div>
 
+    <div class="form__field">
+      <label class="toggle-row">
+        <input type="checkbox" class="toggle-input" formControlName="isTesting" />
+        <span class="toggle-track"><span class="toggle-knob"></span></span>
+        <span class="toggle-label">{{ 'addJob.isTesting' | translate }}</span>
+      </label>
+      <p class="form__hint">{{ 'addJob.isTestingHint' | translate }}</p>
+    </div>
+
     <div class="form__actions">
       <button type="submit" class="btn-primary" [disabled]="form.invalid">{{ 'addJob.submit' | translate }}</button>
       <a routerLink="/jobs" class="link-muted">{{ 'addJob.cancel' | translate }}</a>

@@ -87,6 +87,8 @@
     "llm": "LLM",
     "llmPlaceholder": "Select a model",
     "llmError": "Select a model",
+    "isTesting": "Test environment",
+    "isTestingHint": "Sends this job's n8n trigger to the test webhook instead of production.",
     "mainRuleSet": "Main rule set",
     "mainRuleSetError": "Select a main rule set",
     "glossary": "Glossary",

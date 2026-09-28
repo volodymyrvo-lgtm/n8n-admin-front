@@ -32,3 +32,64 @@
 .field-control--invalid {
   border-color: oklch(62% 0.19 25);
 }
+
+.form__hint {
+  margin: 0;
+  font: 400 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(52% 0.01 260);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  width: 34px;
+  height: 19px;
+  border-radius: 999px;
+  background: oklch(32% 0.015 260);
+  position: relative;
+  flex: none;
+  transition: background 0.15s ease;
+}
+
+.toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: oklch(80% 0.005 260);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.toggle-input:checked + .toggle-track {
+  background: var(--accent);
+}
+
+.toggle-input:checked + .toggle-track .toggle-knob {
+  transform: translateX(15px);
+  background: #14151a;
+}
+
+.toggle-input:focus-visible + .toggle-track {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 30%, transparent);
+}
+
+.toggle-label {
+  font: 500 13.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(75% 0.006 260);
+}
