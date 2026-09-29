@@ -12,11 +12,11 @@
     </a>
   </div>
 
-  @if (!jobsService.jobRunsLoading() && jobsService.jobRuns().length > 0) {
+  @if (!jobsService.jobRunsLoading() && (jobsService.jobRunsTotal() > 0 || selectedJobTypes().length > 0 || selectedUserId())) {
     <div class="type-filter">
       <span class="field-label type-filter__label">{{ 'jobs.filterTypeLabel' | translate }}</span>
       <div class="type-filter__chips">
-        @for (jobType of jobTypeOptions(); track jobType) {
+        @for (jobType of jobTypeOptions; track jobType) {
           <button
             type="button"
             class="type-filter__chip"
@@ -58,9 +58,9 @@
 
   @if (jobsService.jobRunsLoading()) {
     <app-spinner [label]="'common.loading' | translate" />
-  } @else if (filteredJobRuns().length > 0) {
+  } @else if (jobsService.jobRuns().length > 0) {
     <div class="job-cards">
-      @for (run of filteredJobRuns(); track trackJobRun($index, run)) {
+      @for (run of jobsService.jobRuns(); track trackJobRun($index, run)) {
         <div class="job-card" [class]="cardStatusClass(run.status)">
           <button
             type="button"
@@ -216,6 +216,7 @@
         </div>
       }
     </div>
+    <app-paginator [page]="jobsService.jobRunsPage()" [totalPages]="totalPages()" (pageChange)="goToPage($event)" />
   } @else if (selectedJobTypes().length > 0 || selectedUserId()) {
     <app-empty-state
       [title]="'jobs.emptyFilteredTitle' | translate"

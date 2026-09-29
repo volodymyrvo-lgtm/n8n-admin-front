@@ -2,13 +2,14 @@ import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { JobRun, JobRunStatus, JobSteps, StepStatus } from '../../../core/models/job.model';
+import { JOB_TYPE_OPTIONS, JobRun, JobRunStatus, JobSteps, StepStatus } from '../../../core/models/job.model';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { JobsService } from '../../../core/services/jobs.service';
 import { PromptsService } from '../../../core/services/prompts.service';
 import { RuleSetsService } from '../../../core/services/rule-sets.service';
 import { UsersService } from '../../../core/services/users.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state';
+import { PaginatorComponent } from '../../../shared/components/paginator/paginator';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner';
 
 interface StepEntry {
@@ -18,7 +19,7 @@ interface StepEntry {
 
 @Component({
   selector: 'app-job-list',
-  imports: [RouterLink, TranslatePipe, DatePipe, CurrencyPipe, EmptyStateComponent, SpinnerComponent],
+  imports: [RouterLink, TranslatePipe, DatePipe, CurrencyPipe, EmptyStateComponent, SpinnerComponent, PaginatorComponent],
   templateUrl: './job-list.html',
   styleUrl: './job-list.css',
 })
@@ -33,37 +34,27 @@ export class JobListComponent implements OnInit, OnDestroy {
   protected readonly selectedUserId = signal<string | null>(null);
   private readonly expandedIds = signal<ReadonlySet<string>>(new Set());
 
-  /** Distinct job types actually present in the loaded runs - drives the type filter chips. */
-  protected readonly jobTypeOptions = computed(() => {
-    const types = new Set<string>();
-    for (const run of this.jobsService.jobRuns()) {
-      types.add(run.jobType);
-    }
-    return Array.from(types);
-  });
+  /**
+   * The full known set of job types, for the type filter chips. Jobs are
+   * paginated on the backend now (see JobsService.loadJobRuns) - `jobRuns`
+   * only ever holds one page, so the chips can no longer be derived from
+   * "types actually present in the loaded runs" the way they used to be.
+   */
+  protected readonly jobTypeOptions = JOB_TYPE_OPTIONS;
 
-  /** Distinct users who have run a job - drives the "run by" filter chips. */
-  protected readonly runnerOptions = computed(() => {
-    const ids = new Set<string>();
-    for (const run of this.jobsService.jobRuns()) {
-      ids.add(run.runnedById);
-    }
-    return Array.from(ids);
-  });
+  /**
+   * Every user, as candidates for the "run by" filter - same reasoning as
+   * `jobTypeOptions` above: with only one page loaded at a time, we can't
+   * derive "users who have actually run a job" from it any more.
+   */
+  protected readonly runnerOptions = computed(() => this.usersService.users().map((user) => user.id));
 
-  protected readonly filteredJobRuns = computed(() => {
-    const jobTypes = this.selectedJobTypes();
-    const userId = this.selectedUserId();
-    return this.jobsService.jobRuns().filter((run) => {
-      if (jobTypes.length > 0 && !jobTypes.includes(run.jobType)) {
-        return false;
-      }
-      return !(userId && run.runnedById !== userId);
-    });
-  });
+  protected readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.jobsService.jobRunsTotal() / this.jobsService.jobRunsLimit())),
+  );
 
   ngOnInit(): void {
-    this.jobsService.loadJobRuns();
+    this.refresh(1);
     this.usersService.loadUsers();
     this.ruleSetsService.loadRuleSets();
     this.promptsService.loadPrompts();
@@ -83,18 +74,36 @@ export class JobListComponent implements OnInit, OnDestroy {
     this.selectedJobTypes.update((current) =>
       current.includes(jobType) ? current.filter((type) => type !== jobType) : [...current, jobType],
     );
+    this.refresh(1);
   }
 
   protected clearJobTypeFilter(): void {
     this.selectedJobTypes.set([]);
+    this.refresh(1);
   }
 
   protected toggleUserFilter(userId: string): void {
     this.selectedUserId.update((current) => (current === userId ? null : userId));
+    this.refresh(1);
   }
 
   protected clearUserFilter(): void {
     this.selectedUserId.set(null);
+    this.refresh(1);
+  }
+
+  protected goToPage(page: number): void {
+    this.refresh(page);
+  }
+
+  /** (Re)fetches job runs for the given page from the backend, using the current filter selections - called on init, on every filter change (reset to page 1) and on every page navigation. */
+  private refresh(page: number): void {
+    this.jobsService.loadJobRuns({
+      page,
+      limit: 10,
+      jobTypes: this.selectedJobTypes(),
+      runnedById: this.selectedUserId(),
+    });
   }
 
   protected isExpanded(id: string): boolean {

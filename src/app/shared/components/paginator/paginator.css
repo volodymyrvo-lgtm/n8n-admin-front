@@ -1,0 +1,20 @@
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 6px 0 2px;
+}
+
+.paginator__label {
+  font: 500 12.5px 'JetBrains Mono', monospace;
+  color: oklch(65% 0.01 260);
+  min-width: 92px;
+  text-align: center;
+}
+
+.paginator .icon-btn:disabled {
+  opacity: 0.32;
+  cursor: default;
+  pointer-events: none;
+}

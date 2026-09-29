@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
+import { SetType } from '../../core/models/rule-set.model';
 import { AuthService, CurrentUser } from '../../core/services/auth.service';
 import { RuleSetsService } from '../../core/services/rule-sets.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -162,6 +163,66 @@ describe('RuleSetsComponent', () => {
 
     expect(el.querySelector('.data-table')).toBeNull();
     expect(el.querySelector('app-empty-state')).toBeTruthy();
+  });
+
+  it('paginates the list into pages of 20 and navigates with the paginator', () => {
+    const fixture = TestBed.createComponent(RuleSetsComponent);
+    const ruleSetsService = TestBed.inject(RuleSetsService);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/rules').flush([]);
+
+    const ruleSets = Array.from({ length: 25 }, (_, i) => ({
+      id: `${i + 1}`,
+      ruleName: `Rule ${i + 1}`,
+      ruleSet: {},
+      setType: ['email'] as SetType[],
+    }));
+    ruleSetsService.ruleSets.set(ruleSets);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.data-table__row').length).toBe(20);
+    expect(el.textContent).toContain('Rule 1');
+    expect(el.textContent).not.toContain('Rule 21');
+    expect((fixture.componentInstance as any).page()).toBe(1);
+    expect((fixture.componentInstance as any).totalPages()).toBe(2);
+
+    const nextButton = el.querySelectorAll('.paginator .icon-btn')[1] as HTMLButtonElement;
+    nextButton.click();
+    fixture.detectChanges();
+
+    const rows = el.querySelectorAll('.data-table__row');
+    expect(rows.length).toBe(5);
+    expect(rows[0].textContent).toContain('Rule 21');
+    expect((fixture.componentInstance as any).page()).toBe(2);
+  });
+
+  it('resets to page 1 when the type filter changes', () => {
+    const fixture = TestBed.createComponent(RuleSetsComponent);
+    const ruleSetsService = TestBed.inject(RuleSetsService);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/rules').flush([]);
+
+    const ruleSets = Array.from({ length: 25 }, (_, i) => ({
+      id: `${i + 1}`,
+      ruleName: `Rule ${i + 1}`,
+      ruleSet: {},
+      setType: ['email'] as SetType[],
+    }));
+    ruleSetsService.ruleSets.set(ruleSets);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    const nextButton = el.querySelectorAll('.paginator .icon-btn')[1] as HTMLButtonElement;
+    nextButton.click();
+    fixture.detectChanges();
+    expect((fixture.componentInstance as any).page()).toBe(2);
+
+    const emailChip = el.querySelector('.type-filter__chip[data-type="email"]') as HTMLButtonElement;
+    emailChip.click();
+    fixture.detectChanges();
+
+    expect((fixture.componentInstance as any).page()).toBe(1);
   });
 
   it('hides the edit and delete actions for a non-admin user', () => {

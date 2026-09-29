@@ -47,7 +47,7 @@
         <span class="field-label">{{ 'ruleSets.columnFields' | translate }}</span>
         <span class="field-label">{{ 'ruleSets.columnActions' | translate }}</span>
       </div>
-      @for (ruleSet of filteredRuleSets(); track ruleSet.id) {
+      @for (ruleSet of pagedRuleSets(); track ruleSet.id) {
         <div class="data-table__row" style="grid-template-columns: 2fr 1fr auto;">
           <span class="data-table__cell-primary">{{ ruleSet.ruleName }}</span>
           <span class="data-table__cell-muted">{{ fieldCount(ruleSet) }}</span>
@@ -93,6 +93,7 @@
         </div>
       }
     </div>
+    <app-paginator [page]="page()" [totalPages]="totalPages()" (pageChange)="page.set($event)" />
   } @else if (selectedTypes().length > 0) {
     <app-empty-state
       [title]="'ruleSets.emptyFilteredTitle' | translate"

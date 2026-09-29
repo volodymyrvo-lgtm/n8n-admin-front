@@ -1,6 +1,11 @@
 {
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "pagination": {
+      "prev": "Previous page",
+      "next": "Next page",
+      "pageOf": "Page {{page}} of {{total}}"
+    }
   },
   "app": {
     "title": "n8n Admin Panel"

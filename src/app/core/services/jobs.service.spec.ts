@@ -88,13 +88,28 @@ describe('JobsService', () => {
     localStorage.clear();
   });
 
-  it('fetches job runs from the backend', () => {
+  it('fetches a page of job runs from the backend, defaulting to page 1 / limit 20', () => {
     const service = TestBed.inject(JobsService);
     service.loadJobRuns();
 
-    httpMock.expectOne('http://localhost:3000/jobs').flush([makeRun()]);
+    const req = httpMock.expectOne('http://localhost:3000/jobs?page=1&limit=20');
+    expect(req.request.method).toBe('GET');
+    req.flush({ items: [makeRun()], total: 37, page: 1, limit: 20 });
 
     expect(service.jobRuns().length).toBe(1);
+    expect(service.jobRunsTotal()).toBe(37);
+    expect(service.jobRunsPage()).toBe(1);
+    expect(service.jobRunsLimit()).toBe(20);
+  });
+
+  it('sends the page, limit, job type and runnedById filters as query params', () => {
+    const service = TestBed.inject(JobsService);
+    service.loadJobRuns({ page: 2, limit: 10, jobTypes: ['email', 'sms'], runnedById: 'user-1' });
+
+    const req = httpMock.expectOne(
+      'http://localhost:3000/jobs?page=2&limit=10&jobType=email,sms&runnedById=user-1',
+    );
+    req.flush({ items: [], total: 0, page: 2, limit: 10 });
   });
 
   it('opens a socket to the jobs namespace with the current auth token', () => {
@@ -127,15 +142,15 @@ describe('JobsService', () => {
     expect(service.jobRuns()[0].status).toBe('success');
   });
 
-  it('prepends a new job run when job.updated references an id not yet in the list', () => {
+  it('ignores a job.updated event for an id not on the currently loaded page', () => {
     const service = TestBed.inject(JobsService);
     service.jobRuns.set([makeRun({ id: '1' })]);
     service.connectJobUpdates();
 
     updatedHandler()(makeRun({ id: '2' }));
 
-    expect(service.jobRuns().length).toBe(2);
-    expect(service.jobRuns()[0].id).toBe('2');
+    expect(service.jobRuns().length).toBe(1);
+    expect(service.jobRuns()[0].id).toBe('1');
   });
 
   it('disconnects the socket and allows reconnecting afterwards', () => {

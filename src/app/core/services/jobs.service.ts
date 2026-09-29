@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
 import { environment } from '@env';
@@ -9,10 +9,27 @@ import {
   CreateJobN8nLocalizationPayload,
   CreateJobN8nPayload,
   JobRun,
+  PaginatedJobRuns,
 } from '../models/job.model';
 import { AuthService } from './auth.service';
 
 const JOBS_URL = `${environment.apiBaseUrl}/jobs`;
+
+/** Default page size for `loadJobRuns()` - matches what the backend defaults to when `limit` is omitted, kept explicit here so JobListComponent's page-count math always has a real number to divide by. */
+const DEFAULT_JOB_RUNS_LIMIT = 20;
+
+/**
+ * Query params for `loadJobRuns()`. `jobTypes` supports the type filter's
+ * multi-select chips (sent as a single comma-separated `jobType` param -
+ * see the backend's pagination contract); `runnedById` is the single-select
+ * "run by" filter. Both are optional - an empty/omitted filter means "all".
+ */
+export interface JobRunsQuery {
+  page?: number;
+  limit?: number;
+  jobTypes?: string[];
+  runnedById?: string | null;
+}
 
 // See .env.example / scripts/generate-env.js - these are the n8n
 // webhooks that actually run a job, sourced from N8N_WEBHOOK_URL /
@@ -39,21 +56,50 @@ export class JobsService {
   private readonly authService = inject(AuthService);
   private socket: Socket | null = null;
 
-  /** Job run history, as shown on the jobs page. */
+  /**
+   * The currently loaded *page* of job runs, as shown on the jobs page -
+   * unlike RuleSetsService/PromptsService, this is never "all of them":
+   * job runs grow without bound, so the backend paginates GET /jobs and
+   * this only ever holds one page at a time (see `jobRunsTotal`/
+   * `jobRunsPage`/`jobRunsLimit` for what JobListComponent needs to
+   * render a pager around it).
+   */
   readonly jobRuns = signal<JobRun[]>([]);
   readonly jobRunsLoading = signal<boolean>(false);
+  readonly jobRunsTotal = signal<number>(0);
+  readonly jobRunsPage = signal<number>(1);
+  readonly jobRunsLimit = signal<number>(DEFAULT_JOB_RUNS_LIMIT);
 
-  loadJobRuns(): void {
+  /**
+   * Fetches one page of job runs. Re-call this (e.g. from
+   * JobListComponent's filter/page handlers) with the new `page`/
+   * `jobTypes`/`runnedById` whenever the user changes a filter or
+   * navigates a page - each call replaces `jobRuns` with that page's
+   * results, it doesn't accumulate across calls.
+   */
+  loadJobRuns(query: JobRunsQuery = {}): void {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? DEFAULT_JOB_RUNS_LIMIT;
+
+    let params = new HttpParams().set('page', page).set('limit', limit);
+    if (query.jobTypes && query.jobTypes.length > 0) {
+      params = params.set('jobType', query.jobTypes.join(','));
+    }
+    if (query.runnedById) {
+      params = params.set('runnedById', query.runnedById);
+    }
+
     this.jobRunsLoading.set(true);
-    this.http
-      .get<JobRun[]>(JOBS_URL)
-      .subscribe({
-        next: (result) => {
-          this.jobRuns.set(result);
-          this.jobRunsLoading.set(false);
-        },
-        error: () => this.jobRunsLoading.set(false),
-      });
+    this.http.get<PaginatedJobRuns>(JOBS_URL, { params }).subscribe({
+      next: (result) => {
+        this.jobRuns.set(result.items);
+        this.jobRunsTotal.set(result.total);
+        this.jobRunsPage.set(result.page);
+        this.jobRunsLimit.set(result.limit);
+        this.jobRunsLoading.set(false);
+      },
+      error: () => this.jobRunsLoading.set(false),
+    });
   }
 
   /**
@@ -140,6 +186,11 @@ export class JobsService {
 
     this.http.post<JobRun>(JOBS_URL, backendPayload).subscribe({
       next: (created) => {
+        // AddJobComponent navigates to /jobs right after this resolves, which
+        // remounts JobListComponent and reloads page 1 from scratch - this
+        // unshift just makes the freshly-created run visible immediately to
+        // any caller that doesn't navigate away (and to tests), even though
+        // it can transiently make `jobRuns` one longer than `jobRunsLimit`.
         this.jobRuns.update((runs) => [created, ...runs]);
         callbacks?.onBackendSuccess?.(created);
 
@@ -181,11 +232,18 @@ export class JobsService {
     this.socket = null;
   }
 
+  /**
+   * Only updates a job run already showing on the current page, in
+   * place - unlike before pagination existed, an update for an id we
+   * don't have is dropped rather than prepended, since we can no longer
+   * tell whether that job actually belongs on this page (it may belong
+   * on a different page, or be excluded by the active filters).
+   */
   private applyJobUpdate(job: JobRun): void {
     this.jobRuns.update((runs) => {
       const index = runs.findIndex((run) => run.id === job.id);
       if (index === -1) {
-        return [job, ...runs];
+        return runs;
       }
       const next = runs.slice();
       next[index] = job;

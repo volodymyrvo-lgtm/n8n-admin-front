@@ -46,6 +46,21 @@ export interface JobRun {
   ruleIds: string[];
 }
 
+/**
+ * GET /jobs is paginated on the backend (job runs grow without bound,
+ * unlike rule sets/prompts which stay small enough to load in full and
+ * page through on the frontend - see JobsService.loadJobRuns). `page` is
+ * 1-based; `total` is the number of job runs matching the current
+ * filters, across every page, and is what JobListComponent divides by
+ * `limit` to know how many pages to show.
+ */
+export interface PaginatedJobRuns {
+  items: JobRun[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 /** The channel a job's message goes out through. */
 export type JobTypeOption = 'email' | 'sms' | 'web_push' | 'notification_center' | 'in_app';
 export const JOB_TYPE_OPTIONS: readonly JobTypeOption[] = ['email', 'sms', 'web_push', 'notification_center', 'in_app'];

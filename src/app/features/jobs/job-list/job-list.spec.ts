@@ -6,8 +6,6 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
 import { JobRun } from '../../../core/models/job.model';
 import { JobsService } from '../../../core/services/jobs.service';
-import { RuleSetsService } from '../../../core/services/rule-sets.service';
-import { UsersService } from '../../../core/services/users.service';
 import { JobListComponent } from './job-list';
 
 // JobListComponent connects to the jobs websocket on init and disconnects
@@ -70,11 +68,25 @@ describe('JobListComponent', () => {
     httpMock.verify();
   });
 
-  function createAndLoad(runs: JobRun[]): { fixture: ReturnType<typeof TestBed.createComponent> } {
+  /**
+   * Loads the component with `items` as page 1 of the (backend-paginated,
+   * see JobsService.loadJobRuns) job list - `total` defaults to
+   * `items.length` (a single page's worth) but can be overridden to
+   * simulate more job runs existing than fit on this page.
+   */
+  function createAndLoad(
+    items: JobRun[],
+    options: { total?: number } = {},
+  ): { fixture: ReturnType<typeof TestBed.createComponent> } {
     const fixture = TestBed.createComponent(JobListComponent);
     fixture.detectChanges();
-    httpMock.expectOne('http://localhost:3000/jobs').flush(runs);
-    httpMock.expectOne('http://localhost:3000/users').flush([{ id: 'user-1', username: 'ada.lovelace', role: 'admin' }]);
+    httpMock
+      .expectOne('http://localhost:3000/jobs?page=1&limit=20')
+      .flush({ items, total: options.total ?? items.length, page: 1, limit: 20 });
+    httpMock.expectOne('http://localhost:3000/users').flush([
+      { id: 'user-1', username: 'ada.lovelace', role: 'admin' },
+      { id: 'user-2', username: 'grace', role: 'user' },
+    ]);
     httpMock
       .expectOne('http://localhost:3000/rules')
       .flush([{ id: 'rule-1', ruleName: 'Default routing', ruleSet: {}, setType: ['email'] }]);
@@ -126,7 +138,7 @@ describe('JobListComponent', () => {
     expect(el.querySelector('.job-card__body')).toBeNull();
   });
 
-  it('filters by job type', () => {
+  it('filters by job type, re-fetching page 1 from the backend with the jobType query param', () => {
     const { fixture } = createAndLoad([
       makeRun({ id: '1', jobType: 'email', taskDescription: 'Email run' }),
       makeRun({ id: '2', jobType: 'sms', taskDescription: 'SMS run' }),
@@ -141,13 +153,23 @@ describe('JobListComponent', () => {
     smsChip.click();
     fixture.detectChanges();
 
+    httpMock
+      .expectOne('http://localhost:3000/jobs?page=1&limit=20&jobType=sms')
+      .flush({
+        items: [makeRun({ id: '2', jobType: 'sms', taskDescription: 'SMS run' })],
+        total: 1,
+        page: 1,
+        limit: 20,
+      });
+    fixture.detectChanges();
+
     el = fixture.nativeElement as HTMLElement;
     expect(el.querySelectorAll('.job-card').length).toBe(1);
     expect(el.textContent).toContain('SMS run');
     expect(el.textContent).not.toContain('Email run');
   });
 
-  it('filters by the user who ran the job', () => {
+  it('filters by the user who ran the job, re-fetching page 1 with the runnedById query param', () => {
     const { fixture } = createAndLoad([
       makeRun({ id: '1', runnedById: 'user-1', taskDescription: 'Run by ada' }),
       makeRun({ id: '2', runnedById: 'user-2', taskDescription: 'Run by grace' }),
@@ -162,10 +184,69 @@ describe('JobListComponent', () => {
     userChip.click();
     fixture.detectChanges();
 
+    httpMock
+      .expectOne('http://localhost:3000/jobs?page=1&limit=20&runnedById=user-1')
+      .flush({
+        items: [makeRun({ id: '1', runnedById: 'user-1', taskDescription: 'Run by ada' })],
+        total: 1,
+        page: 1,
+        limit: 20,
+      });
+    fixture.detectChanges();
+
     el = fixture.nativeElement as HTMLElement;
     expect(el.querySelectorAll('.job-card').length).toBe(1);
     expect(el.textContent).toContain('Run by ada');
     expect(el.textContent).not.toContain('Run by grace');
+  });
+
+  it('keeps the filter chips visible (so a filter can be cleared) even when it matches nothing', () => {
+    const { fixture } = createAndLoad([makeRun({ id: '1', jobType: 'email' })]);
+
+    let el = fixture.nativeElement as HTMLElement;
+    const webPushChip = Array.from(el.querySelectorAll('.type-filter__chip')).find(
+      (chip) => chip.textContent?.trim() === 'web_push',
+    ) as HTMLButtonElement;
+    webPushChip.click();
+    fixture.detectChanges();
+
+    httpMock
+      .expectOne('http://localhost:3000/jobs?page=1&limit=20&jobType=web_push')
+      .flush({ items: [], total: 0, page: 1, limit: 20 });
+    fixture.detectChanges();
+
+    el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-empty-state')).toBeTruthy();
+    expect(el.querySelector('.type-filter')).toBeTruthy();
+    expect(el.querySelector('.type-filter__clear')).toBeTruthy();
+  });
+
+  it('pages through job runs via the backend when there are more than fit on one page', () => {
+    const page1Items = Array.from({ length: 20 }, (_, i) =>
+      makeRun({ id: `${i + 1}`, taskDescription: `Job ${i + 1}` }),
+    );
+    const { fixture } = createAndLoad(page1Items, { total: 25 });
+
+    const jobsService = TestBed.inject(JobsService);
+    let el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.job-card').length).toBe(20);
+    expect(jobsService.jobRunsPage()).toBe(1);
+
+    const nextButton = el.querySelectorAll('.paginator .icon-btn')[1] as HTMLButtonElement;
+    nextButton.click();
+    fixture.detectChanges();
+
+    const page2Items = Array.from({ length: 5 }, (_, i) =>
+      makeRun({ id: `${i + 21}`, taskDescription: `Job ${i + 21}` }),
+    );
+    httpMock
+      .expectOne('http://localhost:3000/jobs?page=2&limit=20')
+      .flush({ items: page2Items, total: 25, page: 2, limit: 20 });
+    fixture.detectChanges();
+
+    el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.job-card').length).toBe(5);
+    expect(jobsService.jobRunsPage()).toBe(2);
   });
 
   it('connects to live job updates on init and disconnects when the page is left', () => {

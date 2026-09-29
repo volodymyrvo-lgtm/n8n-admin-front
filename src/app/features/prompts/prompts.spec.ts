@@ -97,6 +97,33 @@ describe('PromptsComponent', () => {
     expect(promptsService.prompts().length).toBe(1);
   });
 
+  it('paginates the list into pages of 20 and navigates with the paginator', () => {
+    const fixture = TestBed.createComponent(PromptsComponent);
+    fixture.detectChanges();
+    const prompts = Array.from({ length: 25 }, (_, i) => ({
+      id: `p-${i + 1}`,
+      name: `Prompt ${i + 1}`,
+      message: 'Hi',
+    }));
+    httpMock.expectOne('http://localhost:3000/prompts').flush(prompts);
+    fixture.detectChanges();
+
+    let el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.data-table__row').length).toBe(20);
+    expect((fixture.componentInstance as any).page()).toBe(1);
+    expect((fixture.componentInstance as any).totalPages()).toBe(2);
+
+    const nextButton = el.querySelectorAll('.paginator .icon-btn')[1] as HTMLButtonElement;
+    nextButton.click();
+    fixture.detectChanges();
+
+    el = fixture.nativeElement as HTMLElement;
+    const rows = el.querySelectorAll('.data-table__row');
+    expect(rows.length).toBe(5);
+    expect(rows[0].textContent).toContain('Prompt 21');
+    expect((fixture.componentInstance as any).page()).toBe(2);
+  });
+
   it('hides the "new prompt" button and the edit/delete actions for a non-admin user', () => {
     TestBed.inject(AuthService).currentUser.set(NON_ADMIN_USER);
 
