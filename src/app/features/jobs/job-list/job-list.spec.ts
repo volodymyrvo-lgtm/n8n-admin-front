@@ -81,8 +81,8 @@ describe('JobListComponent', () => {
     const fixture = TestBed.createComponent(JobListComponent);
     fixture.detectChanges();
     httpMock
-      .expectOne('http://localhost:3000/jobs?page=1&limit=20')
-      .flush({ items, total: options.total ?? items.length, page: 1, limit: 20 });
+      .expectOne('http://localhost:3000/jobs?page=1&limit=10')
+      .flush({ items, total: options.total ?? items.length, page: 1, limit: 10 });
     httpMock.expectOne('http://localhost:3000/users').flush([
       { id: 'user-1', username: 'ada.lovelace', role: 'admin' },
       { id: 'user-2', username: 'grace', role: 'user' },
@@ -138,6 +138,24 @@ describe('JobListComponent', () => {
     expect(el.querySelector('.job-card__body')).toBeNull();
   });
 
+  it('shows the data table link as a short label (not the raw URL) pointing at the full tableUrl', () => {
+    const { fixture } = createAndLoad([makeRun({ tableUrl: 'https://example.com/sheet/abc' })]);
+
+    const header = fixture.nativeElement.querySelector('.job-card__header') as HTMLButtonElement;
+    header.click();
+    fixture.detectChanges();
+
+    const link = fixture.nativeElement.querySelector('.job-card__table-link') as HTMLAnchorElement;
+    // The test harness doesn't load real i18n translations (the pipe just
+    // echoes the key back) - asserting the key here, rather than the "Doc"
+    // text it resolves to for real users, is what the rest of this test
+    // suite does for translated labels (see the paginator spec).
+    expect(link.textContent?.trim()).toBe('jobs.card.tableUrlLabel');
+    expect(link.textContent?.trim()).not.toBe('https://example.com/sheet/abc');
+    expect(link.getAttribute('href')).toBe('https://example.com/sheet/abc');
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
+
   it('filters by job type, re-fetching page 1 from the backend with the jobType query param', () => {
     const { fixture } = createAndLoad([
       makeRun({ id: '1', jobType: 'email', taskDescription: 'Email run' }),
@@ -154,12 +172,12 @@ describe('JobListComponent', () => {
     fixture.detectChanges();
 
     httpMock
-      .expectOne('http://localhost:3000/jobs?page=1&limit=20&jobType=sms')
+      .expectOne('http://localhost:3000/jobs?page=1&limit=10&jobType=sms')
       .flush({
         items: [makeRun({ id: '2', jobType: 'sms', taskDescription: 'SMS run' })],
         total: 1,
         page: 1,
-        limit: 20,
+        limit: 10,
       });
     fixture.detectChanges();
 
@@ -185,12 +203,12 @@ describe('JobListComponent', () => {
     fixture.detectChanges();
 
     httpMock
-      .expectOne('http://localhost:3000/jobs?page=1&limit=20&runnedById=user-1')
+      .expectOne('http://localhost:3000/jobs?page=1&limit=10&runnedById=user-1')
       .flush({
         items: [makeRun({ id: '1', runnedById: 'user-1', taskDescription: 'Run by ada' })],
         total: 1,
         page: 1,
-        limit: 20,
+        limit: 10,
       });
     fixture.detectChanges();
 
@@ -211,8 +229,8 @@ describe('JobListComponent', () => {
     fixture.detectChanges();
 
     httpMock
-      .expectOne('http://localhost:3000/jobs?page=1&limit=20&jobType=web_push')
-      .flush({ items: [], total: 0, page: 1, limit: 20 });
+      .expectOne('http://localhost:3000/jobs?page=1&limit=10&jobType=web_push')
+      .flush({ items: [], total: 0, page: 1, limit: 10 });
     fixture.detectChanges();
 
     el = fixture.nativeElement as HTMLElement;
@@ -222,14 +240,14 @@ describe('JobListComponent', () => {
   });
 
   it('pages through job runs via the backend when there are more than fit on one page', () => {
-    const page1Items = Array.from({ length: 20 }, (_, i) =>
+    const page1Items = Array.from({ length: 10 }, (_, i) =>
       makeRun({ id: `${i + 1}`, taskDescription: `Job ${i + 1}` }),
     );
-    const { fixture } = createAndLoad(page1Items, { total: 25 });
+    const { fixture } = createAndLoad(page1Items, { total: 15 });
 
     const jobsService = TestBed.inject(JobsService);
     let el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelectorAll('.job-card').length).toBe(20);
+    expect(el.querySelectorAll('.job-card').length).toBe(10);
     expect(jobsService.jobRunsPage()).toBe(1);
 
     const nextButton = el.querySelectorAll('.paginator .icon-btn')[1] as HTMLButtonElement;
@@ -237,11 +255,11 @@ describe('JobListComponent', () => {
     fixture.detectChanges();
 
     const page2Items = Array.from({ length: 5 }, (_, i) =>
-      makeRun({ id: `${i + 21}`, taskDescription: `Job ${i + 21}` }),
+      makeRun({ id: `${i + 11}`, taskDescription: `Job ${i + 11}` }),
     );
     httpMock
-      .expectOne('http://localhost:3000/jobs?page=2&limit=20')
-      .flush({ items: page2Items, total: 25, page: 2, limit: 20 });
+      .expectOne('http://localhost:3000/jobs?page=2&limit=10')
+      .flush({ items: page2Items, total: 15, page: 2, limit: 10 });
     fixture.detectChanges();
 
     el = fixture.nativeElement as HTMLElement;

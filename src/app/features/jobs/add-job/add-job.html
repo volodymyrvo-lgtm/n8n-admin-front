@@ -67,103 +67,105 @@
       }
     </div>
 
-    <div class="form__field">
-      <label class="field-label" for="systemMessage">{{ 'addJob.systemMessage' | translate }}</label>
-      <div
-        class="field-control"
-        [class.field-control--invalid]="form.controls.promptId.invalid && form.controls.promptId.touched"
-      >
-        <select id="systemMessage" formControlName="promptId">
-          <option value="">{{ 'addJob.systemMessagePlaceholder' | translate }}</option>
-          @for (prompt of promptsService.prompts(); track prompt.id) {
-            <option [value]="prompt.id">{{ prompt.name }}</option>
-          }
-        </select>
-      </div>
-      @if (form.controls.promptId.invalid && form.controls.promptId.touched) {
-        <span class="form__error">{{ 'addJob.systemMessageError' | translate }}</span>
-      }
-    </div>
-
-    <div class="form__field">
-      <label class="field-label" for="llm">{{ 'addJob.llm' | translate }}</label>
-      <div
-        class="field-control"
-        [class.field-control--invalid]="form.controls.llm.invalid && form.controls.llm.touched"
-      >
-        <select id="llm" formControlName="llm">
-          <option value="">{{ 'addJob.llmPlaceholder' | translate }}</option>
-          @for (option of llmOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-          }
-        </select>
-      </div>
-      @if (form.controls.llm.invalid && form.controls.llm.touched) {
-        <span class="form__error">{{ 'addJob.llmError' | translate }}</span>
-      }
-    </div>
-
-    @if (!isLocalization()) {
+    @if (!isUpdate()) {
       <div class="form__field">
-        <label class="field-label" for="mainRuleSet">{{ 'addJob.mainRuleSet' | translate }}</label>
+        <label class="field-label" for="systemMessage">{{ 'addJob.systemMessage' | translate }}</label>
         <div
           class="field-control"
-          [class.field-control--invalid]="form.controls.mainRuleSetId.invalid && form.controls.mainRuleSetId.touched"
+          [class.field-control--invalid]="form.controls.promptId.invalid && form.controls.promptId.touched"
         >
-          <select id="mainRuleSet" formControlName="mainRuleSetId">
+          <select id="systemMessage" formControlName="promptId">
+            <option value="">{{ 'addJob.systemMessagePlaceholder' | translate }}</option>
+            @for (prompt of promptsService.prompts(); track prompt.id) {
+              <option [value]="prompt.id">{{ prompt.name }}</option>
+            }
+          </select>
+        </div>
+        @if (form.controls.promptId.invalid && form.controls.promptId.touched) {
+          <span class="form__error">{{ 'addJob.systemMessageError' | translate }}</span>
+        }
+      </div>
+
+      <div class="form__field">
+        <label class="field-label" for="llm">{{ 'addJob.llm' | translate }}</label>
+        <div
+          class="field-control"
+          [class.field-control--invalid]="form.controls.llm.invalid && form.controls.llm.touched"
+        >
+          <select id="llm" formControlName="llm">
+            <option value="">{{ 'addJob.llmPlaceholder' | translate }}</option>
+            @for (option of llmOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
+        @if (form.controls.llm.invalid && form.controls.llm.touched) {
+          <span class="form__error">{{ 'addJob.llmError' | translate }}</span>
+        }
+      </div>
+
+      @if (!isLocalization()) {
+        <div class="form__field">
+          <label class="field-label" for="mainRuleSet">{{ 'addJob.mainRuleSet' | translate }}</label>
+          <div
+            class="field-control"
+            [class.field-control--invalid]="form.controls.mainRuleSetId.invalid && form.controls.mainRuleSetId.touched"
+          >
+            <select id="mainRuleSet" formControlName="mainRuleSetId">
+              <option value="">{{ 'addJob.ruleSetPlaceholder' | translate }}</option>
+              @for (ruleSet of mainRuleSets(); track ruleSet.id) {
+                <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
+              }
+            </select>
+          </div>
+          @if (form.controls.mainRuleSetId.invalid && form.controls.mainRuleSetId.touched) {
+            <span class="form__error">{{ 'addJob.mainRuleSetError' | translate }}</span>
+          }
+        </div>
+      } @else {
+        <div class="form__field">
+          <label class="field-label" for="glossary">{{ 'addJob.glossary' | translate }}</label>
+          <div
+            class="field-control"
+            [class.field-control--invalid]="form.controls.glossaryId.invalid && form.controls.glossaryId.touched"
+          >
+            <select id="glossary" formControlName="glossaryId">
+              <option value="">{{ 'addJob.glossaryPlaceholder' | translate }}</option>
+              @for (glossary of glossariesService.glossaries(); track glossary.id) {
+                <option [value]="glossary.id">{{ glossary.glossaryName }}</option>
+              }
+            </select>
+          </div>
+          @if (form.controls.glossaryId.invalid && form.controls.glossaryId.touched) {
+            <span class="form__error">{{ 'addJob.glossaryError' | translate }}</span>
+          }
+        </div>
+      }
+
+      <div class="form__field">
+        <label class="field-label" for="toneOfVoiceRuleSet">{{ 'addJob.toneOfVoice' | translate }}</label>
+        <div class="field-control">
+          <select id="toneOfVoiceRuleSet" formControlName="toneOfVoiceRuleSetId">
             <option value="">{{ 'addJob.ruleSetPlaceholder' | translate }}</option>
-            @for (ruleSet of mainRuleSets(); track ruleSet.id) {
+            @for (ruleSet of toneOfVoiceRuleSets(); track ruleSet.id) {
               <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
             }
           </select>
         </div>
-        @if (form.controls.mainRuleSetId.invalid && form.controls.mainRuleSetId.touched) {
-          <span class="form__error">{{ 'addJob.mainRuleSetError' | translate }}</span>
-        }
       </div>
-    } @else {
+
       <div class="form__field">
-        <label class="field-label" for="glossary">{{ 'addJob.glossary' | translate }}</label>
-        <div
-          class="field-control"
-          [class.field-control--invalid]="form.controls.glossaryId.invalid && form.controls.glossaryId.touched"
-        >
-          <select id="glossary" formControlName="glossaryId">
-            <option value="">{{ 'addJob.glossaryPlaceholder' | translate }}</option>
-            @for (glossary of glossariesService.glossaries(); track glossary.id) {
-              <option [value]="glossary.id">{{ glossary.glossaryName }}</option>
+        <label class="field-label" for="humanizerRuleSet">{{ 'addJob.humanizer' | translate }}</label>
+        <div class="field-control">
+          <select id="humanizerRuleSet" formControlName="humanizerRuleSetId">
+            <option value="">{{ 'addJob.ruleSetPlaceholder' | translate }}</option>
+            @for (ruleSet of humanizerRuleSets(); track ruleSet.id) {
+              <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
             }
           </select>
         </div>
-        @if (form.controls.glossaryId.invalid && form.controls.glossaryId.touched) {
-          <span class="form__error">{{ 'addJob.glossaryError' | translate }}</span>
-        }
       </div>
     }
-
-    <div class="form__field">
-      <label class="field-label" for="toneOfVoiceRuleSet">{{ 'addJob.toneOfVoice' | translate }}</label>
-      <div class="field-control">
-        <select id="toneOfVoiceRuleSet" formControlName="toneOfVoiceRuleSetId">
-          <option value="">{{ 'addJob.ruleSetPlaceholder' | translate }}</option>
-          @for (ruleSet of toneOfVoiceRuleSets(); track ruleSet.id) {
-            <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
-          }
-        </select>
-      </div>
-    </div>
-
-    <div class="form__field">
-      <label class="field-label" for="humanizerRuleSet">{{ 'addJob.humanizer' | translate }}</label>
-      <div class="field-control">
-        <select id="humanizerRuleSet" formControlName="humanizerRuleSetId">
-          <option value="">{{ 'addJob.ruleSetPlaceholder' | translate }}</option>
-          @for (ruleSet of humanizerRuleSets(); track ruleSet.id) {
-            <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
-          }
-        </select>
-      </div>
-    </div>
 
     <div class="form__field">
       <label class="toggle-row">

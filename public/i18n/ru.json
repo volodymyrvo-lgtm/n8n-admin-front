@@ -78,6 +78,7 @@
       "systemMessage": "Системное сообщение",
       "glossary": "Глоссарий",
       "tableUrl": "Таблица данных",
+      "tableUrlLabel": "Doc",
       "spend": "Расходы",
       "spendTotal": "Итого"
     }
@@ -373,6 +374,10 @@
     "smm": {
       "title": "SMM-генерация",
       "description": "Контент и посты для социальных сетей."
+    },
+    "dashboard": {
+      "title": "Дашборд",
+      "description": "Метрики и аналитика по всем потокам."
     }
   }
 }

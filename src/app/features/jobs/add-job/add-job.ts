@@ -59,7 +59,7 @@ export class AddJobComponent implements  OnInit {
     initialValue: this.form.controls.jobType.value,
   });
 
-  /** Kept in sync with the taskStatus control so `isLocalization` can react to it. */
+  /** Kept in sync with the taskStatus control so `isLocalization`/`isUpdate` can react to it. */
   private readonly selectedTaskStatus = toSignal(this.form.controls.taskStatus.valueChanges, {
     initialValue: this.form.controls.taskStatus.value,
   });
@@ -67,10 +67,23 @@ export class AddJobComponent implements  OnInit {
   /**
    * A "localization" job is a different kind of job from the form's
    * perspective: no main rule set (a glossary is picked instead) and a
-   * differently-shaped n8n payload - see `syncLocalizationFields` below
+   * differently-shaped n8n payload - see `syncTaskStatusFields` below
    * and JobsService.buildN8nPayload.
    */
   protected readonly isLocalization = computed(() => this.selectedTaskStatus() === 'localization');
+
+  /**
+   * An "update" job only carries task metadata (jobType/taskStatus/
+   * messageType/board/taskDescription) - it has no system message, LLM,
+   * main rule set, tone of voice, or humanizer, so those fields are
+   * hidden in the form (see add-job.html) and cleared by
+   * `syncTaskStatusFields` below, the same way the main rule set is
+   * swapped out for "localization". JobsService.buildN8nPayload /
+   * buildBackendPayload don't need their own "update" branch for this -
+   * they already send '' for whichever of these fields the form leaves
+   * empty.
+   */
+  protected readonly isUpdate = computed(() => this.selectedTaskStatus() === 'update');
 
   /**
    * Rule sets tagged for the currently selected job type - only those make
@@ -105,29 +118,60 @@ export class AddJobComponent implements  OnInit {
   });
 
   /**
-   * Swaps which fields are required whenever `isLocalization` flips:
-   * a localization job has no main rule set (cleared and no longer
-   * required) but must have a glossary picked instead, and vice versa
-   * for any other task status. Also clears whichever field just became
-   * irrelevant so the form never submits a stale id for a field the UI
-   * no longer shows (see add-job.html).
+   * Swaps which fields are required/shown whenever the task status
+   * changes:
+   * - "localization": no main rule set (cleared, not required) - a
+   *   glossary is required in its place.
+   * - "update": no system message, LLM, main rule set, tone of voice,
+   *   or humanizer - all five are cleared and not required, since an
+   *   update job doesn't touch any of them (see add-job.html).
+   * - anything else ("new"): every field above behaves normally.
+   *
+   * Also clears whichever field just became irrelevant so the form
+   * never submits a stale id/value for a field the UI no longer shows.
    */
-  private readonly syncLocalizationFields = effect(() => {
+  private readonly syncTaskStatusFields = effect(() => {
     const localization = this.isLocalization();
+    const update = this.isUpdate();
+
     const mainRuleSetId = this.form.controls.mainRuleSetId;
     const glossaryId = this.form.controls.glossaryId;
+    const promptId = this.form.controls.promptId;
+    const llm = this.form.controls.llm;
+    const toneOfVoiceRuleSetId = this.form.controls.toneOfVoiceRuleSetId;
+    const humanizerRuleSetId = this.form.controls.humanizerRuleSetId;
 
     if (localization) {
       mainRuleSetId.clearValidators();
       mainRuleSetId.setValue('');
       glossaryId.setValidators(Validators.required);
     } else {
-      mainRuleSetId.setValidators(Validators.required);
       glossaryId.clearValidators();
       glossaryId.setValue('');
+      if (update) {
+        mainRuleSetId.clearValidators();
+        mainRuleSetId.setValue('');
+      } else {
+        mainRuleSetId.setValidators(Validators.required);
+      }
     }
+
+    if (update) {
+      promptId.clearValidators();
+      promptId.setValue('');
+      llm.clearValidators();
+      llm.setValue('');
+      toneOfVoiceRuleSetId.setValue('');
+      humanizerRuleSetId.setValue('');
+    } else {
+      promptId.setValidators(Validators.required);
+      llm.setValidators(Validators.required);
+    }
+
     mainRuleSetId.updateValueAndValidity({ emitEvent: false });
     glossaryId.updateValueAndValidity({ emitEvent: false });
+    promptId.updateValueAndValidity({ emitEvent: false });
+    llm.updateValueAndValidity({ emitEvent: false });
   });
 
   ngOnInit() {

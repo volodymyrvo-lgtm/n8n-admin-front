@@ -296,6 +296,144 @@ describe('AddJobComponent', () => {
     expect(fixture.componentInstance['form'].controls.mainRuleSetId.value).toBe('');
   });
 
+  describe('update task status', () => {
+    function loadFixtureData(fixture: ReturnType<typeof TestBed.createComponent<AddJobComponent>>): void {
+      fixture.detectChanges();
+      httpMock.expectOne('http://localhost:3000/rules').flush([
+        { id: 'rule-1', ruleName: 'Default routing', ruleSet: {}, setType: ['email'] },
+      ]);
+      httpMock.expectOne('http://localhost:3000/prompts').flush([{ id: 'prompt-1', name: 'Default', message: 'Hi' }]);
+      httpMock.expectOne('http://localhost:3000/glossaries').flush([]);
+      fixture.detectChanges();
+    }
+
+    it('hides system message, LLM, main rule set, tone of voice and humanizer once the task status is update, and clears them', () => {
+      const fixture = TestBed.createComponent(AddJobComponent);
+      loadFixtureData(fixture);
+
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('#systemMessage')).toBeTruthy();
+      expect(el.querySelector('#llm')).toBeTruthy();
+      expect(el.querySelector('#mainRuleSet')).toBeTruthy();
+      expect(el.querySelector('#toneOfVoiceRuleSet')).toBeTruthy();
+      expect(el.querySelector('#humanizerRuleSet')).toBeTruthy();
+
+      const form = fixture.componentInstance['form'];
+      form.controls.promptId.setValue('prompt-1');
+      form.controls.llm.setValue('claude_sonnet_5');
+      form.controls.mainRuleSetId.setValue('rule-1');
+      form.controls.toneOfVoiceRuleSetId.setValue('rule-2');
+      form.controls.humanizerRuleSetId.setValue('rule-3');
+      form.controls.taskStatus.setValue('update');
+      fixture.detectChanges();
+
+      expect(el.querySelector('#systemMessage')).toBeNull();
+      expect(el.querySelector('#llm')).toBeNull();
+      expect(el.querySelector('#mainRuleSet')).toBeNull();
+      expect(el.querySelector('#glossary')).toBeNull();
+      expect(el.querySelector('#toneOfVoiceRuleSet')).toBeNull();
+      expect(el.querySelector('#humanizerRuleSet')).toBeNull();
+
+      // Every field the UI just hid is cleared and no longer required...
+      expect(form.controls.promptId.value).toBe('');
+      expect(form.controls.llm.value).toBe('');
+      expect(form.controls.mainRuleSetId.value).toBe('');
+      expect(form.controls.toneOfVoiceRuleSetId.value).toBe('');
+      expect(form.controls.humanizerRuleSetId.value).toBe('');
+      expect(form.valid).toBe(false); // taskDescription is still untouched/empty
+
+      form.controls.taskDescription.setValue('Move user to onboarding board');
+      expect(form.valid).toBe(true);
+
+      form.controls.taskStatus.setValue('new');
+      fixture.detectChanges();
+
+      expect(el.querySelector('#systemMessage')).toBeTruthy();
+      expect(el.querySelector('#llm')).toBeTruthy();
+      expect(el.querySelector('#mainRuleSet')).toBeTruthy();
+      expect(form.controls.promptId.valid).toBe(false);
+      expect(form.controls.llm.valid).toBe(false);
+      expect(form.controls.mainRuleSetId.valid).toBe(false);
+    });
+
+    it('posts an update job with empty sm/llm/ruleIds and mainRuleSet/toneOfVoice/humanizer', () => {
+      const fixture = TestBed.createComponent(AddJobComponent);
+      const router = TestBed.inject(Router);
+      vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+      loadFixtureData(fixture);
+
+      fixture.componentInstance['form'].setValue({
+        jobType: 'email',
+        taskStatus: 'update',
+        messageType: 'email',
+        board: 'ONBOARDING',
+        taskDescription: 'Move user to onboarding board',
+        mainRuleSetId: '',
+        toneOfVoiceRuleSetId: '',
+        humanizerRuleSetId: '',
+        promptId: '',
+        glossaryId: '',
+        llm: '',
+        isTesting: false,
+      });
+      // setValue() alone doesn't re-run syncTaskStatusFields (an effect,
+      // flushed by change detection) - without this, mainRuleSetId/
+      // promptId/llm would still carry their stale "required" validators
+      // from before the task status flipped, and the form would wrongly
+      // report itself invalid.
+      fixture.detectChanges();
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body).toEqual({
+        steps: { step1: { status: 'pending' } },
+        jobType: 'email',
+        taskStatus: 'update',
+        messageType: 'email',
+        board: 'ONBOARDING',
+        taskDescription: 'Move user to onboarding board',
+        ruleIds: [],
+        sm: '',
+        llm: '',
+      });
+      backendReq.flush({
+        id: 'new-3',
+        steps: { step1: { status: 'pending' } },
+        jobType: 'email',
+        taskStatus: 'update',
+        messageType: 'email',
+        board: 'ONBOARDING',
+        taskDescription: 'Move user to onboarding board',
+        status: 'pending',
+        runDate: null,
+        createdAt: '2026-09-14T00:00:00.000Z',
+        updatedAt: '2026-09-14T00:00:00.000Z',
+        sm: '',
+        glossaryId: null,
+        llm: '',
+        spend: {},
+        tableUrl: '',
+        runnedById: 'user-1',
+        ruleIds: [],
+      });
+
+      const n8nReq = httpMock.expectOne(N8N_URL);
+      expect(n8nReq.request.body).toEqual({
+        taskStatus: 'update',
+        messageType: 'email',
+        board: 'ONBOARDING',
+        taskDescription: 'Move user to onboarding board',
+        mainRuleSet: '',
+        toneOfVoice: '',
+        humanizer: '',
+        sm: '',
+        llm: '',
+        jobId: 'new-3',
+      });
+      n8nReq.flush({});
+    });
+  });
+
   describe('localization task status', () => {
     function loadFixtureData(fixture: ReturnType<typeof TestBed.createComponent<AddJobComponent>>): void {
       fixture.detectChanges();

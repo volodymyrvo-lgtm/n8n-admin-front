@@ -78,6 +78,7 @@
       "systemMessage": "System message",
       "glossary": "Glossary",
       "tableUrl": "Data table",
+      "tableUrlLabel": "Doc",
       "spend": "Spend",
       "spendTotal": "Total"
     }
@@ -373,6 +374,10 @@
     "smm": {
       "title": "SMM Generation",
       "description": "Content and posts for social media."
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Metrics and insights across every flow."
     }
   }
 }

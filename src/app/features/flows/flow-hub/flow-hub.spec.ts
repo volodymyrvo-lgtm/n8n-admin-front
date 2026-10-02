@@ -68,7 +68,7 @@ describe('FlowHubComponent', () => {
     expect(contentLink?.getAttribute('href')).toBe('/jobs');
 
     const soonButtons = el.querySelectorAll('.flow-card--soon');
-    expect(soonButtons.length).toBe(4);
+    expect(soonButtons.length).toBe(5);
     soonButtons.forEach((button) => {
       expect(button.tagName).toBe('BUTTON');
       expect((button as HTMLButtonElement).disabled).toBe(true);

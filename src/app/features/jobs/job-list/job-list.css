@@ -208,11 +208,18 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  /* Lets the grid item shrink below its content's natural width (e.g. a
+     long email in "Run by") instead of overflowing into the next column -
+     grid items default to min-width: auto, which ignores the track size. */
+  min-width: 0;
 }
 
 .job-card__meta-item span:last-child {
   font: 500 13.5px 'Work Sans', system-ui, sans-serif;
   color: oklch(88% 0.004 260);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .job-card__section {

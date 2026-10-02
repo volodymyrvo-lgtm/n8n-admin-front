@@ -123,7 +123,7 @@
               <div class="job-card__meta">
                 <div class="job-card__meta-item">
                   <span class="field-label">{{ 'jobs.card.runBy' | translate }}</span>
-                  <span>{{ runnerName(run.runnedById) }}</span>
+                  <span [title]="runnerName(run.runnedById)">{{ runnerName(run.runnedById) }}</span>
                 </div>
                 <div class="job-card__meta-item">
                   <span class="field-label">{{ 'jobs.card.runDate' | translate }}</span>
@@ -154,7 +154,7 @@
                 @if (run.tableUrl) {
                   <div class="job-card__meta-item">
                     <span class="field-label">{{ 'jobs.card.tableUrl' | translate }}</span>
-                    <a class="job-card__table-link" [href]="run.tableUrl" target="_blank" rel="noopener">{{ run.tableUrl }}</a>
+                    <a class="job-card__table-link" [href]="run.tableUrl" target="_blank" rel="noopener">{{ 'jobs.card.tableUrlLabel' | translate }}</a>
                   </div>
                 }
               </div>
