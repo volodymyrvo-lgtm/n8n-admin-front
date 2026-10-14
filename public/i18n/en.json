@@ -377,7 +377,99 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "description": "Metrics and insights across every flow."
+      "description": "LLM spend, requests and tokens by flow, type and model."
+    }
+  },
+  "usage": {
+    "title": "Dashboard",
+    "subtitle": "LLM spend, requests and tokens by flow type, flow and model.",
+    "filters": {
+      "title": "Filters",
+      "period": "Period",
+      "from": "From",
+      "to": "To",
+      "type": "Type",
+      "model": "Model",
+      "flow": "Flow",
+      "reset": "Clear filters",
+      "clear": "Clear"
+    },
+    "presets": {
+      "yesterday": "Yesterday",
+      "last7": "7 days",
+      "last30": "30 days",
+      "thisMonth": "This month",
+      "thisQuarter": "This quarter"
+    },
+    "granularity": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter"
+    },
+    "dimension": {
+      "llmMod": "Model",
+      "type": "Type",
+      "flow": "Flow"
+    },
+    "kpi": {
+      "title": "Totals for the period",
+      "cost": "Spend",
+      "requests": "Requests",
+      "inputTokens": "Input tokens",
+      "outputTokens": "Output tokens"
+    },
+    "chart": {
+      "title": "Spend over time",
+      "step": "Time step",
+      "splitBy": "Split by",
+      "total": "Total",
+      "aria": "Stacked bar chart of spend over time",
+      "partialNote": "Faded bars are periods that are still in progress or only partly inside the selected range, so they are not comparable with full periods.",
+      "view": "Chart type",
+      "donutAria": "Doughnut chart of spend shares",
+      "noSpend": "No spend in this period to split.",
+      "others": "Others ({{count}})",
+      "donutTitle": "Spend share"
+    },
+    "period": {
+      "ongoing": "In progress - data up to yesterday only",
+      "partial": "Partial period"
+    },
+    "breakdown": {
+      "byType": "Spend by type",
+      "byModel": "Spend by model",
+      "noTokens": "{{requests}} requests, but the model reported no tokens or cost"
+    },
+    "empty": {
+      "title": "No data for this period",
+      "description": "Try another date range or clear the type / model / flow filters."
+    },
+    "noDataAtAll": {
+      "title": "No usage data yet",
+      "description": "Data is loaded once a day, in the morning, and always up to yesterday."
+    },
+    "error": {
+      "generic": "Could not load the data. Please try again.",
+      "filters": "Could not load the dashboard filters.",
+      "retry": "Retry"
+    },
+    "types": {
+      "new_email_generation": "Email generation",
+      "email_localization": "Email localization",
+      "new_sms_generation": "SMS generation",
+      "sms_localization": "SMS localization",
+      "new_webpush_generation": "Web Push generation",
+      "webpush_localization": "Web Push localization",
+      "new_inapp_generation": "In-App generation",
+      "inapp_localization": "In-App localization",
+      "new_nc_generation": "Notification Center generation",
+      "nc_localization": "Notification Center localization",
+      "other": "Other"
+    },
+    "view": {
+      "bars": "Bars over time",
+      "donut": "Doughnut: share of total"
     }
   }
 }

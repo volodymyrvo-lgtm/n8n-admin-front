@@ -127,7 +127,7 @@
           </div>
         </button>
 
-        <button type="button" class="flow-card flow-card--soon" disabled>
+        <a routerLink="/usage" class="flow-card flow-card--active">
           <div class="flow-card__top">
             <div class="flow-card__icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -137,13 +137,19 @@
                 <rect x="3" y="17" width="7" height="4" rx="1.2"></rect>
               </svg>
             </div>
-            <span class="flow-card__badge flow-card__badge--soon">{{ 'flowHub.badge.comingSoon' | translate }}</span>
+            <span class="flow-card__badge flow-card__badge--active">{{ 'flowHub.badge.active' | translate }}</span>
           </div>
           <div>
             <h2 class="flow-card__title">{{ 'flowHub.dashboard.title' | translate }}</h2>
             <p class="flow-card__desc">{{ 'flowHub.dashboard.description' | translate }}</p>
           </div>
-        </button>
+          <div class="flow-card__cta">
+            <span>{{ 'flowHub.cta' | translate }}</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path>
+            </svg>
+          </div>
+        </a>
 
       </div>
     </div>

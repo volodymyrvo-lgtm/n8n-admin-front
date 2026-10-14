@@ -24,6 +24,12 @@ export const routes: Routes = [
         path: 'flows',
         loadComponent: () => import('./features/flows/flow-hub/flow-hub').then((m) => m.FlowHubComponent),
       },
+      // LLM spend dashboard, opened from the "Dashboard" tile on the hub.
+      // A standalone page (own top bar, no Content Generation sidebar).
+      {
+        path: 'usage',
+        loadComponent: () => import('./features/llm-usage/llm-usage').then((m) => m.LlmUsageComponent),
+      },
       {
         path: '',
         loadComponent: () =>

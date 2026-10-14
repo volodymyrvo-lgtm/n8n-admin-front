@@ -1,0 +1,33 @@
+<button
+  type="button"
+  class="ms__button"
+  [class.ms__button--active]="selected().length > 0"
+  [class.ms__button--open]="open()"
+  aria-haspopup="true"
+  [attr.aria-expanded]="open()"
+  [attr.title]="selectedSummary() || null"
+  (click)="toggleOpen()"
+>
+  <span class="ms__label">{{ label() }}</span>
+  @if (selected().length > 0) {
+    <span class="ms__count">{{ selected().length }}</span>
+  }
+  <svg class="ms__chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 9l6 6 6-6"></path>
+  </svg>
+</button>
+
+@if (open()) {
+  <div class="ms__panel" [class.ms__panel--end]="panelAlign() === 'end'" role="group" [attr.aria-label]="label()">
+    @for (option of options(); track option.value) {
+      <label class="ms__option">
+        <input type="checkbox" [checked]="isSelected(option.value)" (change)="toggled.emit(option.value)" />
+        <span class="ms__option-label">{{ option.label }}</span>
+      </label>
+    }
+
+    @if (selected().length > 0) {
+      <button type="button" class="ms__clear" (click)="cleared.emit()">{{ clearLabel() }}</button>
+    }
+  </div>
+}

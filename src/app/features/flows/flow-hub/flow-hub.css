@@ -166,6 +166,8 @@
   border: 1.5px solid oklch(26% 0.015 260);
   background: oklch(18% 0.015 260);
   font-family: inherit;
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
   transition: border-color 0.18s ease, transform 0.12s ease, background 0.18s ease;
 }

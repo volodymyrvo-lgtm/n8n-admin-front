@@ -1,0 +1,309 @@
+<div class="page">
+  <header class="topbar">
+    <div class="topbar__left">
+      <div class="brand">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="5" cy="17" r="2.2"></circle>
+          <circle cx="12" cy="7" r="2.2"></circle>
+          <circle cx="19" cy="17" r="2.2"></circle>
+          <path d="M6.9 15.7L10.1 8.9"></path>
+          <path d="M13.9 8.9L17.1 15.7"></path>
+        </svg>
+        <span class="brand-name">n8n Admin</span>
+      </div>
+
+      <a routerLink="/flows" class="back-to-hub">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path>
+          <path d="M11 18l-6-6 6-6"></path>
+        </svg>
+        <span>{{ 'nav.backToHub' | translate }}</span>
+      </a>
+    </div>
+
+    <div class="topbar__right">
+      <app-language-switcher />
+      <button type="button" class="logout-btn" (click)="logout()" [attr.aria-label]="'nav.logout' | translate">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <path d="M16 17l5-5-5-5"></path>
+          <path d="M21 12H9"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'usage.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'usage.subtitle' | translate }}</p>
+    </div>
+
+    @if (filtersLoading()) {
+      <app-spinner [label]="'common.loading' | translate" />
+    } @else if (filtersError()) {
+      <div class="alert" role="alert">
+        <span>{{ 'usage.error.filters' | translate }}</span>
+        <button type="button" class="alert__action" (click)="loadFilters()">{{ 'usage.error.retry' | translate }}</button>
+      </div>
+    } @else if (state(); as s) {
+      <section class="toolbar" [attr.aria-label]="'usage.filters.title' | translate">
+        <div class="chips" role="group" [attr.aria-label]="'usage.filters.period' | translate">
+          @for (preset of presets; track preset) {
+            <button
+              type="button"
+              class="chip"
+              [class.chip--active]="activePreset() === preset"
+              (click)="selectPreset(preset)"
+            >
+              {{ 'usage.presets.' + preset | translate }}
+            </button>
+          }
+        </div>
+
+        <div class="date-range">
+          <input
+            #fromInput
+            type="date"
+            [attr.aria-label]="'usage.filters.from' | translate"
+            [value]="s.from"
+            [min]="filters()?.minDate ?? ''"
+            [max]="filters()?.maxDate ?? ''"
+            (change)="setFrom(fromInput.value)"
+          />
+          <span class="date-range__dash" aria-hidden="true">–</span>
+          <input
+            #toInput
+            type="date"
+            [attr.aria-label]="'usage.filters.to' | translate"
+            [value]="s.to"
+            [min]="filters()?.minDate ?? ''"
+            [max]="filters()?.maxDate ?? ''"
+            (change)="setTo(toInput.value)"
+          />
+        </div>
+
+        <span class="toolbar__divider" aria-hidden="true"></span>
+
+        <div class="selects">
+          <app-multi-select
+            [label]="'usage.filters.type' | translate"
+            [options]="typeOptions()"
+            [selected]="s.types"
+            [clearLabel]="'usage.filters.clear' | translate"
+            (toggled)="toggleType($event)"
+            (cleared)="clearTypes()"
+          />
+          <app-multi-select
+            [label]="'usage.filters.model' | translate"
+            [options]="modelOptions()"
+            [selected]="s.models"
+            [clearLabel]="'usage.filters.clear' | translate"
+            (toggled)="toggleModel($event)"
+            (cleared)="clearModels()"
+          />
+          <app-multi-select
+            [label]="'usage.filters.flow' | translate"
+            [options]="flowOptions()"
+            panelAlign="end"
+            [selected]="s.flows"
+            [clearLabel]="'usage.filters.clear' | translate"
+            (toggled)="toggleFlow($event)"
+            (cleared)="clearFlows()"
+          />
+          @if (hasActiveFilters()) {
+            <button type="button" class="link-reset" (click)="resetFilters()">{{ 'usage.filters.reset' | translate }}</button>
+          }
+        </div>
+      </section>
+
+      @if (errorMessage(); as message) {
+        <div class="alert" role="alert">
+          <span>{{ message }}</span>
+        </div>
+      }
+
+      @if (isEmpty()) {
+        <app-empty-state [title]="'usage.empty.title' | translate" [description]="'usage.empty.description' | translate">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path>
+          </svg>
+        </app-empty-state>
+      } @else if (!overview() && overviewLoading()) {
+        <app-spinner [label]="'common.loading' | translate" />
+      } @else if (overview()) {
+        <div class="results" [class.results--loading]="overviewLoading() || seriesLoading()">
+          <section class="kpis" [attr.aria-label]="'usage.kpi.title' | translate">
+            <div class="kpi">
+              <span class="field-label">{{ 'usage.kpi.cost' | translate }}</span>
+              <span class="kpi__value kpi__value--accent">{{ cost(totals().cost) }}</span>
+            </div>
+            <div class="kpi">
+              <span class="field-label">{{ 'usage.kpi.requests' | translate }}</span>
+              <span class="kpi__value" [title]="integer(totals().requests)">{{ compact(totals().requests) }}</span>
+            </div>
+            <div class="kpi">
+              <span class="field-label">{{ 'usage.kpi.inputTokens' | translate }}</span>
+              <span class="kpi__value" [title]="integer(totals().inputTokens)">{{ compact(totals().inputTokens) }}</span>
+            </div>
+            <div class="kpi">
+              <span class="field-label">{{ 'usage.kpi.outputTokens' | translate }}</span>
+              <span class="kpi__value" [title]="integer(totals().outputTokens)">{{ compact(totals().outputTokens) }}</span>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">{{ (s.view === 'donut' ? 'usage.chart.donutTitle' : 'usage.chart.title') | translate }}</h2>
+              <div class="card__controls">
+                <div class="segmented" role="group" [attr.aria-label]="'usage.chart.view' | translate">
+                  @for (view of views; track view) {
+                    <button
+                      type="button"
+                      class="segmented__option segmented__option--icon"
+                      [class.segmented__option--active]="s.view === view"
+                      [attr.aria-pressed]="s.view === view"
+                      [attr.aria-label]="'usage.view.' + view | translate"
+                      [attr.title]="'usage.view.' + view | translate"
+                      (click)="setView(view)"
+                    >
+                      @if (view === 'bars') {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M6 20V11"></path><path d="M12 20V4"></path><path d="M18 20v-6"></path>
+                        </svg>
+                      } @else {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 12a9 9 0 1 1-9-9"></path><path d="M21 12h-9V3a9 9 0 0 1 9 9z"></path>
+                        </svg>
+                      }
+                    </button>
+                  }
+                </div>
+
+                @if (s.view === 'bars') {
+                  <div class="control">
+                    <span class="field-label">{{ 'usage.chart.step' | translate }}</span>
+                    <div class="segmented" role="group" [attr.aria-label]="'usage.chart.step' | translate">
+                      @for (granularity of granularities; track granularity) {
+                        <button
+                          type="button"
+                          class="segmented__option"
+                          [class.segmented__option--active]="s.granularity === granularity"
+                          [attr.aria-pressed]="s.granularity === granularity"
+                          (click)="setGranularity(granularity)"
+                        >
+                          {{ 'usage.granularity.' + granularity | translate }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <div class="control">
+                  <span class="field-label">{{ 'usage.chart.splitBy' | translate }}</span>
+                  <div class="segmented" role="group" [attr.aria-label]="'usage.chart.splitBy' | translate">
+                    @for (dimension of splitDimensions; track dimension) {
+                      <button
+                        type="button"
+                        class="segmented__option"
+                        [class.segmented__option--active]="s.splitBy === dimension"
+                        [attr.aria-pressed]="s.splitBy === dimension"
+                        (click)="setSplit(dimension)"
+                      >
+                        {{ 'usage.dimension.' + dimension | translate }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            @if (s.view === 'donut') {
+              @if (donutSlices(); as slices) {
+                @if (slices.length > 0) {
+                  <app-cost-donut
+                    [slices]="slices"
+                    [formatValue]="formatChartValue()"
+                    [formatShare]="formatShare()"
+                    [totalLabel]="'usage.chart.total' | translate"
+                    [ariaLabel]="'usage.chart.donutAria' | translate"
+                  />
+                } @else {
+                  <p class="card__note">{{ 'usage.chart.noSpend' | translate }}</p>
+                }
+              } @else {
+                <app-spinner [label]="'common.loading' | translate" />
+              }
+            } @else if (chart(); as c) {
+              <app-cost-chart
+                [labels]="c.labels"
+                [titles]="c.titles"
+                [notes]="c.notes"
+                [faded]="c.faded"
+                [series]="c.series"
+                [formatValue]="formatChartValue()"
+                [totalLabel]="'usage.chart.total' | translate"
+                [ariaLabel]="'usage.chart.aria' | translate"
+              />
+              @if (c.hasPartial) {
+                <p class="card__note">{{ 'usage.chart.partialNote' | translate }}</p>
+              }
+            } @else {
+              <app-spinner [label]="'common.loading' | translate" />
+            }
+          </section>
+
+          <div class="breakdowns">
+            <section class="card">
+              <h2 class="card__title">{{ 'usage.breakdown.byType' | translate }}</h2>
+              <ul class="bars">
+                @for (item of byType(); track item.key) {
+                  <li class="bar-row">
+                    <div class="bar-row__head">
+                      <span class="bar-row__label" [title]="item.label">{{ item.label }}</span>
+                      <span class="bar-row__value">
+                        {{ cost(item.cost) }}
+                        <span class="bar-row__share">{{ percent(item.share) }}</span>
+                      </span>
+                    </div>
+                    <div class="bar-row__track"><div class="bar-row__fill" [style.width.%]="item.share * 100"></div></div>
+                    @if (item.noTokens) {
+                      <span class="bar-row__note">{{ 'usage.breakdown.noTokens' | translate: { requests: integer(item.requests) } }}</span>
+                    }
+                  </li>
+                }
+              </ul>
+            </section>
+
+            <section class="card">
+              <h2 class="card__title">{{ 'usage.breakdown.byModel' | translate }}</h2>
+              <ul class="bars">
+                @for (item of byModel(); track item.key) {
+                  <li class="bar-row">
+                    <div class="bar-row__head">
+                      <span class="bar-row__label" [title]="item.label">{{ item.label }}</span>
+                      <span class="bar-row__value">
+                        {{ cost(item.cost) }}
+                        <span class="bar-row__share">{{ percent(item.share) }}</span>
+                      </span>
+                    </div>
+                    <div class="bar-row__track"><div class="bar-row__fill" [style.width.%]="item.share * 100"></div></div>
+                    @if (item.noTokens) {
+                      <span class="bar-row__note">{{ 'usage.breakdown.noTokens' | translate: { requests: integer(item.requests) } }}</span>
+                    }
+                  </li>
+                }
+              </ul>
+            </section>
+          </div>
+        </div>
+      }
+    } @else {
+      <app-empty-state [title]="'usage.noDataAtAll.title' | translate" [description]="'usage.noDataAtAll.description' | translate">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20V10"></path><path d="M10 20V4"></path><path d="M16 20v-7"></path><path d="M22 20H2"></path>
+        </svg>
+      </app-empty-state>
+    }
+  </main>
+</div>
