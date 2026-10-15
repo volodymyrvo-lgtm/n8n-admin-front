@@ -1,5 +1,5 @@
 import type { LlmUsageSummaryRow } from '../../core/models/llm-usage.model';
-import { buildChartModel, buildDonutSlices, TOTAL_SERIES_KEY } from './chart-data';
+import { buildChartModel, buildCompareChartModel, buildDonutSlices, TOTAL_SERIES_KEY } from './chart-data';
 
 function row(period: string | null, llmMod: string, cost: number): LlmUsageSummaryRow {
   return {
@@ -124,5 +124,53 @@ describe('buildDonutSlices', () => {
     const rest = slices[5];
     expect(rest).toMatchObject({ label: 'Others (2)', color: '#5d6577', value: 9, isRest: true });
     expect(slices.reduce((sum, slice) => sum + slice.share, 0)).toBeCloseTo(1, 10);
+  });
+});
+
+describe('buildCompareChartModel', () => {
+  const model = (from: string, to: string, rows: LlmUsageSummaryRow[], maxDate = '2026-10-31') =>
+    buildChartModel(rows, { granularity: 'day', splitBy: 'llmMod', from, to, maxDate });
+
+  it('lines two periods up by position and sums every series into one total per bucket', () => {
+    const a = model('2026-09-01', '2026-09-03', [row('2026-09-01', 'x', 1), row('2026-09-01', 'y', 2), row('2026-09-03', 'x', 4)]);
+    const b = buildChartModel([row('2026-10-02', 'x', 5)], {
+      granularity: 'day',
+      splitBy: null,
+      from: '2026-10-01',
+      to: '2026-10-03',
+      maxDate: '2026-10-31',
+    });
+    // (B's rows carry no split, but the builder just sums whatever it's given.)
+
+    const compare = buildCompareChartModel(a, b);
+    expect(compare.size).toBe(3);
+    expect(compare.a).toEqual([3, 0, 4]);
+    expect(compare.b).toEqual([0, 5, 0]);
+    expect(compare.periodsA).toEqual(['2026-09-01', '2026-09-02', '2026-09-03']);
+    expect(compare.periodsB).toEqual(['2026-10-01', '2026-10-02', '2026-10-03']);
+    expect(compare.partial).toEqual([false, false, false]);
+  });
+
+  it('leaves the shorter period without bars (null) past its end', () => {
+    const compare = buildCompareChartModel(
+      model('2026-09-01', '2026-09-02', [row('2026-09-01', 'x', 1)]),
+      model('2026-10-01', '2026-10-04', [row('2026-10-04', 'x', 2)]),
+    );
+
+    expect(compare.size).toBe(4);
+    expect(compare.a).toEqual([1, 0, null, null]);
+    expect(compare.b).toEqual([0, 0, 0, 2]);
+    expect(compare.periodsA).toEqual(['2026-09-01', '2026-09-02', null, null]);
+  });
+
+  it('flags a bucket as partial / ongoing when either side is', () => {
+    // B runs to Oct 5 but data only goes up to Oct 3: its last two days are still in progress.
+    const compare = buildCompareChartModel(
+      model('2026-09-01', '2026-09-05', []),
+      model('2026-10-01', '2026-10-05', [], '2026-10-03'),
+    );
+
+    expect(compare.ongoing).toEqual([false, false, false, true, true]);
+    expect(compare.partial).toEqual([false, false, false, true, true]);
   });
 });

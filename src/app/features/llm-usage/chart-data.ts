@@ -75,6 +75,49 @@ export function buildChartModel(rows: readonly LlmUsageSummaryRow[], options: Ch
   };
 }
 
+/** Two periods laid side by side: bucket 1 of A against bucket 1 of B, and so on. */
+export interface CompareChartModel {
+  /** Number of buckets of the longer period. */
+  size: number;
+  /** Total cost per bucket index; `null` past the end of the shorter period. */
+  a: (number | null)[];
+  b: (number | null)[];
+  /** Bucket start dates by index (`null` past the end), for the tooltips. */
+  periodsA: (string | null)[];
+  periodsB: (string | null)[];
+  /** Either side's bucket at this index is cut off or still in progress, so the two aren't strictly comparable. */
+  partial: boolean[];
+  /** Either side's bucket at this index is still in progress (data up to yesterday only). */
+  ongoing: boolean[];
+}
+
+function totalsPerBucket(model: ChartModel): number[] {
+  return model.periods.map((_, index) => model.series.reduce((sum, series) => sum + (series.data[index] ?? 0), 0));
+}
+
+/**
+ * Lines two periods' per-bucket totals up by position, so "day 3 of period
+ * A" sits next to "day 3 of period B" whatever the actual dates are. The
+ * periods can differ in length: the shorter one just has no bars at the end.
+ */
+export function buildCompareChartModel(a: ChartModel, b: ChartModel): CompareChartModel {
+  const size = Math.max(a.periods.length, b.periods.length);
+  const totalsA = totalsPerBucket(a);
+  const totalsB = totalsPerBucket(b);
+  const at = <T>(items: readonly T[], index: number): T | null => (index < items.length ? items[index] : null);
+  const indexes = Array.from({ length: size }, (_, index) => index);
+
+  return {
+    size,
+    a: indexes.map((i) => at(totalsA, i)),
+    b: indexes.map((i) => at(totalsB, i)),
+    periodsA: indexes.map((i) => at(a.periods, i)),
+    periodsB: indexes.map((i) => at(b.periods, i)),
+    partial: indexes.map((i) => (a.coverage[i]?.partial ?? false) || (b.coverage[i]?.partial ?? false)),
+    ongoing: indexes.map((i) => (a.coverage[i]?.ongoing ?? false) || (b.coverage[i]?.ongoing ?? false)),
+  };
+}
+
 export interface DonutSliceInput {
   key: string;
   label: string;

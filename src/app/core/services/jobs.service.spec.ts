@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { vi } from 'vitest';
-import { CreateJobFormValue, JobRun } from '../models/job.model';
+import { CreateJobFormValue, JobRun, SeoJobRun } from '../models/job.model';
 import { JobsService } from './jobs.service';
 
 const N8N_URL = 'https://royaleteam.app.n8n.cloud/webhook/6b74d4ba-f397-4534-83ef-7bffe54d1a6f';
@@ -20,6 +20,7 @@ vi.mock('socket.io-client', () => ({
 function makeRun(overrides: Partial<JobRun> = {}): JobRun {
   return {
     id: '1',
+    kind: 'communication',
     steps: { step1: { status: 'success' } },
     jobType: 'email',
     taskStatus: 'new',
@@ -60,12 +61,12 @@ function makeFormValue(overrides: Partial<CreateJobFormValue> = {}): CreateJobFo
 }
 
 /** Grabs the handler registered for `job.updated` via `socket.on(...)`. */
-function updatedHandler(): (job: JobRun) => void {
+function updatedHandler(): (job: JobRun | SeoJobRun) => void {
   const call = mockSocket.on.mock.calls.find(([event]) => event === 'job.updated');
   if (!call) {
     throw new Error('job.updated handler was never registered');
   }
-  return call[1] as (job: JobRun) => void;
+  return call[1] as (job: JobRun | SeoJobRun) => void;
 }
 
 describe('JobsService', () => {
@@ -140,6 +141,17 @@ describe('JobsService', () => {
 
     expect(service.jobRuns().length).toBe(1);
     expect(service.jobRuns()[0].status).toBe('success');
+  });
+
+  it('ignores job.updated events of SEO jobs, which belong to the SEO page', () => {
+    const service = TestBed.inject(JobsService);
+    service.jobRuns.set([makeRun({ id: '1', status: 'pending' })]);
+    service.connectJobUpdates();
+
+    // Even an event that happens to share an id with a loaded run must not touch the list.
+    updatedHandler()({ ...makeRun({ id: '1', status: 'success' }), kind: 'seo' } as unknown as SeoJobRun);
+
+    expect(service.jobRuns()[0].status).toBe('pending');
   });
 
   it('ignores a job.updated event for an id not on the currently loaded page', () => {

@@ -1,0 +1,129 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'seoAdd.title' | translate }}</h1>
+    <p class="page-subtitle">{{ 'seoAdd.subtitle' | translate }}</p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="seoLanguage">{{ 'seoAdd.language' | translate }}</label>
+      <div class="field-control">
+        <select id="seoLanguage" formControlName="language">
+          @for (option of languageOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="seoLlm">{{ 'seoAdd.llm' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="form.controls.llm.invalid && form.controls.llm.touched">
+        <select id="seoLlm" formControlName="llm">
+          <option value="">{{ 'seoAdd.llmPlaceholder' | translate }}</option>
+          @for (option of llmOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
+        </select>
+      </div>
+      @if (form.controls.llm.invalid && form.controls.llm.touched) {
+        <span class="form__error">{{ 'seoAdd.llmError' | translate }}</span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="seoPrompt">{{ 'seoAdd.prompt' | translate }}</label>
+      <div
+        class="field-control"
+        [class.field-control--invalid]="form.controls.promptId.invalid && form.controls.promptId.touched"
+      >
+        <select id="seoPrompt" formControlName="promptId">
+          <option value="">{{ 'seoAdd.promptPlaceholder' | translate }}</option>
+          @for (prompt of promptsService.seoPrompts(); track prompt.id) {
+            <option [value]="prompt.id">{{ prompt.name }}</option>
+          }
+        </select>
+      </div>
+      @if (form.controls.promptId.invalid && form.controls.promptId.touched) {
+        <span class="form__error">{{ 'seoAdd.promptError' | translate }}</span>
+      }
+      @if (!promptsService.loading() && promptsService.seoPrompts().length === 0) {
+        <p class="form__hint" data-testid="no-prompts-hint">
+          {{ 'seoAdd.noPrompts' | translate }}
+          @if (authService.isAdmin()) {
+            <a routerLink="/seo/prompts/new" class="link-muted">{{ 'seoAdd.createPrompt' | translate }}</a>
+          }
+        </p>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="seoToneOfVoiceRuleSet">{{ 'seoAdd.toneOfVoice' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="showRulesError()">
+        <select id="seoToneOfVoiceRuleSet" formControlName="toneOfVoiceRuleSetId">
+          <option value="">{{ 'seoAdd.ruleSetPlaceholder' | translate }}</option>
+          @for (ruleSet of toneOfVoiceRuleSets(); track ruleSet.id) {
+            <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="seoHumanizerRuleSet">{{ 'seoAdd.humanizer' | translate }}</label>
+      <div class="field-control" [class.field-control--invalid]="showRulesError()">
+        <select id="seoHumanizerRuleSet" formControlName="humanizerRuleSetId">
+          <option value="">{{ 'seoAdd.ruleSetPlaceholder' | translate }}</option>
+          @for (ruleSet of humanizerRuleSets(); track ruleSet.id) {
+            <option [value]="ruleSet.id">{{ ruleSet.ruleName }}</option>
+          }
+        </select>
+      </div>
+      @if (showRulesError()) {
+        <span class="form__error">{{ 'seoAdd.rulesError' | translate }}</span>
+      }
+      @if (!ruleSetsService.loading() && ruleSetsService.seoRuleSets().length === 0) {
+        <p class="form__hint" data-testid="no-rules-hint">
+          {{ 'seoAdd.noRules' | translate }}
+          @if (authService.isAdmin()) {
+            <a routerLink="/seo/rule-sets/new" class="link-muted">{{ 'seoAdd.createRule' | translate }}</a>
+          }
+        </p>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="field-label" for="seoPageTask">{{ 'seoAdd.pageTask' | translate }}</label>
+      <div
+        class="field-control"
+        [class.field-control--invalid]="form.controls.pageTask.invalid && form.controls.pageTask.touched"
+      >
+        <input
+          id="seoPageTask"
+          type="text"
+          formControlName="pageTask"
+          [placeholder]="'seoAdd.pageTaskPlaceholder' | translate"
+        />
+      </div>
+      @if (form.controls.pageTask.invalid && form.controls.pageTask.touched) {
+        <span class="form__error">
+          {{ (form.controls.pageTask.hasError('maxlength') ? 'seoAdd.pageTaskTooLong' : 'seoAdd.pageTaskError') | translate: { max: pageTaskMaxLength } }}
+        </span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="toggle-row">
+        <input type="checkbox" class="toggle-input" formControlName="isTesting" />
+        <span class="toggle-track"><span class="toggle-knob"></span></span>
+        <span class="toggle-label">{{ 'addJob.isTesting' | translate }}</span>
+      </label>
+      <p class="form__hint">{{ 'seoAdd.isTestingHint' | translate }}</p>
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting()">{{ 'seoAdd.submit' | translate }}</button>
+      <a routerLink="/seo/jobs" class="link-muted">{{ 'seoAdd.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

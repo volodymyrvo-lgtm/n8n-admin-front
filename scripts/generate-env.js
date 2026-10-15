@@ -71,6 +71,10 @@ const REQUIRED_VARS = [
   'TEST_N8N_WEBHOOK_URL'
 ];
 
+// The SEO webhooks are optional on purpose: the SEO section needs them to
+// actually start a job, but a missing value must not break the whole
+// build/deploy - SeoJobsService reports a clear error instead (the job
+// record is still created, it just isn't triggered in n8n).
 const missing = REQUIRED_VARS.filter((name) => !env[name]);
 if (missing.length > 0) {
   console.error(
@@ -93,6 +97,8 @@ export const environment = {
   apiBaseUrl: ${jsString(env.API_BASE_URL)},
   n8nWebhookUrl: ${jsString(env.N8N_WEBHOOK_URL)},
   testN8nWebhookUrl: ${jsString(env.TEST_N8N_WEBHOOK_URL)},
+  seoN8nWebhookUrl: ${jsString(env.SEO_N8N_WEBHOOK_URL || '')},
+  testSeoN8nWebhookUrl: ${jsString(env.TEST_SEO_N8N_WEBHOOK_URL || '')},
 };
 `;
 

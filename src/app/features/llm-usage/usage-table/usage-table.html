@@ -1,0 +1,69 @@
+@if (!loaded()) {
+  <app-spinner [label]="'common.loading' | translate" />
+} @else if (error(); as message) {
+  <div class="alert" role="alert">{{ message }}</div>
+} @else if (rows().length === 0) {
+  <p class="usage-table__empty">{{ 'usage.table.empty' | translate }}</p>
+} @else {
+  <div class="usage-table__scroll" [class.usage-table__scroll--loading]="loading()">
+    <table class="usage-table">
+      <thead>
+        <tr>
+          @for (column of columns; track column.key) {
+            <th
+              scope="col"
+              [class.usage-table__num]="column.numeric"
+              [attr.aria-sort]="ariaSort(column)"
+            >
+              @if (column.sortBy) {
+                <button
+                  type="button"
+                  class="usage-table__sort"
+                  [class.usage-table__sort--active]="isSorted(column)"
+                  (click)="sortOn(column)"
+                >
+                  <span>{{ 'usage.table.columns.' + column.key | translate }}</span>
+                  <svg class="usage-table__arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    @if (isSorted(column) && order() === 'asc') {
+                      <path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path>
+                    } @else {
+                      <path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path>
+                    }
+                  </svg>
+                </button>
+              } @else {
+                <span>{{ 'usage.table.columns.' + column.key | translate }}</span>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.id) {
+          <tr>
+            <td class="usage-table__nowrap">{{ row.date }}</td>
+            <td class="usage-table__flow" [title]="row.flow">{{ row.flow }}</td>
+            <td [title]="row.type">{{ typeLabel()(row.type) }}</td>
+            <td class="usage-table__nowrap">{{ row.llmMod }}</td>
+            <td class="usage-table__num">{{ integer(row.requests) }}</td>
+            <td class="usage-table__num">{{ integer(row.inputTokens) }}</td>
+            <td class="usage-table__num">{{ integer(row.outputTokens) }}</td>
+            <td class="usage-table__num">{{ integer(row.cacheReadTokens) }}</td>
+            <td class="usage-table__num">{{ integer(row.cacheWriteTokens) }}</td>
+            <td
+              class="usage-table__num usage-table__cost"
+              [class.usage-table__cost--unmetered]="isUnmetered(row)"
+              [attr.title]="isUnmetered(row) ? ('usage.table.unmetered' | translate) : null"
+            >
+              {{ cost(row.cost) }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="usage-table__footer">
+    <span class="usage-table__count">{{ 'usage.table.rows' | translate: { count: integer(total()) } }}</span>
+    <app-paginator [page]="page()" [totalPages]="totalPages()" (pageChange)="pageChange.emit($event)" />
+  </div>
+}

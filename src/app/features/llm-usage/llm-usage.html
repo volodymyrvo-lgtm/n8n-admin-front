@@ -137,50 +137,170 @@
             <div class="kpi">
               <span class="field-label">{{ 'usage.kpi.cost' | translate }}</span>
               <span class="kpi__value kpi__value--accent">{{ cost(totals().cost) }}</span>
+              @if (kpiDeltas(); as deltas) {
+                @if (deltas.cost.kind !== 'none') {
+                  <span
+                    class="kpi__delta kpi__delta--{{ deltas.cost.direction }} kpi__delta--cost"
+                    [title]="'usage.compare.previous' | translate: { range: previousPeriodLabel(), value: deltas.cost.previous }"
+                  >
+                    @if (deltas.cost.direction === 'up') {<span aria-hidden="true">▲</span>}
+                    @if (deltas.cost.direction === 'down') {<span aria-hidden="true">▼</span>}
+                    {{ deltas.cost.text }}
+                  </span>
+                }
+                @if (deltas.cost.perDay; as avg) {
+                  <span class="kpi__avg" [title]="'usage.compare.perDayHint' | translate">
+                    {{ 'usage.compare.perDay' | translate: { current: avg.current, previous: avg.previous } }}
+                    @if (avg.text) { <span class="kpi__avg-change">{{ avg.text }}</span> }
+                  </span>
+                }
+              }
             </div>
             <div class="kpi">
               <span class="field-label">{{ 'usage.kpi.requests' | translate }}</span>
               <span class="kpi__value" [title]="integer(totals().requests)">{{ compact(totals().requests) }}</span>
+              @if (kpiDeltas(); as deltas) {
+                @if (deltas.requests.kind !== 'none') {
+                  <span
+                    class="kpi__delta kpi__delta--{{ deltas.requests.direction }}"
+                    [title]="'usage.compare.previous' | translate: { range: previousPeriodLabel(), value: deltas.requests.previous }"
+                  >
+                    @if (deltas.requests.direction === 'up') {<span aria-hidden="true">▲</span>}
+                    @if (deltas.requests.direction === 'down') {<span aria-hidden="true">▼</span>}
+                    {{ deltas.requests.text }}
+                  </span>
+                }
+                @if (deltas.requests.perDay; as avg) {
+                  <span class="kpi__avg" [title]="'usage.compare.perDayHint' | translate">
+                    {{ 'usage.compare.perDay' | translate: { current: avg.current, previous: avg.previous } }}
+                    @if (avg.text) { <span class="kpi__avg-change">{{ avg.text }}</span> }
+                  </span>
+                }
+              }
             </div>
             <div class="kpi">
               <span class="field-label">{{ 'usage.kpi.inputTokens' | translate }}</span>
               <span class="kpi__value" [title]="integer(totals().inputTokens)">{{ compact(totals().inputTokens) }}</span>
+              @if (kpiDeltas(); as deltas) {
+                @if (deltas.inputTokens.kind !== 'none') {
+                  <span
+                    class="kpi__delta kpi__delta--{{ deltas.inputTokens.direction }}"
+                    [title]="'usage.compare.previous' | translate: { range: previousPeriodLabel(), value: deltas.inputTokens.previous }"
+                  >
+                    @if (deltas.inputTokens.direction === 'up') {<span aria-hidden="true">▲</span>}
+                    @if (deltas.inputTokens.direction === 'down') {<span aria-hidden="true">▼</span>}
+                    {{ deltas.inputTokens.text }}
+                  </span>
+                }
+                @if (deltas.inputTokens.perDay; as avg) {
+                  <span class="kpi__avg" [title]="'usage.compare.perDayHint' | translate">
+                    {{ 'usage.compare.perDay' | translate: { current: avg.current, previous: avg.previous } }}
+                    @if (avg.text) { <span class="kpi__avg-change">{{ avg.text }}</span> }
+                  </span>
+                }
+              }
             </div>
             <div class="kpi">
               <span class="field-label">{{ 'usage.kpi.outputTokens' | translate }}</span>
               <span class="kpi__value" [title]="integer(totals().outputTokens)">{{ compact(totals().outputTokens) }}</span>
+              @if (kpiDeltas(); as deltas) {
+                @if (deltas.outputTokens.kind !== 'none') {
+                  <span
+                    class="kpi__delta kpi__delta--{{ deltas.outputTokens.direction }}"
+                    [title]="'usage.compare.previous' | translate: { range: previousPeriodLabel(), value: deltas.outputTokens.previous }"
+                  >
+                    @if (deltas.outputTokens.direction === 'up') {<span aria-hidden="true">▲</span>}
+                    @if (deltas.outputTokens.direction === 'down') {<span aria-hidden="true">▼</span>}
+                    {{ deltas.outputTokens.text }}
+                  </span>
+                }
+                @if (deltas.outputTokens.perDay; as avg) {
+                  <span class="kpi__avg" [title]="'usage.compare.perDayHint' | translate">
+                    {{ 'usage.compare.perDay' | translate: { current: avg.current, previous: avg.previous } }}
+                    @if (avg.text) { <span class="kpi__avg-change">{{ avg.text }}</span> }
+                  </span>
+                }
+              }
             </div>
           </section>
 
+          <div class="compare-bar">
+            @if (state()?.compare) {
+              <div class="compare-bar__period">
+                <span class="field-label">{{ 'usage.compare.with' | translate }}</span>
+                @if (comparePeriod(); as period) {
+                  <div class="date-range">
+                    <input
+                      #cmpFromInput
+                      type="date"
+                      [attr.aria-label]="'usage.compare.from' | translate"
+                      [value]="period.from"
+                      [min]="filters()?.minDate ?? ''"
+                      [max]="filters()?.maxDate ?? ''"
+                      (change)="setCompareFrom(cmpFromInput.value)"
+                    />
+                    <span class="date-range__dash" aria-hidden="true">–</span>
+                    <input
+                      #cmpToInput
+                      type="date"
+                      [attr.aria-label]="'usage.compare.to' | translate"
+                      [value]="period.to"
+                      [min]="filters()?.minDate ?? ''"
+                      [max]="filters()?.maxDate ?? ''"
+                      (change)="setCompareTo(cmpToInput.value)"
+                    />
+                  </div>
+                  @if (period.custom) {
+                    <button type="button" class="link-reset" (click)="resetComparePeriod()">{{ 'usage.compare.reset' | translate }}</button>
+                  } @else {
+                    <span class="compare-bar__hint">{{ 'usage.compare.auto' | translate }}</span>
+                  }
+                }
+              </div>
+              @if (comparisonUnavailable()) {
+                <span class="compare-bar__note">{{ 'usage.compare.unavailable' | translate }}</span>
+              } @else if (lengthNote(); as note) {
+                <span class="compare-bar__note compare-bar__note--warn">{{ 'usage.compare.lengthNote' | translate: { a: note.a, b: note.b } }}</span>
+              }
+            }
+            <button type="button" class="link-reset compare-bar__toggle" [attr.aria-pressed]="!!state()?.compare" (click)="toggleCompare()">
+              {{ (state()?.compare ? 'usage.compare.off' : 'usage.compare.on') | translate }}
+            </button>
+          </div>
+
           <section class="card">
             <div class="card__header">
-              <h2 class="card__title">{{ (s.view === 'donut' ? 'usage.chart.donutTitle' : 'usage.chart.title') | translate }}</h2>
+              <h2 class="card__title">{{ (view() === 'donut' ? 'usage.chart.donutTitle' : view() === 'compare' ? 'usage.chart.compareTitle' : 'usage.chart.title') | translate }}</h2>
               <div class="card__controls">
                 <div class="segmented" role="group" [attr.aria-label]="'usage.chart.view' | translate">
-                  @for (view of views; track view) {
+                  @for (mode of availableViews(); track mode) {
                     <button
                       type="button"
                       class="segmented__option segmented__option--icon"
-                      [class.segmented__option--active]="s.view === view"
-                      [attr.aria-pressed]="s.view === view"
-                      [attr.aria-label]="'usage.view.' + view | translate"
-                      [attr.title]="'usage.view.' + view | translate"
-                      (click)="setView(view)"
+                      [class.segmented__option--active]="view() === mode"
+                      [attr.aria-pressed]="view() === mode"
+                      [attr.aria-label]="'usage.view.' + mode | translate"
+                      [attr.title]="'usage.view.' + mode | translate"
+                      (click)="setView(mode)"
                     >
-                      @if (view === 'bars') {
+                      @if (mode === 'bars') {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M6 20V11"></path><path d="M12 20V4"></path><path d="M18 20v-6"></path>
                         </svg>
-                      } @else {
+                      } @else if (mode === 'donut') {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M21 12a9 9 0 1 1-9-9"></path><path d="M21 12h-9V3a9 9 0 0 1 9 9z"></path>
+                        </svg>
+                      } @else {
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M4 20v-8"></path><path d="M8 20V6"></path><path d="M14 20v-6"></path><path d="M18 20V9"></path>
                         </svg>
                       }
                     </button>
                   }
                 </div>
 
-                @if (s.view === 'bars') {
+                @if (view() !== 'donut') {
                   <div class="control">
                     <span class="field-label">{{ 'usage.chart.step' | translate }}</span>
                     <div class="segmented" role="group" [attr.aria-label]="'usage.chart.step' | translate">
@@ -199,6 +319,7 @@
                   </div>
                 }
 
+                @if (view() !== 'compare') {
                 <div class="control">
                   <span class="field-label">{{ 'usage.chart.splitBy' | translate }}</span>
                   <div class="segmented" role="group" [attr.aria-label]="'usage.chart.splitBy' | translate">
@@ -215,10 +336,11 @@
                     }
                   </div>
                 </div>
+                }
               </div>
             </div>
 
-            @if (s.view === 'donut') {
+            @if (view() === 'donut') {
               @if (donutSlices(); as slices) {
                 @if (slices.length > 0) {
                   <app-cost-donut
@@ -231,6 +353,25 @@
                 } @else {
                   <p class="card__note">{{ 'usage.chart.noSpend' | translate }}</p>
                 }
+              } @else {
+                <app-spinner [label]="'common.loading' | translate" />
+              }
+            } @else if (view() === 'compare') {
+              @if (compareChart(); as cc) {
+                <app-cost-chart
+                  [labels]="cc.labels"
+                  [titles]="cc.titles"
+                  [notes]="cc.notes"
+                  [faded]="cc.faded"
+                  [series]="cc.series"
+                  [stacked]="false"
+                  [formatValue]="formatChartValue()"
+                  [totalLabel]="'usage.chart.total' | translate"
+                  [ariaLabel]="'usage.chart.compareAria' | translate"
+                />
+                <p class="card__note">{{ 'usage.chart.compareNote' | translate }}</p>
+              } @else if (compareSeriesFailed()) {
+                <p class="card__note">{{ 'usage.compare.chartError' | translate }}</p>
               } @else {
                 <app-spinner [label]="'common.loading' | translate" />
               }
@@ -267,6 +408,15 @@
                       </span>
                     </div>
                     <div class="bar-row__track"><div class="bar-row__fill" [style.width.%]="item.share * 100"></div></div>
+                    @if (item.previous; as before) {
+                      <div class="bar-row__track bar-row__track--prev"><div class="bar-row__fill bar-row__fill--prev" [style.width.%]="before.share * 100"></div></div>
+                      <span class="bar-row__prev">
+                        {{ 'usage.compare.was' | translate: { value: cost(before.cost), share: percent(before.share) } }}
+                        @if (before.changeText) {
+                          <span class="bar-row__change bar-row__change--{{ before.direction }}">{{ before.changeText }}</span>
+                        }
+                      </span>
+                    }
                     @if (item.noTokens) {
                       <span class="bar-row__note">{{ 'usage.breakdown.noTokens' | translate: { requests: integer(item.requests) } }}</span>
                     }
@@ -288,6 +438,15 @@
                       </span>
                     </div>
                     <div class="bar-row__track"><div class="bar-row__fill" [style.width.%]="item.share * 100"></div></div>
+                    @if (item.previous; as before) {
+                      <div class="bar-row__track bar-row__track--prev"><div class="bar-row__fill bar-row__fill--prev" [style.width.%]="before.share * 100"></div></div>
+                      <span class="bar-row__prev">
+                        {{ 'usage.compare.was' | translate: { value: cost(before.cost), share: percent(before.share) } }}
+                        @if (before.changeText) {
+                          <span class="bar-row__change bar-row__change--{{ before.direction }}">{{ before.changeText }}</span>
+                        }
+                      </span>
+                    }
                     @if (item.noTokens) {
                       <span class="bar-row__note">{{ 'usage.breakdown.noTokens' | translate: { requests: integer(item.requests) } }}</span>
                     }
@@ -296,6 +455,20 @@
               </ul>
             </section>
           </div>
+
+          <section class="card">
+            <h2 class="card__title">{{ 'usage.table.title' | translate }}</h2>
+            <app-usage-table
+              [filters]="tableFilters()"
+              [page]="s.page"
+              [sortBy]="s.sortBy"
+              [order]="s.order"
+              [locale]="locale()"
+              [typeLabel]="typeLabelFn"
+              (pageChange)="setPage($event)"
+              (sortChange)="setSort($event)"
+            />
+          </section>
         </div>
       }
     } @else {

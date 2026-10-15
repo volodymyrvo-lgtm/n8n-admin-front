@@ -23,7 +23,8 @@
     "users": "Users",
     "logout": "Log out",
     "prompts": "Prompts",
-    "glossary": "Glossary"
+    "glossary": "Glossary",
+    "seoSection": "SEO Generation"
   },
   "login": {
     "title": "Sign in to the console",
@@ -369,7 +370,7 @@
     },
     "seo": {
       "title": "SEO Generation",
-      "description": "SEO copy, metadata and content optimized for search."
+      "description": "SEO page generation jobs, prompts and results."
     },
     "smm": {
       "title": "SMM Generation",
@@ -430,7 +431,10 @@
       "donutAria": "Doughnut chart of spend shares",
       "noSpend": "No spend in this period to split.",
       "others": "Others ({{count}})",
-      "donutTitle": "Spend share"
+      "donutTitle": "Spend share",
+      "compareTitle": "Spend: period vs period",
+      "compareAria": "Bar chart comparing spend in two periods",
+      "compareNote": "Bars are lined up by position: day 1 of one period next to day 1 of the other. Faded bars are partial or still in progress."
     },
     "period": {
       "ongoing": "In progress - data up to yesterday only",
@@ -469,7 +473,94 @@
     },
     "view": {
       "bars": "Bars over time",
-      "donut": "Doughnut: share of total"
+      "donut": "Doughnut: share of total",
+      "compare": "Compare with the other period"
+    },
+    "compare": {
+      "new": "new",
+      "previous": "Previous period ({{range}}): {{value}}",
+      "caption": "Compared with the previous period: {{range}}",
+      "unavailable": "No earlier data to compare with.",
+      "on": "Compare with previous period",
+      "off": "Hide comparison",
+      "with": "Compare with",
+      "from": "Compare period: from",
+      "to": "Compare period: to",
+      "reset": "Previous period",
+      "auto": "(the previous period of the same length)",
+      "lengthNote": "The periods differ in length ({{a}} vs {{b}} days): compare the per-day averages.",
+      "perDay": "/day: {{current}} vs {{previous}}",
+      "perDayHint": "Average per day in this period vs. the period compared with",
+      "was": "then: {{value}} · {{share}}",
+      "periodA": "{{range}}",
+      "periodB": "{{range}}",
+      "chartError": "Could not load the data of the period being compared.",
+      "unit": {
+        "day": "Day {{n}}",
+        "week": "Week {{n}}",
+        "month": "Month {{n}}",
+        "quarter": "Quarter {{n}}"
+      }
+    },
+    "table": {
+      "title": "Daily details",
+      "empty": "No rows for this period.",
+      "rows": "{{count}} rows",
+      "unmetered": "Requests were made, but the model reported no tokens or cost.",
+      "columns": {
+        "date": "Date",
+        "flow": "Flow",
+        "type": "Type",
+        "model": "Model",
+        "requests": "Requests",
+        "inputTokens": "Input",
+        "outputTokens": "Output",
+        "cacheRead": "Cache read",
+        "cacheWrite": "Cache write",
+        "cost": "Spend"
+      }
     }
+  },
+  "seoJobs": {
+    "title": "SEO jobs",
+    "subtitle": "Generation runs for SEO pages.",
+    "newJob": "New SEO job",
+    "emptyTitle": "No SEO jobs yet",
+    "emptyDescription": "Create the first SEO job to generate a page.",
+    "card": {
+      "language": "Language",
+      "prompt": "Prompt"
+    }
+  },
+  "seoAdd": {
+    "title": "Add SEO Job",
+    "subtitle": "Configure a new SEO page generation and trigger it via n8n.",
+    "language": "Language",
+    "llm": "LLM",
+    "llmPlaceholder": "Select a model",
+    "llmError": "Select a model",
+    "prompt": "Prompt",
+    "promptPlaceholder": "Select a prompt",
+    "promptError": "Select a prompt",
+    "noPrompts": "There are no SEO prompts yet.",
+    "createPrompt": "Create one",
+    "pageTask": "Page task",
+    "pageTaskPlaceholder": "e.g. R048 · Keno",
+    "pageTaskError": "Page task is required",
+    "pageTaskTooLong": "Page task must be at most {{max}} characters",
+    "isTestingHint": "Sends this job's n8n trigger to the test webhook instead of production.",
+    "submit": "Create job",
+    "cancel": "Cancel",
+    "toast": {
+      "created": "SEO job created"
+    },
+    "n8nError": "Job saved, but the n8n trigger failed",
+    "n8nNotConfigured": "Job saved, but the SEO n8n webhook is not configured",
+    "rulesError": "Select a tone of voice or humanizer rule set",
+    "noRules": "There are no SEO rule sets yet.",
+    "createRule": "Create one",
+    "toneOfVoice": "Tone of voice",
+    "humanizer": "Humanizer",
+    "ruleSetPlaceholder": "Select a rule set"
   }
 }

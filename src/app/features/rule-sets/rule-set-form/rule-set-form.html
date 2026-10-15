@@ -53,7 +53,7 @@
       <button type="submit" class="btn-primary" [disabled]="form.invalid">
         {{ (isEditMode ? 'ruleSets.edit.submit' : 'ruleSets.add.submit') | translate }}
       </button>
-      <a routerLink="/rule-sets" class="link-muted">{{ 'ruleSets.add.cancel' | translate }}</a>
+      <a [routerLink]="basePath" class="link-muted">{{ 'ruleSets.add.cancel' | translate }}</a>
     </div>
   </form>
 </div>

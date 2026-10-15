@@ -33,6 +33,20 @@ describe('errorToastInterceptor', () => {
     expect(toast.toasts()[0].message).toBe('Jobs are unavailable');
   });
 
+  it('joins a list of validation messages (a NestJS 400 with several broken fields) into one toast', async () => {
+    const toast = TestBed.inject(ToastService);
+    const req = new HttpRequest('POST', '/api/jobs/seo', {});
+    const error = new HttpErrorResponse({
+      error: { statusCode: 400, message: ['language must be 2-5 latin letters', 'pageTask must not be empty'] },
+      status: 400,
+    });
+    const next: HttpHandlerFn = () => throwError(() => error);
+
+    await run(req, next);
+
+    expect(toast.toasts()[0].message).toBe('language must be 2-5 latin letters; pageTask must not be empty');
+  });
+
   it('falls back to a generic message when the server gives none', async () => {
     const toast = TestBed.inject(ToastService);
     const req = new HttpRequest('GET', '/api/jobs');

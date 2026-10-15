@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -161,5 +162,69 @@ describe('PromptsComponent', () => {
 
     expect(confirmSpy).not.toHaveBeenCalled();
     expect(promptsService.prompts().length).toBe(1);
+  });
+});
+
+describe('PromptsComponent (SEO section)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PromptsComponent],
+      providers: [
+        provideTranslateService(),
+        provideRouter([{ path: 'seo/prompts', component: PromptsComponent, data: { kind: 'seo' } }]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(ADMIN_USER);
+  });
+
+  afterEach(() => httpMock.verify());
+
+  it('lists only SEO prompts (GET /prompts?kind=seo) and links the SEO routes', async () => {
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/seo/prompts', PromptsComponent);
+
+    const req = httpMock.expectOne((r) => r.url === 'http://localhost:3000/prompts');
+    expect(req.request.params.get('kind')).toBe('seo');
+    req.flush([{ id: 's-1', name: 'R048 brief', message: 'x', kind: 'seo' }]);
+    harness.detectChanges();
+
+    const el = harness.routeNativeElement as HTMLElement;
+    expect(el.textContent).toContain('R048 brief');
+    expect(el.querySelector('a.page-btn')?.getAttribute('href')).toBe('/seo/prompts/new');
+    expect(el.querySelector('a.icon-btn')?.getAttribute('href')).toBe('/seo/prompts/s-1/edit');
+  });
+
+  it('does not show communication prompts that were loaded earlier', async () => {
+    TestBed.inject(PromptsService).prompts.set([{ id: 'c-1', name: 'Mailing prompt', message: 'x' }]);
+
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/seo/prompts', PromptsComponent);
+    httpMock.expectOne((r) => r.url === 'http://localhost:3000/prompts').flush([]);
+    harness.detectChanges();
+
+    const el = harness.routeNativeElement as HTMLElement;
+    expect(el.textContent).not.toContain('Mailing prompt');
+    expect(el.querySelector('app-empty-state')).toBeTruthy();
+  });
+
+  it('deletes an SEO prompt through the same endpoint and drops it from the SEO list', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const promptsService = TestBed.inject(PromptsService);
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/seo/prompts', PromptsComponent);
+    httpMock
+      .expectOne((r) => r.url === 'http://localhost:3000/prompts')
+      .flush([{ id: 's-1', name: 'R048 brief', message: 'x', kind: 'seo' }]);
+    harness.detectChanges();
+
+    (harness.routeNativeElement as HTMLElement).querySelector<HTMLButtonElement>('button.icon-btn--danger')?.click();
+    httpMock.expectOne('http://localhost:3000/prompts/s-1').flush(null);
+
+    expect(promptsService.seoPrompts()).toEqual([]);
   });
 });

@@ -27,6 +27,8 @@ export type JobRunStatus = 'success' | 'failed' | 'pending';
  */
 export interface JobRun {
   id: string;
+  /** Which family the job belongs to - this is the communication (CRM mailings) one; SEO jobs are `SeoJobRun`. */
+  kind: 'communication';
   steps: JobSteps;
   jobType: string;
   taskStatus: string;
@@ -180,4 +182,115 @@ export interface CreateJobN8nLocalizationPayload {
   sm: string;
   llm: string;
   jobId: string;
+}
+
+// ---------------------------------------------------------------------------
+// SEO jobs (generation of SEO pages) - same `/jobs` resource on the backend,
+// told apart from the communication ones by `kind`. See SeoJobsService.
+// ---------------------------------------------------------------------------
+
+/**
+ * A run of an SEO job, as returned by `GET /jobs?kind=seo`. It shares the
+ * run bookkeeping (steps, status, dates, spend, table link) with
+ * `JobRun`, but carries its own fields (`language`, `prompt`,
+ * `pageTask`) while the communication-only ones (`jobType`, `board`,
+ * ...) are always `null`. `llm` holds the model, as on every job.
+ *
+ * `prompt` is a plain string on the backend: `"<LANGUAGE> <promptId>"`,
+ * built by `buildSeoPrompt` from the form's language + chosen prompt.
+ */
+export interface SeoJobRun {
+  id: string;
+  kind: 'seo';
+  steps: JobSteps;
+  status: JobRunStatus;
+  runDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+  runnedById: string | null;
+  llm: string | null;
+  spend: Record<string, number>;
+  tableUrl: string | null;
+  language: string;
+  prompt: string;
+  pageTask: string;
+  jobType: null;
+  taskStatus: null;
+  messageType: null;
+  board: null;
+  taskDescription: null;
+  ruleIds: string[];
+  sm: string | null;
+  glossaryId: string | null;
+}
+
+/** Same paginated envelope as `PaginatedJobRuns`, for `GET /jobs?kind=seo`. */
+export interface PaginatedSeoJobRuns {
+  items: SeoJobRun[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+/** Languages an SEO page can be generated in; the value is sent as-is (`language`). */
+export type SeoLanguageOption = 'EN' | 'AZ' | 'RU';
+export const SEO_LANGUAGE_OPTIONS: readonly SeoLanguageOption[] = ['EN', 'AZ', 'RU'];
+
+/** The SEO form's limits - mirror the backend's validation of `POST /jobs/seo`. */
+export const SEO_PAGE_TASK_MAX_LENGTH = 500;
+export const SEO_LLM_MAX_LENGTH = 200;
+export const SEO_PROMPT_MAX_LENGTH = 1000;
+
+/** The new-SEO-job form's values. `promptId` is the chosen prompt's id (see PromptsService, kind `seo`). `isTesting` only picks which n8n webhook is triggered, like on the communication form. */
+export interface CreateSeoJobFormValue {
+  language: string;
+  llm: string;
+  promptId: string;
+  pageTask: string;
+  /** Ids of the picked SEO rule sets by role (kind `seo`, tagged `toneOfVoice` / `humanaizer`); `''` when a role wasn't picked, but at least one is required. There is no "main" rule set for SEO. */
+  toneOfVoiceRuleSetId: string;
+  humanizerRuleSetId: string;
+  isTesting: boolean;
+}
+
+/**
+ * Body of `POST /jobs/seo`. Nothing else may be sent (the backend rejects
+ * unknown fields with a 400): `kind`, the run date and the runner are set
+ * by the server.
+ */
+export interface CreateSeoJobBackendPayload {
+  steps: JobSteps;
+  language: string;
+  llm: string;
+  prompt: string;
+  pageTask: string;
+  /** Unique ids of existing SEO rules (the backend rejects other kinds' rules and unknown ids), at least one. */
+  ruleIds: string[];
+}
+
+/**
+ * Body posted to the SEO n8n webhook once the backend has created the record (`jobId`).
+ * Like the communication payload it carries the rule sets by role
+ * (`toneOfVoice` / `humanizer`, the rule's id or `''` when not picked) -
+ * not a `ruleIds` array, which is only for our backend.
+ */
+export interface CreateSeoJobN8nPayload {
+  jobId: string;
+  language: string;
+  llm: string;
+  prompt: string;
+  pageTask: string;
+  toneOfVoice: string;
+  humanizer: string;
+}
+
+/** The `prompt` string the backend stores for an SEO job: the language, a space, then the prompt's id. */
+export function buildSeoPrompt(language: string, promptId: string): string {
+  return `${language} ${promptId}`;
+}
+
+/** Splits a stored `prompt` back into its language and prompt id; `null` if it isn't in the `"<LANGUAGE> <id>"` form. */
+export function parseSeoPrompt(prompt: string): { language: string; promptId: string } | null {
+  const match = /^(\S+)\s+(\S+)$/.exec(prompt.trim());
+  return match ? { language: match[1], promptId: match[2] } : null;
 }

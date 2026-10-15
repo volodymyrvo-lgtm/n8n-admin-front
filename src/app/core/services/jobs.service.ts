@@ -10,6 +10,7 @@ import {
   CreateJobN8nPayload,
   JobRun,
   PaginatedJobRuns,
+  SeoJobRun,
 } from '../models/job.model';
 import { AuthService } from './auth.service';
 
@@ -222,7 +223,13 @@ export class JobsService {
       auth: { token: this.authService.getToken() },
     });
 
-    this.socket.on('job.updated', (job: JobRun) => {
+    // `job.updated` is broadcast for every job of every kind - this page
+    // only shows the communication ones (a payload without `kind`
+    // predates the field and is a communication job).
+    this.socket.on('job.updated', (job: JobRun | SeoJobRun) => {
+      if (job.kind === 'seo') {
+        return;
+      }
       this.applyJobUpdate(job);
     });
   }

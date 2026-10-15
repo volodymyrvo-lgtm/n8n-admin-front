@@ -28,7 +28,15 @@ export const errorToastInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      const serverMessage = typeof error.error?.message === 'string' ? error.error.message : null;
+      // NestJS validation errors come as an array of messages (a 400 with
+      // several broken fields) - show them all, not the generic text.
+      const message: unknown = error.error?.message;
+      const serverMessage =
+        typeof message === 'string'
+          ? message
+          : Array.isArray(message) && message.length > 0 && message.every((item) => typeof item === 'string')
+            ? message.join('; ')
+            : null;
       toast.error(serverMessage ?? translate.instant('toast.genericError'));
       return throwError(() => error);
     }),

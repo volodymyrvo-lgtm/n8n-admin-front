@@ -5,7 +5,7 @@
       <p class="page-subtitle">{{ 'ruleSets.subtitle' | translate }}</p>
     </div>
     @if (authService.isAdmin()) {
-      <a routerLink="/rule-sets/new" class="page-btn">
+      <a [routerLink]="basePath + '/new'" class="page-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14"></path><path d="M5 12h14"></path>
         </svg>
@@ -55,7 +55,7 @@
             @if (authService.isAdmin()) {
               <a
                 class="icon-btn"
-                [routerLink]="['/rule-sets', ruleSet.id, 'edit']"
+                [routerLink]="[basePath, ruleSet.id, 'edit']"
                 [attr.aria-label]="'ruleSets.edit.title' | translate"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -65,7 +65,7 @@
               </a>
               <a
                 class="icon-btn"
-                routerLink="/rule-sets/new"
+                [routerLink]="basePath + '/new'"
                 [queryParams]="{ duplicateFrom: ruleSet.id }"
                 [attr.aria-label]="'ruleSets.duplicate.action' | translate"
               >

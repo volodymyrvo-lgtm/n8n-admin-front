@@ -1,0 +1,157 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.usage-table__scroll {
+  overflow-x: auto;
+  border: 1px solid oklch(26% 0.015 260);
+  border-radius: 10px;
+  transition: opacity 0.15s ease;
+}
+
+.usage-table__scroll--loading {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.usage-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  font: 400 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(90% 0.006 260);
+}
+
+.usage-table th:first-child,
+.usage-table td:first-child {
+  padding-left: 14px;
+}
+
+.usage-table th:last-child,
+.usage-table td:last-child {
+  padding-right: 14px;
+}
+
+.usage-table th,
+.usage-table td {
+  padding: 9px 8px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.usage-table thead th {
+  position: sticky;
+  top: 0;
+  background: oklch(20% 0.014 260);
+  border-bottom: 1px solid oklch(28% 0.015 260);
+  font: 600 10.5px 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: oklch(66% 0.01 260);
+  white-space: nowrap;
+}
+
+.usage-table tbody tr + tr td {
+  border-top: 1px solid oklch(24% 0.014 260);
+}
+
+.usage-table tbody tr:hover td {
+  background: oklch(21% 0.014 260);
+}
+
+.usage-table__num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.usage-table__nowrap {
+  white-space: nowrap;
+}
+
+.usage-table__flow {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.usage-table__cost {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.usage-table__cost--unmetered {
+  color: oklch(58% 0.008 260);
+  font-weight: 400;
+  cursor: help;
+}
+
+.usage-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.usage-table__sort:hover,
+.usage-table__sort--active {
+  color: oklch(96% 0.004 260);
+}
+
+.usage-table__sort:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* The arrow only shows up on the sorted column (and, faintly, on hover) so the header isn't a wall of arrows. */
+.usage-table__arrow {
+  opacity: 0;
+}
+
+.usage-table__sort:hover .usage-table__arrow {
+  opacity: 0.45;
+}
+
+.usage-table__sort--active .usage-table__arrow {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.usage-table__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+
+.usage-table__count {
+  font: 400 12px 'JetBrains Mono', ui-monospace, monospace;
+  color: oklch(62% 0.01 260);
+}
+
+.usage-table__empty {
+  margin: 0;
+  font: 400 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(62% 0.01 260);
+}
+
+.alert {
+  padding: 10px 14px;
+  border: 1px solid oklch(45% 0.12 25);
+  border-radius: 8px;
+  background: oklch(24% 0.05 25);
+  color: oklch(88% 0.05 25);
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+}

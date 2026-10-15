@@ -101,3 +101,26 @@ export function formatPeriodTitle(period: string, granularity: BucketGranularity
       return `${formatPeriodLabel(period, granularity, locale)} (${short.format(start)} – ${short.format(utcDate(bucketEnd(period, granularity)))})`;
   }
 }
+
+/** How a KPI changed against the previous period. */
+export type Delta =
+  | { kind: 'none' } // nothing in either period - nothing to say
+  | { kind: 'new' } // zero before, something now - a percentage would be infinite
+  | { kind: 'change'; direction: 'up' | 'down' | 'flat'; fraction: number };
+
+/** Changes smaller than 0.05% read as "no change" (the badge would show "0.0%" anyway). */
+const FLAT_THRESHOLD = 0.0005;
+
+/** `total / days`, 0 for an empty period. */
+export function perDay(total: number, days: number): number {
+  return days > 0 ? total / days : 0;
+}
+
+export function compareValues(current: number, previous: number): Delta {
+  if (previous === 0) {
+    return current === 0 ? { kind: 'none' } : { kind: 'new' };
+  }
+  const fraction = (current - previous) / Math.abs(previous);
+  const direction = Math.abs(fraction) < FLAT_THRESHOLD ? 'flat' : fraction > 0 ? 'up' : 'down';
+  return { kind: 'change', direction, fraction };
+}

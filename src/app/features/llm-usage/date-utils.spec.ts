@@ -7,6 +7,7 @@ import {
   isValidIsoDate,
   nextBucketStart,
   presetRange,
+  previousRange,
   startOfBucket,
   suggestGranularity,
 } from './date-utils';
@@ -176,6 +177,18 @@ describe('date-utils', () => {
       expect(suggestGranularity('2026-05-01', '2026-10-11')).toBe('month');
       expect(suggestGranularity('2025-01-01', '2026-10-11')).toBe('month');
       expect(suggestGranularity('2023-01-01', '2026-10-11')).toBe('quarter');
+    });
+  });
+
+  describe('previousRange', () => {
+    it('is the period of the same length that ends the day before', () => {
+      expect(previousRange('2026-09-12', '2026-10-11')).toEqual({ from: '2026-08-13', to: '2026-09-11' });
+      expect(previousRange('2026-10-11', '2026-10-11')).toEqual({ from: '2026-10-10', to: '2026-10-10' });
+    });
+
+    it('crosses month and year boundaries', () => {
+      expect(previousRange('2026-01-01', '2026-01-07')).toEqual({ from: '2025-12-25', to: '2025-12-31' });
+      expect(previousRange('2026-03-01', '2026-03-31')).toEqual({ from: '2026-01-29', to: '2026-02-28' });
     });
   });
 });

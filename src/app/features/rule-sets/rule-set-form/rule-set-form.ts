@@ -2,7 +2,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RuleSetFields, SET_TYPES, SetType } from '../../../core/models/rule-set.model';
+import { RuleSetFields, RuleSetKind, SEO_SET_TYPES, SET_TYPES, SetType } from '../../../core/models/rule-set.model';
 import { RuleSetsService } from '../../../core/services/rule-sets.service';
 import { ToastService } from '../../../core/services/toast.service';
 import {
@@ -33,11 +33,17 @@ export class RuleSetFormComponent {
   private readonly translate = inject(TranslateService);
   private readonly cd = inject(ChangeDetectorRef);
 
+  /** Under `/seo/rule-sets` the form creates (and edits) SEO rules, under `/rule-sets` communication ones: the route's `data.kind` says which. */
+  private readonly kind: RuleSetKind = this.route.snapshot.data?.['kind'] === 'seo' ? 'seo' : 'communication';
+  /** The list this form belongs to - where it returns to. */
+  protected readonly basePath = this.kind === 'seo' ? '/seo/rule-sets' : '/rule-sets';
+
   private readonly editingId = this.route.snapshot.paramMap.get('id');
   private readonly duplicateFromId = this.editingId ? null : this.route.snapshot.queryParamMap.get('duplicateFrom');
   protected readonly isEditMode = !!this.editingId;
   protected readonly isDuplicateMode = !!this.duplicateFromId;
-  protected readonly setTypes = SET_TYPES;
+  /** The checkboxes offered: all channels/roles for a communication rule, only tone of voice / humanizer for an SEO one. */
+  protected readonly setTypes: readonly SetType[] = this.kind === 'seo' ? SEO_SET_TYPES : SET_TYPES;
 
   protected readonly form = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -63,12 +69,12 @@ export class RuleSetFormComponent {
       return;
     }
 
-    const existing = this.ruleSetsService.ruleSets().find((ruleSet) => ruleSet.id === sourceId);
+    const existing = this.ruleSetsService.ruleSetsFor(this.kind)().find((ruleSet) => ruleSet.id === sourceId);
     if (!existing) {
       if (this.editingId) {
         // Not found locally (e.g. a direct navigation before the list has
         // loaded) - there is nothing to edit, so go back to the list.
-        this.router.navigateByUrl('/rule-sets');
+        this.router.navigateByUrl(this.basePath);
       }
       // Duplicating from a rule set that isn't loaded locally yet (rare -
       // the copy action only appears once the list has loaded) just falls
@@ -97,19 +103,19 @@ export class RuleSetFormComponent {
     const input = {
       ruleName: name,
       ruleSet: rowsToRuleSet(this.fields()),
-      setType: SET_TYPES.filter((type) => setType[type]),
+      setType: this.setTypes.filter((type) => setType[type]),
     };
 
     if (this.editingId) {
-      this.ruleSetsService.updateRuleSet(this.editingId, input);
+      this.ruleSetsService.updateRuleSet(this.editingId, input, this.kind);
       this.toast.success(this.translate.instant('ruleSets.toast.updated'));
     } else {
-      this.ruleSetsService.addRuleSet(input);
-      this.ruleSetsService.loadRuleSets();
+      this.ruleSetsService.addRuleSet(input, this.kind);
+      this.ruleSetsService.loadRuleSets(this.kind);
       this.toast.success(this.translate.instant('ruleSets.toast.created'));
     }
 
-    this.router.navigateByUrl('/rule-sets');
+    this.router.navigateByUrl(this.basePath);
     this.cd.markForCheck();
   }
 }

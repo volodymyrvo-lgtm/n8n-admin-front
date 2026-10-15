@@ -1,0 +1,96 @@
+/* ---- comparison with the previous period ---- */
+
+.kpi__delta {
+  font: 500 12px 'JetBrains Mono', ui-monospace, monospace;
+  color: oklch(66% 0.01 260);
+  font-variant-numeric: tabular-nums;
+  cursor: help;
+}
+
+/* Spend going up reads as a warning, going down as good news; the other tiles stay neutral (more requests isn't bad per se). */
+.kpi__delta--cost.kpi__delta--up {
+  color: oklch(74% 0.16 30);
+}
+
+.kpi__delta--cost.kpi__delta--down {
+  color: oklch(76% 0.15 150);
+}
+
+/* Per-day averages: only shown when the two periods differ in length, since totals alone would flatter the longer one. */
+.kpi__avg {
+  font: 400 11.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+  font-variant-numeric: tabular-nums;
+  cursor: help;
+}
+
+.kpi__avg-change {
+  margin-left: 4px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  color: oklch(66% 0.01 260);
+}
+
+/* The "compare with" row under the KPI strip: the other period's dates, a note, and the on/off switch. */
+.compare-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: -12px;
+}
+
+.compare-bar__period {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.compare-bar__hint,
+.compare-bar__note {
+  font: 400 12px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+}
+
+.compare-bar__note--warn {
+  color: oklch(76% 0.12 80);
+}
+
+.compare-bar__toggle {
+  margin-left: auto;
+}
+
+/* Breakdown rows while comparing: the other period's bar (muted) and figures under this period's. */
+.bar-row__track--prev {
+  height: 4px;
+}
+
+.bar-row__fill--prev {
+  background: #6f8fb3;
+}
+
+.bar-row__prev {
+  font: 400 12px 'Work Sans', system-ui, sans-serif;
+  color: oklch(60% 0.01 260);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-row__change {
+  margin-left: 6px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Spend up reads as a warning, down as good news - the same colors as the KPI tile. */
+.bar-row__change--up {
+  color: oklch(74% 0.16 30);
+}
+
+.bar-row__change--down {
+  color: oklch(76% 0.15 150);
+}
+
+@media (max-width: 720px) {
+  .compare-bar__toggle {
+    margin-left: 0;
+  }
+}

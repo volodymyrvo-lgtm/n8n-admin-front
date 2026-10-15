@@ -2,6 +2,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PromptKind } from '../../../core/models/prompt.model';
 import { PromptsService } from '../../../core/services/prompts.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -10,6 +11,11 @@ import { ToastService } from '../../../core/services/toast.service';
  * editing an existing one (`/prompts/:id/edit`) - same split as
  * RuleSetFormComponent. Just name + raw message for now; more fields
  * will show up here once the shape of a prompt is decided.
+ *
+ * Shared by the Content section and the SEO section: the route's
+ * `data.kind` says which kind of prompt this edits (and so which list
+ * "edit" looks the prompt up in, what a new prompt is created as, and
+ * where to go back to).
  */
 @Component({
   selector: 'app-prompt-form',
@@ -25,6 +31,10 @@ export class PromptFormComponent {
   private readonly toast = inject(ToastService);
   private readonly translate = inject(TranslateService);
 
+  private readonly kind: PromptKind = this.route.snapshot.data?.['kind'] === 'seo' ? 'seo' : 'communication';
+  /** The list page this form belongs to - where Cancel and a successful save go. */
+  protected readonly basePath = this.kind === 'seo' ? '/seo/prompts' : '/prompts';
+
   private readonly editingId = this.route.snapshot.paramMap.get('id');
   protected readonly isEditMode = !!this.editingId;
 
@@ -38,11 +48,11 @@ export class PromptFormComponent {
       return;
     }
 
-    const existing = this.promptsService.prompts().find((prompt) => prompt.id === this.editingId);
+    const existing = this.promptsService.promptsFor(this.kind)().find((prompt) => prompt.id === this.editingId);
     if (!existing) {
       // Not found locally (e.g. a direct navigation before the list has
       // loaded) - there is nothing to edit, so go back to the list.
-      this.router.navigateByUrl('/prompts');
+      this.router.navigateByUrl(this.basePath);
       return;
     }
 
@@ -62,17 +72,18 @@ export class PromptFormComponent {
       this.promptsService.updatePrompt(this.editingId, input, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('prompts.toast.updated'));
-          this.router.navigateByUrl('/prompts');
+          this.router.navigateByUrl(this.basePath);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));
         },
       });
     } else {
-      this.promptsService.addPrompt(input, {
+      // Only an SEO prompt says its kind; a communication one is created exactly as before (the backend defaults it).
+      this.promptsService.addPrompt(this.kind === 'seo' ? { ...input, kind: 'seo' } : input, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('prompts.toast.created'));
-          this.router.navigateByUrl('/prompts');
+          this.router.navigateByUrl(this.basePath);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));

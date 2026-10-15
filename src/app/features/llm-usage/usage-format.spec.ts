@@ -1,4 +1,5 @@
 import {
+  compareValues,
   formatCompact,
   formatCost,
   formatInteger,
@@ -70,5 +71,25 @@ describe('usage-format', () => {
     expect(intlLocale('ru')).toBe('ru-RU');
     expect(intlLocale('en')).toBe('en-US');
     expect(intlLocale('anything-else')).toBe('en-US');
+  });
+
+  describe('compareValues', () => {
+    it('reports the relative change and its direction', () => {
+      expect(compareValues(150, 100)).toEqual({ kind: 'change', direction: 'up', fraction: 0.5 });
+      expect(compareValues(75, 100)).toEqual({ kind: 'change', direction: 'down', fraction: -0.25 });
+    });
+
+    it('treats a negligible change as flat', () => {
+      expect(compareValues(100.01, 100)).toMatchObject({ kind: 'change', direction: 'flat' });
+    });
+
+    it('says "new" when the previous period had nothing, and nothing when both are empty', () => {
+      expect(compareValues(5, 0)).toEqual({ kind: 'new' });
+      expect(compareValues(0, 0)).toEqual({ kind: 'none' });
+    });
+
+    it('shows a full drop when the current period is empty', () => {
+      expect(compareValues(0, 40)).toEqual({ kind: 'change', direction: 'down', fraction: -1 });
+    });
   });
 });

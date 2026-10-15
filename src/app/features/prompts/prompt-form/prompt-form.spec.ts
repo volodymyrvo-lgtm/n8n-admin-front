@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { PromptsService } from '../../../core/services/prompts.service';
 import { PromptFormComponent } from './prompt-form';
 
-function configure(routeId: string | null): void {
+function configure(routeId: string | null, kind?: 'seo'): void {
   TestBed.configureTestingModule({
     imports: [PromptFormComponent],
     providers: [
@@ -17,7 +17,9 @@ function configure(routeId: string | null): void {
       provideHttpClientTesting(),
       {
         provide: ActivatedRoute,
-        useValue: { snapshot: { paramMap: convertToParamMap(routeId ? { id: routeId } : {}) } },
+        useValue: {
+          snapshot: { paramMap: convertToParamMap(routeId ? { id: routeId } : {}), data: kind ? { kind } : {} },
+        },
       },
     ],
   });
@@ -217,5 +219,70 @@ describe('PromptFormComponent (auto-closing prompt tags)', () => {
     typeInto(textarea, '<system>\n</system>', '<system>'.length);
 
     expect(textarea.value).toBe('<system>\n</system>');
+  });
+});
+
+describe('PromptFormComponent (SEO section)', () => {
+  it('creates an SEO prompt with kind: "seo" in the body and goes back to the SEO prompts list', () => {
+    configure(null, 'seo');
+    TestBed.compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    const promptsService = TestBed.inject(PromptsService);
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    const fixture = TestBed.createComponent(PromptFormComponent);
+    fixture.componentInstance['form'].setValue({ name: 'R048 brief', message: 'Write a page' });
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne('http://localhost:3000/prompts');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ name: 'R048 brief', message: 'Write a page', kind: 'seo' });
+    req.flush({ id: 's-1', name: 'R048 brief', message: 'Write a page', kind: 'seo' });
+
+    expect(promptsService.seoPrompts().map((prompt) => prompt.id)).toEqual(['s-1']);
+    expect(promptsService.prompts()).toEqual([]);
+    expect(navigateSpy).toHaveBeenCalledWith('/seo/prompts');
+    httpMock.verify();
+  });
+
+  it('edits an SEO prompt found in the SEO list (without re-sending kind) and goes back to the SEO list', () => {
+    configure('s-1', 'seo');
+    TestBed.compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    const promptsService = TestBed.inject(PromptsService);
+    promptsService.seoPrompts.set([{ id: 's-1', name: 'R048 brief', message: 'Write a page', kind: 'seo' }]);
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    const fixture = TestBed.createComponent(PromptFormComponent);
+    expect(fixture.componentInstance['form'].controls.name.value).toBe('R048 brief');
+
+    fixture.componentInstance['form'].controls.message.setValue('Write a better page');
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne('http://localhost:3000/prompts/s-1');
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ name: 'R048 brief', message: 'Write a better page' });
+    req.flush({ id: 's-1', name: 'R048 brief', message: 'Write a better page', kind: 'seo' });
+
+    expect(promptsService.seoPrompts()[0].message).toBe('Write a better page');
+    expect(navigateSpy).toHaveBeenCalledWith('/seo/prompts');
+    httpMock.verify();
+  });
+
+  it('goes back to the SEO list when the prompt is not among the SEO prompts', () => {
+    configure('c-1', 'seo');
+    TestBed.compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    // A communication prompt with that id exists, but this is the SEO section.
+    TestBed.inject(PromptsService).prompts.set([{ id: 'c-1', name: 'Mailing', message: 'x' }]);
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    TestBed.createComponent(PromptFormComponent);
+
+    expect(navigateSpy).toHaveBeenCalledWith('/seo/prompts');
+    httpMock.verify();
   });
 });

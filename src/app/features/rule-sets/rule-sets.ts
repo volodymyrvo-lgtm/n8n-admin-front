@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { RuleSet, SET_TYPES, SetType } from '../../core/models/rule-set.model';
+import { RuleSet, RuleSetKind, SEO_SET_TYPES, SET_TYPES, SetType } from '../../core/models/rule-set.model';
 import { AuthService } from '../../core/services/auth.service';
 import { RuleSetsService } from '../../core/services/rule-sets.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -23,13 +23,20 @@ export class RuleSetsComponent implements OnInit {
   protected readonly authService = inject(AuthService);
   private readonly translate = inject(TranslateService);
   private readonly toast = inject(ToastService);
+  private readonly route = inject(ActivatedRoute);
 
-  protected readonly setTypes = SET_TYPES;
+  /** The Content section (`/rule-sets`) lists communication rules, the SEO section (`/seo/rule-sets`) the SEO ones - the route's `data.kind` says which. */
+  private readonly kind: RuleSetKind = this.route.snapshot.data?.['kind'] === 'seo' ? 'seo' : 'communication';
+  /** Where this list's own routes live: the form pages are `<basePath>/new` and `<basePath>/:id/edit`. */
+  protected readonly basePath = this.kind === 'seo' ? '/seo/rule-sets' : '/rule-sets';
+  protected readonly ruleSets = this.ruleSetsService.ruleSetsFor(this.kind);
+
+  protected readonly setTypes: readonly SetType[] = this.kind === 'seo' ? SEO_SET_TYPES : SET_TYPES;
   protected readonly selectedTypes = signal<SetType[]>([]);
 
   protected readonly filteredRuleSets = computed(() => {
     const selected = this.selectedTypes();
-    const ruleSets = this.ruleSetsService.ruleSets();
+    const ruleSets = this.ruleSets();
     if (selected.length === 0) {
       return ruleSets;
     }
@@ -49,7 +56,7 @@ export class RuleSetsComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.ruleSetsService.loadRuleSets();
+    this.ruleSetsService.loadRuleSets(this.kind);
   }
 
   protected fieldCount(ruleSet: RuleSet): number {

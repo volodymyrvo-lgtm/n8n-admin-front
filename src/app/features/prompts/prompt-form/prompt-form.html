@@ -38,7 +38,7 @@
       <button type="submit" class="btn-primary" [disabled]="form.invalid">
         {{ (isEditMode ? 'prompts.edit.submit' : 'prompts.add.submit') | translate }}
       </button>
-      <a routerLink="/prompts" class="link-muted">{{ 'prompts.add.cancel' | translate }}</a>
+      <a [routerLink]="basePath" class="link-muted">{{ 'prompts.add.cancel' | translate }}</a>
     </div>
   </form>
 </div>

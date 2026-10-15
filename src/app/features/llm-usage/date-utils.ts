@@ -178,3 +178,14 @@ export function suggestGranularity(from: string, to: string): BucketGranularity 
   }
   return days <= 730 ? 'month' : 'quarter';
 }
+
+/**
+ * The period of the same length that ends the day before `from` - what the
+ * KPI tiles compare against ("the previous 30 days" for a 30-day range).
+ * Same length, not the previous calendar month/week, so the two sums are
+ * comparable even while the current month is only partly over.
+ */
+export function previousRange(from: string, to: string): { from: string; to: string } {
+  const previousTo = addDays(from, -1);
+  return { from: addDays(previousTo, -(daysInRange(from, to) - 1)), to: previousTo };
+}

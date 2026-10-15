@@ -30,6 +30,65 @@ export const routes: Routes = [
         path: 'usage',
         loadComponent: () => import('./features/llm-usage/llm-usage').then((m) => m.LlmUsageComponent),
       },
+      // SEO Generation: its own section with its own sidebar (the same
+      // layout component, told by `data.section` to show the SEO menu).
+      // Prompts reuse the Content Generation pages - `data.kind` makes
+      // them list/create/edit SEO prompts instead (see PromptsService).
+      {
+        path: 'seo',
+        data: { section: 'seo' },
+        loadComponent: () =>
+          import('./layout/dashboard-layout/dashboard-layout').then((m) => m.DashboardLayoutComponent),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'jobs' },
+          {
+            path: 'jobs',
+            loadComponent: () => import('./features/seo/seo-job-list/seo-job-list').then((m) => m.SeoJobListComponent),
+          },
+          {
+            path: 'jobs/new',
+            loadComponent: () => import('./features/seo/add-seo-job/add-seo-job').then((m) => m.AddSeoJobComponent),
+          },
+          {
+            path: 'rule-sets',
+            data: { kind: 'seo' },
+            loadComponent: () => import('./features/rule-sets/rule-sets').then((m) => m.RuleSetsComponent),
+          },
+          {
+            path: 'rule-sets/new',
+            canActivate: [adminGuard],
+            data: { kind: 'seo' },
+            loadComponent: () =>
+              import('./features/rule-sets/rule-set-form/rule-set-form').then((m) => m.RuleSetFormComponent),
+          },
+          {
+            path: 'rule-sets/:id/edit',
+            canActivate: [adminGuard],
+            data: { kind: 'seo' },
+            loadComponent: () =>
+              import('./features/rule-sets/rule-set-form/rule-set-form').then((m) => m.RuleSetFormComponent),
+          },
+          {
+            path: 'prompts',
+            data: { kind: 'seo' },
+            loadComponent: () => import('./features/prompts/prompts').then((m) => m.PromptsComponent),
+          },
+          {
+            path: 'prompts/new',
+            canActivate: [adminGuard],
+            data: { kind: 'seo' },
+            loadComponent: () =>
+              import('./features/prompts/prompt-form/prompt-form').then((m) => m.PromptFormComponent),
+          },
+          {
+            path: 'prompts/:id/edit',
+            canActivate: [adminGuard],
+            data: { kind: 'seo' },
+            loadComponent: () =>
+              import('./features/prompts/prompt-form/prompt-form').then((m) => m.PromptFormComponent),
+          },
+        ],
+      },
       {
         path: '',
         loadComponent: () =>

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -241,5 +241,45 @@ describe('RuleSetsComponent', () => {
     expect(el.querySelector('a.icon-btn')).toBeNull();
     expect(el.querySelector('button.icon-btn--danger')).toBeNull();
     expect(el.querySelector('a[href="/rule-sets/new"]')).toBeNull();
+  });
+});
+
+describe('RuleSetsComponent (SEO kind)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RuleSetsComponent],
+      providers: [
+        provideTranslateService(),
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { kind: 'seo' } } } },
+      ],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(ADMIN_USER);
+  });
+
+  afterEach(() => httpMock.verify());
+
+  it('loads only SEO rules (?kind=seo) and renders them with /seo/rule-sets links', () => {
+    const fixture = TestBed.createComponent(RuleSetsComponent);
+    fixture.detectChanges();
+
+    const req = httpMock.expectOne((r) => r.url === 'http://localhost:3000/rules');
+    expect(req.request.params.get('kind')).toBe('seo');
+    req.flush([{ id: 's-1', ruleName: 'SEO tone', ruleSet: { a: 'b' }, setType: ['email'], kind: 'seo' }]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelectorAll('.data-table__row').length).toBe(1);
+    expect(el.querySelector('a[href="/seo/rule-sets/new"]')).not.toBeNull();
+    expect(el.querySelector('a[href="/seo/rule-sets/s-1/edit"]')).not.toBeNull();
+    expect(el.querySelector('a[href="/rule-sets/new"]')).toBeNull();
+    // Only the two SEO roles are offered as type filters.
+    const chips = Array.from(el.querySelectorAll('.type-filter__chip')).map((chip) => chip.getAttribute('data-type'));
+    expect(chips).toEqual(['toneOfVoice', 'humanaizer']);
   });
 });

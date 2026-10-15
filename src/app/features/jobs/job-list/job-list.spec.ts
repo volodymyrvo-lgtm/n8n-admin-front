@@ -23,6 +23,7 @@ vi.mock('socket.io-client', () => ({
 function makeRun(overrides: Partial<JobRun> = {}): JobRun {
   return {
     id: '1',
+    kind: 'communication',
     steps: { step1: { status: 'success' }, step2: { status: 'success' } },
     jobType: 'email',
     taskStatus: 'new',

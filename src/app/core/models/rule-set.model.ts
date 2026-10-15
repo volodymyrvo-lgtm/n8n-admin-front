@@ -36,8 +36,16 @@ export const SET_TYPES: readonly SetType[] = [
   'notification_center',
 ];
 
+/** SEO rules only come in the two roles the SEO job form picks by - tone of voice and humanizer (there is no main rule set). */
+export const SEO_SET_TYPES: readonly SetType[] = ['toneOfVoice', 'humanaizer'];
+
+/** Rule sets are split by the flow that uses them: CRM mailings (the default) or SEO generation. The kind is set by the route a rule is created through, never by the client. */
+export type RuleSetKind = 'communication' | 'seo';
+
 export interface RuleSet {
   id?: string;
+  /** Which part of the app the rule belongs to (the backend fills it in); read-only on the client. */
+  kind?: RuleSetKind;
   ruleName: string;
   ruleSet: RuleSetFields;
   setType: SetType[];

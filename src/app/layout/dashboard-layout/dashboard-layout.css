@@ -65,6 +65,14 @@
   gap: 3px;
 }
 
+.sidebar__section {
+  padding: 0 14px 6px;
+  font: 600 10.5px 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(52% 0.008 260);
+}
+
 .nav-item {
   border: none;
   background: transparent;

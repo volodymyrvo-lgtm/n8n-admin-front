@@ -30,8 +30,8 @@ export interface CostChartSeries {
   label: string;
   /** `#rrggbb` - Chart.js can't derive alpha variants from CSS color functions like oklch(). */
   color: string;
-  /** Cost per bucket, aligned with the chart's `labels`. */
-  data: number[];
+  /** Cost per bucket, aligned with the chart's `labels`; `null` = no bar (e.g. the shorter of two compared periods has ended). */
+  data: (number | null)[];
 }
 
 /** The slice of a Chart.js instance the component needs - lets tests swap in a fake instead of drawing on a real canvas. */
@@ -83,6 +83,8 @@ export class CostChartComponent {
   /** Extra tooltip line per bucket (e.g. "in progress"); empty string for none. */
   readonly notes = input<string[]>([]);
   readonly series = input.required<CostChartSeries[]>();
+  /** Stack the series on top of each other (default), or draw them side by side - for comparing two periods. */
+  readonly stacked = input(true);
   /** Per bucket: draw it faded/outlined. */
   readonly faded = input<boolean[]>([]);
   readonly formatValue = input.required<(value: number) => string>();
@@ -116,6 +118,7 @@ export class CostChartComponent {
     const notes = this.notes();
     const format = this.formatValue();
     const totalLabel = this.totalLabel();
+    const stacked = this.stacked();
     const isFaded = (ctx: ScriptableContext<'bar'>) => faded[ctx.dataIndex] === true;
 
     return {
@@ -139,13 +142,13 @@ export class CostChartComponent {
         interaction: { mode: 'index', intersect: false },
         scales: {
           x: {
-            stacked: true,
+            stacked,
             grid: { display: false },
             ticks: { color: TEXT_MUTED, maxRotation: 0, autoSkip: true },
             border: { color: GRID },
           },
           y: {
-            stacked: true,
+            stacked,
             beginAtZero: true,
             grid: { color: GRID },
             border: { display: false },
@@ -166,14 +169,14 @@ export class CostChartComponent {
             bodyColor: '#c9ccd6',
             footerColor: '#f1f2f5',
             padding: 12,
-            // Zero entries would only pad the tooltip when many series are stacked.
-            filter: (item: TooltipItem<'bar'>) => (item.parsed.y ?? 0) !== 0,
+            // Zero entries would only pad the tooltip when many series are stacked; side by side, a zero is a real answer.
+            filter: (item: TooltipItem<'bar'>) => (stacked ? (item.parsed.y ?? 0) !== 0 : item.parsed.y !== null),
             callbacks: {
               title: (items) => titles[items[0]?.dataIndex ?? 0] ?? items[0]?.label ?? '',
               afterTitle: (items) => notes[items[0]?.dataIndex ?? 0] ?? '',
               label: (item) => `${item.dataset.label}: ${format(item.parsed.y ?? 0)}`,
               footer: (items) =>
-                series.length > 1 ? `${totalLabel}: ${format(items.reduce((sum, item) => sum + (item.parsed.y ?? 0), 0))}` : '',
+                stacked && series.length > 1 ? `${totalLabel}: ${format(items.reduce((sum, item) => sum + (item.parsed.y ?? 0), 0))}` : '',
             },
           },
         },

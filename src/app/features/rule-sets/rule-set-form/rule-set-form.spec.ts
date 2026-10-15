@@ -11,7 +11,7 @@ import { RuleSetFormComponent } from './rule-set-form';
 // RuleSetsService, which does (for loadRuleSets/deleteRuleSet) - providing
 // the testing HttpClient here keeps this spec isolated from any real
 // network call regardless of what else is going on in the test run.
-function configure(routeId: string | null, queryParams: Record<string, string> = {}): void {
+function configure(routeId: string | null, queryParams: Record<string, string> = {}, data: Record<string, unknown> = {}): void {
   TestBed.configureTestingModule({
     imports: [RuleSetFormComponent],
     providers: [
@@ -25,6 +25,7 @@ function configure(routeId: string | null, queryParams: Record<string, string> =
           snapshot: {
             paramMap: convertToParamMap(routeId ? { id: routeId } : {}),
             queryParamMap: convertToParamMap(queryParams),
+            data,
           },
         },
       },
@@ -244,5 +245,37 @@ describe('RuleSetFormComponent (duplicate mode)', () => {
 
     expect(navigateSpy).not.toHaveBeenCalled();
     expect(fixture.componentInstance['form'].controls.name.value).toBe('');
+  });
+});
+
+describe('RuleSetFormComponent (SEO kind)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    configure(null, {}, { kind: 'seo' });
+    await TestBed.compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  it('creates an SEO rule via POST /rules/seo (no kind in the body) and returns to /seo/rule-sets', () => {
+    const fixture = TestBed.createComponent(RuleSetFormComponent);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentInstance['form'].controls.name.setValue('SEO tone');
+    fixture.detectChanges();
+    expect(Array.from(fixture.nativeElement.querySelectorAll('.set-type-option input')).length).toBe(2);
+    fixture.componentInstance['form'].controls.setType.controls.toneOfVoice.setValue(true);
+    fixture.componentInstance['fields'].set([{ id: 'a', key: 'Tone', isGroup: false, value: 'Friendly', children: [] }]);
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne('http://localhost:3000/rules/seo');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ ruleName: 'SEO tone', ruleSet: { Tone: 'Friendly' }, setType: ['toneOfVoice'] });
+    expect(req.request.body).not.toHaveProperty('kind');
+    req.flush({});
+
+    expect(TestBed.inject(RuleSetsService).seoRuleSets().length).toBe(1);
+    expect(TestBed.inject(RuleSetsService).ruleSets().length).toBe(0);
+    expect(navigateSpy).toHaveBeenCalled();
   });
 });

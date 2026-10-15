@@ -118,6 +118,27 @@ describe('CostChartComponent', () => {
     expect(fixture.componentRef).toBeTruthy();
   });
 
+  it('draws the series side by side, keeps zeros in the tooltip and has no total footer when not stacked', async () => {
+    const fixture = create({
+      stacked: false,
+      series: [
+        { label: 'A', color: '#ff6b4a', data: [2, 3, null] },
+        { label: 'B', color: '#6f8fb3', data: [1, 0, 0.5] },
+      ],
+    });
+    await fixture.whenStable();
+
+    const options = configs[0].options!;
+    expect(options.scales?.['x']).toMatchObject({ stacked: false });
+    expect(options.scales?.['y']).toMatchObject({ stacked: false });
+    const filter = options.plugins!.tooltip!.filter as unknown as (item: never) => boolean;
+    expect(filter({ parsed: { y: 0 } } as never)).toBe(true);
+    expect(filter({ parsed: { y: null } } as never)).toBe(false);
+    const footer = options.plugins!.tooltip!.callbacks!.footer as (i: never[]) => string;
+    expect(footer([{ parsed: { y: 1 } }, { parsed: { y: 2 } }] as never[])).toBe('');
+    expect(options.plugins!.legend!.display).toBe(true);
+  });
+
   it('shows a legend only when there is more than one series, and no total footer for a single one', async () => {
     const fixture = create({ series: [{ label: 'only', color: '#ff6b4a', data: [1, 2, 3] }] });
     await fixture.whenStable();

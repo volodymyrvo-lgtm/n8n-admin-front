@@ -5,7 +5,7 @@
       <p class="page-subtitle">{{ 'prompts.subtitle' | translate }}</p>
     </div>
     @if (authService.isAdmin()) {
-      <a routerLink="/prompts/new" class="page-btn">
+      <a [routerLink]="basePath + '/new'" class="page-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14"></path><path d="M5 12h14"></path>
         </svg>
@@ -16,7 +16,7 @@
 
   @if (promptsService.loading()) {
     <app-spinner [label]="'common.loading' | translate" />
-  } @else if (promptsService.prompts().length > 0) {
+  } @else if (prompts().length > 0) {
     <div class="data-table">
       <div class="data-table__head" style="grid-template-columns: 2fr auto;">
         <span class="field-label">{{ 'prompts.columnName' | translate }}</span>
@@ -29,7 +29,7 @@
             @if (authService.isAdmin()) {
               <a
                 class="icon-btn"
-                [routerLink]="['/prompts', prompt.id, 'edit']"
+                [routerLink]="[basePath, prompt.id, 'edit']"
                 [attr.aria-label]="'prompts.edit.title' | translate"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

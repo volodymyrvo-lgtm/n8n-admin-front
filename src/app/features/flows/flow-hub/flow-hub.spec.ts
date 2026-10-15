@@ -55,7 +55,7 @@ describe('FlowHubComponent', () => {
     expect(fixture.componentInstance['userInitials']()).toBe('?');
   });
 
-  it('links the content generation card to /jobs and the dashboard card to /usage, and renders the other four flows as disabled buttons', async () => {
+  it('links the content generation, SEO and dashboard cards to /jobs, /seo and /usage, and renders the other three flows as disabled buttons', async () => {
     configure({ id: 'u-1', username: 'volodymyr.vo@royale.team', role: 'admin' }, authServiceStub);
     await TestBed.compileComponents();
 
@@ -64,11 +64,11 @@ describe('FlowHubComponent', () => {
     const el: HTMLElement = fixture.nativeElement;
 
     const activeLinks = Array.from(el.querySelectorAll('.flow-card--active'));
-    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A']);
-    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual(['/jobs', '/usage']);
+    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A', 'A']);
+    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual(['/jobs', '/seo', '/usage']);
 
     const soonButtons = el.querySelectorAll('.flow-card--soon');
-    expect(soonButtons.length).toBe(4);
+    expect(soonButtons.length).toBe(3);
     soonButtons.forEach((button) => {
       expect(button.tagName).toBe('BUTTON');
       expect((button as HTMLButtonElement).disabled).toBe(true);
