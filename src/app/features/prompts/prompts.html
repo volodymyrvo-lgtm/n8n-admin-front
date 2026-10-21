@@ -24,7 +24,10 @@
       </div>
       @for (prompt of pagedPrompts(); track prompt.id) {
         <div class="data-table__row" style="grid-template-columns: 2fr auto;">
-          <span class="data-table__cell-primary">{{ prompt.name }}</span>
+          <span class="name-cell">
+            <span class="data-table__cell-primary">{{ prompt.name }}</span>
+            <app-view-button [label]="'common.view' | translate" (opened)="viewed.set(prompt)" />
+          </span>
           <span class="row-actions">
             @if (authService.isAdmin()) {
               <a
@@ -65,5 +68,14 @@
         <path d="M8.5 13.5h7"></path><path d="M8.5 17h7"></path>
       </svg>
     </app-empty-state>
+  }
+
+  @if (viewed(); as prompt) {
+    <app-view-modal [title]="prompt.name" [copyText]="prompt.message" (closed)="viewed.set(null)">
+      <div class="view-section">
+        <span class="field-label">{{ 'view.message' | translate }}</span>
+        <p class="view-text view-text--mono" data-testid="prompt-message">{{ prompt.message }}</p>
+      </div>
+    </app-view-modal>
   }
 </div>

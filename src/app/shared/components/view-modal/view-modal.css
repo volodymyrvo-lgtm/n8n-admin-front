@@ -1,0 +1,104 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: oklch(8% 0.01 260 / 0.72);
+  backdrop-filter: blur(2px);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 640px;
+  max-height: min(85vh, 760px);
+  border: 1px solid oklch(28% 0.015 260);
+  border-radius: 14px;
+  background: oklch(17% 0.012 260);
+  box-shadow: 0 24px 60px oklch(5% 0.01 260 / 0.6);
+}
+
+.panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid oklch(24% 0.014 260);
+}
+
+.panel__titles {
+  min-width: 0;
+}
+
+.panel__title {
+  font: 600 18px 'Space Grotesk', system-ui, sans-serif;
+  color: oklch(95% 0.004 260);
+  overflow-wrap: anywhere;
+}
+
+.panel__subtitle {
+  margin-top: 3px;
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+}
+
+.panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.panel__copy {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid oklch(30% 0.015 260);
+  border-radius: 7px;
+  background: transparent;
+  color: oklch(78% 0.006 260);
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.panel__copy:hover {
+  background: oklch(24% 0.015 260);
+  color: oklch(95% 0.004 260);
+}
+
+.panel__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: oklch(62% 0.008 260);
+  cursor: pointer;
+}
+
+.panel__close:hover {
+  background: oklch(26% 0.015 260);
+  color: oklch(92% 0.004 260);
+}
+
+.panel__close:focus-visible,
+.panel__copy:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 20px 22px;
+  overflow-y: auto;
+}

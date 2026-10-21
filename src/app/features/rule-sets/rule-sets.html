@@ -49,7 +49,10 @@
       </div>
       @for (ruleSet of pagedRuleSets(); track ruleSet.id) {
         <div class="data-table__row" style="grid-template-columns: 2fr 1fr auto;">
-          <span class="data-table__cell-primary">{{ ruleSet.ruleName }}</span>
+          <span class="name-cell">
+            <span class="data-table__cell-primary">{{ ruleSet.ruleName }}</span>
+            <app-view-button [label]="'common.view' | translate" (opened)="viewed.set(ruleSet)" />
+          </span>
           <span class="data-table__cell-muted">{{ fieldCount(ruleSet) }}</span>
           <span class="row-actions">
             @if (authService.isAdmin()) {
@@ -109,5 +112,26 @@
         <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
       </svg>
     </app-empty-state>
+  }
+
+  @if (viewed(); as ruleSet) {
+    <app-view-modal [title]="ruleSet.ruleName" [copyText]="ruleSetJson(ruleSet)" (closed)="viewed.set(null)">
+      <div class="view-section">
+        <span class="field-label">{{ 'view.types' | translate }}</span>
+        <div class="view-chips">
+          @for (type of ruleSet.setType; track type) {
+            <span class="status-badge status-badge--neutral">{{ 'ruleSets.setType.' + type | translate }}</span>
+          }
+        </div>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.fields' | translate }}</span>
+        @if (hasFields(ruleSet)) {
+          <app-rule-tree [fields]="ruleSet.ruleSet" />
+        } @else {
+          <span class="view-muted">{{ 'view.noFields' | translate }}</span>
+        }
+      </div>
+    </app-view-modal>
   }
 </div>

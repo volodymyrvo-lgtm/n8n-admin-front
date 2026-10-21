@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '@env';
+import { AccessArea, areasOf, homeUrlOf } from '../access';
 import { UserRole } from '../models/user.model';
 
 const TOKEN_STORAGE_KEY = 'auth_token';
@@ -61,6 +62,16 @@ export class AuthService {
   /** True when the current user's role is 'admin'. False while logged out. */
   public isAdmin(): boolean {
     return this.currentUser()?.role === 'admin';
+  }
+
+  /** Whether the current user's role can open this part of the app (see access.ts). Always false while logged out. */
+  public canAccess(area: AccessArea): boolean {
+    return areasOf(this.currentUser()?.role).includes(area);
+  }
+
+  /** Where this user's role lands when it opens a page it can't use. */
+  public homeUrl(): string {
+    return homeUrlOf(this.currentUser()?.role);
   }
 
   /**

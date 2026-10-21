@@ -1,7 +1,13 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { areaGuard } from './core/guards/area.guard';
+import { inject } from '@angular/core';
+import { AuthService } from './core/services/auth.service';
 import { guestGuard } from './core/guards/guest.guard';
+
+/** A section's landing page: its jobs list, or - for a role without jobs (the reader) - its rule sets. */
+const sectionHome = () => (inject(AuthService).canAccess('jobs') ? 'jobs' : 'rule-sets');
 
 export const routes: Routes = [
   {
@@ -28,7 +34,14 @@ export const routes: Routes = [
       // A standalone page (own top bar, no Content Generation sidebar).
       {
         path: 'usage',
+        canActivate: [areaGuard('dashboard')],
         loadComponent: () => import('./features/llm-usage/llm-usage').then((m) => m.LlmUsageComponent),
+      },
+      // Error logs reported by n8n for jobs of either flow: a standalone page like the dashboard.
+      {
+        path: 'job-errors',
+        canActivate: [areaGuard('errors')],
+        loadComponent: () => import('./features/job-errors/job-errors').then((m) => m.JobErrorsComponent),
       },
       // SEO Generation: its own section with its own sidebar (the same
       // layout component, told by `data.section` to show the SEO menu).
@@ -36,21 +49,25 @@ export const routes: Routes = [
       // them list/create/edit SEO prompts instead (see PromptsService).
       {
         path: 'seo',
+        canActivate: [areaGuard('jobs', 'documents')],
         data: { section: 'seo' },
         loadComponent: () =>
           import('./layout/dashboard-layout/dashboard-layout').then((m) => m.DashboardLayoutComponent),
         children: [
-          { path: '', pathMatch: 'full', redirectTo: 'jobs' },
+          { path: '', pathMatch: 'full', redirectTo: sectionHome },
           {
             path: 'jobs',
+            canActivate: [areaGuard('jobs')],
             loadComponent: () => import('./features/seo/seo-job-list/seo-job-list').then((m) => m.SeoJobListComponent),
           },
           {
             path: 'jobs/new',
+            canActivate: [areaGuard('jobs')],
             loadComponent: () => import('./features/seo/add-seo-job/add-seo-job').then((m) => m.AddSeoJobComponent),
           },
           {
             path: 'rule-sets',
+            canActivate: [areaGuard('documents')],
             data: { kind: 'seo' },
             loadComponent: () => import('./features/rule-sets/rule-sets').then((m) => m.RuleSetsComponent),
           },
@@ -70,6 +87,7 @@ export const routes: Routes = [
           },
           {
             path: 'prompts',
+            canActivate: [areaGuard('documents')],
             data: { kind: 'seo' },
             loadComponent: () => import('./features/prompts/prompts').then((m) => m.PromptsComponent),
           },
@@ -91,20 +109,24 @@ export const routes: Routes = [
       },
       {
         path: '',
+        canActivate: [areaGuard('jobs', 'documents', 'users')],
         loadComponent: () =>
           import('./layout/dashboard-layout/dashboard-layout').then((m) => m.DashboardLayoutComponent),
         children: [
-          { path: '', pathMatch: 'full', redirectTo: 'jobs' },
+          { path: '', pathMatch: 'full', redirectTo: sectionHome },
           {
             path: 'jobs',
+            canActivate: [areaGuard('jobs')],
             loadComponent: () => import('./features/jobs/job-list/job-list').then((m) => m.JobListComponent),
           },
           {
             path: 'jobs/new',
+            canActivate: [areaGuard('jobs')],
             loadComponent: () => import('./features/jobs/add-job/add-job').then((m) => m.AddJobComponent),
           },
           {
             path: 'rule-sets',
+            canActivate: [areaGuard('documents')],
             loadComponent: () => import('./features/rule-sets/rule-sets').then((m) => m.RuleSetsComponent),
           },
           {
@@ -121,6 +143,7 @@ export const routes: Routes = [
           },
           {
             path: 'users',
+            canActivate: [areaGuard('users')],
             loadComponent: () => import('./features/users/users').then((m) => m.UsersComponent),
           },
           {
@@ -130,6 +153,7 @@ export const routes: Routes = [
           },
           {
             path: 'prompts',
+            canActivate: [areaGuard('documents')],
             loadComponent: () => import('./features/prompts/prompts').then((m) => m.PromptsComponent),
           },
           {
@@ -146,6 +170,7 @@ export const routes: Routes = [
           },
           {
             path: 'glossary',
+            canActivate: [areaGuard('documents')],
             loadComponent: () =>
               import('./features/glossary/glossary-list/glossary-list').then((m) => m.GlossaryListComponent),
           },
@@ -163,6 +188,7 @@ export const routes: Routes = [
           },
           {
             path: 'glossary/:id',
+            canActivate: [areaGuard('documents')],
             loadComponent: () =>
               import('./features/glossary/glossary-entries-list/glossary-entries-list').then(
                 (m) => m.GlossaryEntriesListComponent,

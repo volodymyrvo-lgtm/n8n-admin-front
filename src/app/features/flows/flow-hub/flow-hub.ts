@@ -18,7 +18,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './flow-hub.css',
 })
 export class FlowHubComponent {
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   /**
@@ -39,6 +39,15 @@ export class FlowHubComponent {
 
     return initials.toUpperCase() || '?';
   });
+
+  /** Where the Content / SEO tiles lead: the jobs, or - for a role without jobs (the reader) - straight to the documents. */
+  protected readonly contentLink = computed(() => (this.authService.canAccess('jobs') ? '/jobs' : '/rule-sets'));
+  protected readonly seoLink = computed(() => (this.authService.canAccess('jobs') ? '/seo' : '/seo/rule-sets'));
+
+  /** Content / SEO need the jobs or the documents; the "coming soon" tiles are for roles that work with jobs. */
+  protected readonly showFlows = computed(
+    () => this.authService.canAccess('jobs') || this.authService.canAccess('documents'),
+  );
 
   logout(): void {
     this.authService.logout();

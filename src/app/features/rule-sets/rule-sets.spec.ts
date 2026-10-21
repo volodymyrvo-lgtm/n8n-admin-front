@@ -283,3 +283,57 @@ describe('RuleSetsComponent (SEO kind)', () => {
     expect(chips).toEqual(['toneOfVoice', 'humanaizer']);
   });
 });
+
+describe('RuleSetsComponent (view modal)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RuleSetsComponent],
+      providers: [provideTranslateService(), provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    // The eye is for everyone - open it as a plain user.
+    TestBed.inject(AuthService).currentUser.set(NON_ADMIN_USER);
+  });
+
+  afterEach(() => httpMock.verify());
+
+  it('lets any user open a read-only view of the rule set from the eye next to its name, and close it', () => {
+    const fixture = TestBed.createComponent(RuleSetsComponent);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/rules').flush([
+      { id: '1', ruleName: 'Default routing', ruleSet: { Segment: 'VIP', Block: { Min: '10' } }, setType: ['email', 'toneOfVoice'] },
+    ]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-view-modal')).toBeNull();
+    expect(el.querySelector('.name-cell')?.textContent).toContain('Default routing');
+
+    (el.querySelector('.name-cell app-view-button button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const modal = el.querySelector('app-view-modal') as HTMLElement;
+    expect(modal.querySelector('.panel__title')?.textContent).toContain('Default routing');
+    expect(modal.textContent).toContain('ruleSets.setType.email');
+    expect(modal.textContent).toContain('VIP');
+    expect(modal.textContent).toContain('Min');
+    expect(modal.querySelector('[data-testid="copy"]')).not.toBeNull();
+
+    (modal.querySelector('[data-testid="close"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(el.querySelector('app-view-modal')).toBeNull();
+  });
+
+  it('says so when the rule set has no fields', () => {
+    const fixture = TestBed.createComponent(RuleSetsComponent);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/rules').flush([{ id: '1', ruleName: 'Empty', ruleSet: {}, setType: ['email'] }]);
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('app-view-button button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-view-modal').textContent).toContain('view.noFields');
+  });
+});

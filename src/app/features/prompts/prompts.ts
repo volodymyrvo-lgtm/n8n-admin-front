@@ -8,6 +8,8 @@ import { ToastService } from '../../core/services/toast.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner';
+import { ViewButtonComponent } from '../../shared/components/view-button/view-button';
+import { ViewModalComponent } from '../../shared/components/view-modal/view-modal';
 
 /** Rows per page for the client-side pager below - see the matching constant in RuleSetsComponent for why prompts are paginated on the frontend rather than the backend. */
 const PAGE_SIZE = 20;
@@ -20,7 +22,7 @@ const PAGE_SIZE = 20;
  */
 @Component({
   selector: 'app-prompts',
-  imports: [RouterLink, TranslatePipe, EmptyStateComponent, SpinnerComponent, PaginatorComponent],
+  imports: [RouterLink, TranslatePipe, EmptyStateComponent, SpinnerComponent, PaginatorComponent, ViewButtonComponent, ViewModalComponent],
   templateUrl: './prompts.html',
   styleUrl: './prompts.css',
 })
@@ -38,6 +40,9 @@ export class PromptsComponent implements OnInit {
   protected readonly prompts = this.promptsService.promptsFor(this.kind);
 
   protected readonly page = signal(1);
+
+  /** The prompt open in the read-only view modal (any user can open it). */
+  protected readonly viewed = signal<Prompt | null>(null);
 
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.prompts().length / PAGE_SIZE)),

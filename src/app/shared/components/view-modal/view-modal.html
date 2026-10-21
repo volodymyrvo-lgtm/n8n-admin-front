@@ -1,0 +1,27 @@
+<div class="backdrop" (mousedown)="onBackdropMouseDown($event)">
+  <div class="panel" role="dialog" aria-modal="true" [attr.aria-label]="title()">
+    <header class="panel__header">
+      <div class="panel__titles">
+        <h2 class="panel__title">{{ title() }}</h2>
+        @if (subtitle()) {
+          <p class="panel__subtitle">{{ subtitle() }}</p>
+        }
+      </div>
+      <div class="panel__actions">
+        @if (copyText() !== null) {
+          <button type="button" class="panel__copy" data-testid="copy" (click)="copy()">
+            {{ (copied() ? 'common.copied' : 'common.copy') | translate }}
+          </button>
+        }
+        <button #closeButton type="button" class="panel__close" data-testid="close" [attr.aria-label]="'common.close' | translate" (click)="close()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+    <div class="panel__body">
+      <ng-content />
+    </div>
+  </div>
+</div>

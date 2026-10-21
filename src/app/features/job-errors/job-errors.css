@@ -1,0 +1,211 @@
+:host {
+  --accent: #ff6b4a;
+  display: block;
+}
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: oklch(14.5% 0.014 260);
+  color: oklch(94% 0.004 260);
+  font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* ---- top bar ---- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 40px;
+  border-bottom: 1px solid oklch(24% 0.015 260);
+  flex: none;
+}
+
+.topbar__left,
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+}
+
+.brand-name {
+  font: 600 15px 'Space Grotesk', system-ui, sans-serif;
+  color: oklch(95% 0.004 260);
+  letter-spacing: -0.01em;
+}
+
+.back-to-hub {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: oklch(65% 0.008 260);
+  font: 500 13.5px 'Work Sans', system-ui, sans-serif;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.back-to-hub:hover {
+  color: oklch(90% 0.004 260);
+}
+
+.logout-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: oklch(58% 0.01 260);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.logout-btn:hover {
+  background: color-mix(in oklch, oklch(65% 0.19 25) 12%, transparent);
+  color: oklch(72% 0.17 25);
+}
+
+/* ---- content ---- */
+
+.content {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 40px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- error cards (the card shell itself comes from job-list.css) ---- */
+
+.err-time {
+  flex: none;
+  font: 400 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+  white-space: nowrap;
+}
+
+.err-job-ref {
+  flex: none;
+}
+
+.err-message {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in oklch, oklch(70% 0.19 25) 30%, transparent);
+  border-radius: 8px;
+  background: color-mix(in oklch, oklch(70% 0.19 25) 8%, transparent);
+  font: 400 13px/1.55 'JetBrains Mono', monospace;
+  color: oklch(88% 0.02 25);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.err-value {
+  font: 400 13.5px/1.5 'Work Sans', system-ui, sans-serif;
+  color: oklch(90% 0.004 260);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.err-value--mono {
+  font: 500 12.5px 'JetBrains Mono', monospace;
+}
+
+.err-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.err-copy {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid oklch(30% 0.015 260);
+  border-radius: 6px;
+  background: transparent;
+  color: oklch(70% 0.008 260);
+  font: 500 12px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.err-copy:hover {
+  background: oklch(24% 0.015 260);
+  color: oklch(94% 0.004 260);
+}
+
+.err-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1.5px solid color-mix(in oklch, oklch(70% 0.19 25) 40%, transparent);
+  border-radius: 10px;
+  background: color-mix(in oklch, oklch(70% 0.19 25) 8%, transparent);
+  font: 500 13.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(85% 0.05 25);
+}
+
+.err-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Job fields: show full values (ids, dates) instead of cutting them off. */
+:host .job-card__meta-item span:last-child {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    padding: 14px 20px;
+  }
+
+  .topbar__left,
+  .topbar__right {
+    gap: 14px;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  .content {
+    padding: 24px 20px 48px;
+  }
+
+  /* Header: icon, title, badge and chevron on the first row, the time below. */
+  :host .job-card__header {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  :host .job-card__title-group {
+    flex: 1 1 0;
+    min-width: 120px;
+  }
+
+  .err-time {
+    order: 5;
+    flex: 1 0 100%;
+    padding-left: 36px;
+  }
+}

@@ -5,7 +5,11 @@
       "prev": "Previous page",
       "next": "Next page",
       "pageOf": "Page {{page}} of {{total}}"
-    }
+    },
+    "view": "View contents",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "app": {
     "title": "n8n Admin Panel"
@@ -181,7 +185,11 @@
       "admin": "Admin",
       "user": "User",
       "ADMIN": "Admin",
-      "USER": "User"
+      "USER": "User",
+      "reader": "Reader",
+      "analyst": "Analyst",
+      "READER": "Reader",
+      "ANALYST": "Analyst"
     },
     "add": {
       "title": "New User",
@@ -194,7 +202,9 @@
       "passwordPlaceholder": "••••••••••",
       "passwordError": "Password must be at least 6 characters",
       "submit": "Create user",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "toast": {
       "created": "User created",
@@ -379,6 +389,10 @@
     "dashboard": {
       "title": "Dashboard",
       "description": "LLM spend, requests and tokens by flow, type and model."
+    },
+    "errors": {
+      "title": "Error Logs",
+      "description": "Failures reported by n8n for jobs, with the job's details."
     }
   },
   "usage": {
@@ -562,5 +576,57 @@
     "toneOfVoice": "Tone of voice",
     "humanizer": "Humanizer",
     "ruleSetPlaceholder": "Select a rule set"
+  },
+  "view": {
+    "types": "Types",
+    "fields": "Fields",
+    "noFields": "This rule set has no fields.",
+    "message": "Prompt text",
+    "sourceLanguage": "Source language",
+    "targetLanguage": "Target language",
+    "entries": "Terms",
+    "schemaVersion": "Schema version",
+    "purpose": "Purpose",
+    "instructions": "Instructions",
+    "recommended": "Recommended",
+    "doNotUse": "Do not use",
+    "sourceForms": "Source forms found"
+  },
+  "jobErrors": {
+    "title": "Error logs",
+    "subtitle": "Failures reported by n8n, newest first, with the job each one belongs to.",
+    "emptyTitle": "No errors",
+    "emptyDescription": "Nothing has failed yet - errors reported by n8n will show up here.",
+    "loadFailed": "Could not load the error logs.",
+    "retry": "Retry",
+    "unknownWorkflow": "Unknown workflow",
+    "reportedAt": "Reported",
+    "error": "Error",
+    "message": "Message",
+    "workflow": "Workflow",
+    "failedNode": "Failed node",
+    "executionId": "Execution",
+    "noDetails": "No details were sent with this error.",
+    "job": "Job",
+    "jobId": "Job ID",
+    "jobLoading": "Loading job details...",
+    "jobMissing": "This job no longer exists.",
+    "jobFailed": "Could not load the job.",
+    "kind": {
+      "communication": "Content",
+      "seo": "SEO"
+    },
+    "status": "Status",
+    "jobType": "Job type",
+    "taskStatus": "Task status",
+    "messageType": "Message type",
+    "board": "Board",
+    "taskDescription": "Task description",
+    "language": "Language",
+    "pageTask": "Page task",
+    "prompt": "Prompt",
+    "runDate": "Run date",
+    "llm": "LLM",
+    "copy": "Copy"
   }
 }

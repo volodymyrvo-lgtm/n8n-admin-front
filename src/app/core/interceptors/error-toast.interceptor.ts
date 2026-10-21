@@ -1,8 +1,11 @@
 import { inject } from '@angular/core';
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, throwError } from 'rxjs';
 import { ToastService } from '../services/toast.service';
+
+/** Set on a request (via `HttpContext`) whose caller reports its failure itself, so no toast is wanted. */
+export const SKIP_ERROR_TOAST = new HttpContextToken<boolean>(() => false);
 
 /**
  * Shows an error toast for every failed HTTP request, so a failure is
@@ -19,7 +22,7 @@ import { ToastService } from '../services/toast.service';
  * its own errors inline.
  */
 export const errorToastInterceptor: HttpInterceptorFn = (req, next) => {
-  if (req.url.includes('/auth/login') || req.url.includes('/i18n/')) {
+  if (req.url.includes('/auth/login') || req.url.includes('/i18n/') || req.context.get(SKIP_ERROR_TOAST)) {
     return next(req);
   }
 

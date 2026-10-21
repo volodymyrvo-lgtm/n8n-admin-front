@@ -159,3 +159,35 @@ describe('GlossaryEntriesListComponent', () => {
     expect(el.querySelector('button.icon-btn--danger')).toBeNull();
   });
 });
+
+describe('GlossaryEntriesListComponent (view modal)', () => {
+  it('lets any user open a term with its recommended / do-not-use forms from the eye next to the term', async () => {
+    configure();
+    await TestBed.compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(NON_ADMIN_USER);
+
+    const fixture = TestBed.createComponent(GlossaryEntriesListComponent);
+    fixture.detectChanges();
+    httpMock.expectOne(`${environment.apiBaseUrl}/glossaries`).flush([makeGlossary()]);
+    httpMock
+      .expectOne(`${environment.apiBaseUrl}/glossaries/g-1/entries`)
+      .flush([makeEntry({ usage_note: 'Use in payments only' })]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelector('.name-cell app-view-button button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const modal = el.querySelector('app-view-modal') as HTMLElement;
+    expect(modal.querySelector('.panel__title')?.textContent).toContain('Deposit');
+    expect(modal.querySelector('.status-badge--active')?.textContent).toContain('depozit');
+    expect(modal.querySelector('.status-badge--failed')?.textContent).toContain('əmanət');
+    expect(modal.textContent).toContain('Use in payments only');
+
+    (modal.querySelector('[data-testid="close"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(el.querySelector('app-view-modal')).toBeNull();
+    httpMock.verify();
+  });
+});

@@ -228,3 +228,31 @@ describe('PromptsComponent (SEO section)', () => {
     expect(promptsService.seoPrompts()).toEqual([]);
   });
 });
+
+describe('PromptsComponent (view modal)', () => {
+  it('lets any user open the full prompt text from the eye next to the name', async () => {
+    await TestBed.configureTestingModule({
+      imports: [PromptsComponent],
+      providers: [provideTranslateService(), provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(NON_ADMIN_USER);
+
+    const fixture = TestBed.createComponent(PromptsComponent);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:3000/prompts').flush([{ id: 'p-1', name: 'Welcome message', message: 'Hello there!\nSecond line' }]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelector('.name-cell app-view-button button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(el.querySelector('.panel__title')?.textContent).toContain('Welcome message');
+    expect(el.querySelector('[data-testid="prompt-message"]')?.textContent).toBe('Hello there!\nSecond line');
+
+    (el.querySelector('[data-testid="close"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(el.querySelector('app-view-modal')).toBeNull();
+    httpMock.verify();
+  });
+});

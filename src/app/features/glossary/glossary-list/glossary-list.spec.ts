@@ -130,3 +130,34 @@ describe('GlossaryListComponent', () => {
     expect(el.querySelector('button.icon-btn--danger')).toBeNull();
   });
 });
+
+describe('GlossaryListComponent (view modal)', () => {
+  it('lets any user open the glossary details from the eye next to its name', async () => {
+    await TestBed.configureTestingModule({
+      imports: [GlossaryListComponent],
+      providers: [provideTranslateService(), provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+    const httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(NON_ADMIN_USER);
+
+    const fixture = TestBed.createComponent(GlossaryListComponent);
+    fixture.detectChanges();
+    httpMock.expectOne(`${environment.apiBaseUrl}/glossaries`).flush([makeGlossary()]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelector('.name-cell app-view-button button') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const modal = el.querySelector('app-view-modal') as HTMLElement;
+    expect(modal.querySelector('.panel__title')?.textContent).toContain('en_az_glossary');
+    expect(modal.textContent).toContain('Standardize EN -> AZ terminology.');
+    expect(modal.textContent).toContain('tone');
+    expect(modal.textContent).toContain('formal');
+
+    (modal.querySelector('[data-testid="close"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(el.querySelector('app-view-modal')).toBeNull();
+    httpMock.verify();
+  });
+});

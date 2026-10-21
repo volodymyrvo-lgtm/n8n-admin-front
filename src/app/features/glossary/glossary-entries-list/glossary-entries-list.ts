@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { GlossaryEntry, targetLanguageFieldKey } from '../../../core/models/glossary.model';
@@ -7,6 +7,8 @@ import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner';
+import { ViewButtonComponent } from '../../../shared/components/view-button/view-button';
+import { ViewModalComponent } from '../../../shared/components/view-modal/view-modal';
 
 /**
  * One glossary's terms (`/glossary/:id`) - the page you land on after
@@ -17,7 +19,7 @@ import { SpinnerComponent } from '../../../shared/components/spinner/spinner';
  */
 @Component({
   selector: 'app-glossary-entries-list',
-  imports: [RouterLink, TranslatePipe, EmptyStateComponent, SpinnerComponent],
+  imports: [RouterLink, TranslatePipe, EmptyStateComponent, SpinnerComponent, ViewButtonComponent, ViewModalComponent],
   templateUrl: './glossary-entries-list.html',
   styleUrl: './glossary-entries-list.css',
 })
@@ -33,6 +35,9 @@ export class GlossaryEntriesListComponent implements OnInit {
     this.glossariesService.glossaries().find((glossary) => glossary.id === this.glossaryId),
   );
 
+  /** The term open in the read-only view modal (any user can open it). */
+  protected readonly viewed = signal<GlossaryEntry | null>(null);
+
   ngOnInit(): void {
     // The glossaries list is small (one row per language pair) - always
     // reload it here too, so a direct navigation/refresh on this page
@@ -44,11 +49,20 @@ export class GlossaryEntriesListComponent implements OnInit {
 
   /** The entry's recommended terms, reading whichever `recommended_*` field matches this glossary's target language. */
   protected recommendedTerms(entry: GlossaryEntry): string[] {
+    return this.targetLanguageTerms(entry, 'recommended');
+  }
+
+  /** The entry's "do not use" terms - the `do_not_use_*` field of the glossary's target language. */
+  protected doNotUseTerms(entry: GlossaryEntry): string[] {
+    return this.targetLanguageTerms(entry, 'do_not_use');
+  }
+
+  private targetLanguageTerms(entry: GlossaryEntry, prefix: 'recommended' | 'do_not_use'): string[] {
     const glossary = this.glossary();
     if (!glossary) {
       return [];
     }
-    const key = `recommended_${targetLanguageFieldKey(glossary.allGlossRules.target_language)}`;
+    const key = `${prefix}_${targetLanguageFieldKey(glossary.allGlossRules.target_language)}`;
     return (entry as unknown as Record<string, string[] | undefined>)[key] ?? [];
   }
 

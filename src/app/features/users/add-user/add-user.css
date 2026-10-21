@@ -32,3 +32,28 @@
 .field-control--invalid {
   border-color: oklch(62% 0.19 25);
 }
+
+.eye-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: oklch(58% 0.008 260);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.eye-toggle:hover {
+  color: oklch(90% 0.004 260);
+  background: oklch(26% 0.015 260);
+}
+
+.eye-toggle:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
+  outline-offset: 1px;
+}

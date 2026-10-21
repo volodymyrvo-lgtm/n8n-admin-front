@@ -27,7 +27,10 @@
       </div>
       @for (glossary of glossariesService.glossaries(); track glossary.id) {
         <div class="data-table__row" style="grid-template-columns: 1.6fr 1fr 1fr 1fr auto;">
-          <a class="data-table__cell-primary" [routerLink]="['/glossary', glossary.id]">{{ glossary.glossaryName }}</a>
+          <span class="name-cell">
+            <a class="data-table__cell-primary" [routerLink]="['/glossary', glossary.id]">{{ glossary.glossaryName }}</a>
+            <app-view-button [label]="'common.view' | translate" (opened)="viewed.set(glossary)" />
+          </span>
           <span class="data-table__cell-muted">{{ glossary.allGlossRules.language_pair }}</span>
           <span class="data-table__cell-muted">{{ glossary.allGlossRules.entries.length }}</span>
           <span class="data-table__cell-muted">{{ glossary.updatedAt ? (glossary.updatedAt | date: 'medium') : '—' }}</span>
@@ -68,5 +71,47 @@
         <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
       </svg>
     </app-empty-state>
+  }
+
+  @if (viewed(); as glossary) {
+    <app-view-modal [title]="glossary.glossaryName" [subtitle]="glossary.allGlossRules.language_pair" (closed)="viewed.set(null)">
+      <div class="view-grid">
+        <div class="view-field">
+          <span class="field-label">{{ 'view.sourceLanguage' | translate }}</span>
+          <span class="view-text">{{ glossary.allGlossRules.source_language || '—' }}</span>
+        </div>
+        <div class="view-field">
+          <span class="field-label">{{ 'view.targetLanguage' | translate }}</span>
+          <span class="view-text">{{ glossary.allGlossRules.target_language || '—' }}</span>
+        </div>
+        <div class="view-field">
+          <span class="field-label">{{ 'view.entries' | translate }}</span>
+          <span class="view-text">{{ glossary.allGlossRules.entries.length }}</span>
+        </div>
+        <div class="view-field">
+          <span class="field-label">{{ 'view.schemaVersion' | translate }}</span>
+          <span class="view-text">{{ glossary.allGlossRules.schema_version || '—' }}</span>
+        </div>
+        <div class="view-field">
+          <span class="field-label">{{ 'glossary.columnUpdated' | translate }}</span>
+          <span class="view-text">{{ glossary.updatedAt ? (glossary.updatedAt | date: 'medium') : '—' }}</span>
+        </div>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.purpose' | translate }}</span>
+        <p class="view-text">{{ glossary.allGlossRules.purpose || '—' }}</p>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.instructions' | translate }}</span>
+        @for (instruction of instructionEntries(glossary); track instruction.key) {
+          <div class="view-field">
+            <span class="field-label">{{ instruction.key }}</span>
+            <p class="view-text">{{ instruction.value }}</p>
+          </div>
+        } @empty {
+          <span class="view-muted">—</span>
+        }
+      </div>
+    </app-view-modal>
   }
 </div>

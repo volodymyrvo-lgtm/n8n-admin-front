@@ -4,10 +4,10 @@ import { AuthService } from '../services/auth.service';
 import { adminGuard } from './admin.guard';
 
 describe('adminGuard', () => {
-  let authServiceStub: { isAdmin: () => boolean };
+  let authServiceStub: { isAdmin: () => boolean; homeUrl: () => string };
 
   beforeEach(() => {
-    authServiceStub = { isAdmin: () => false };
+    authServiceStub = { isAdmin: () => false, homeUrl: () => '/rule-sets' };
     TestBed.configureTestingModule({
       providers: [provideRouter([]), { provide: AuthService, useValue: authServiceStub }],
     });

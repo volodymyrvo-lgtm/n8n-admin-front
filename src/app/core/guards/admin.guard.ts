@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 
 /**
  * Restricts a route to admins. A logged-in non-admin user is bounced
- * back to the rule sets list rather than to /login - they ARE
+ * back to the page their role does have rather than to /login - they ARE
  * authenticated, they just don't have permission for this action.
  */
 export const adminGuard: CanActivateFn = () => {
@@ -15,5 +15,5 @@ export const adminGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/rule-sets']);
+  return router.createUrlTree([authService.homeUrl()]);
 };

@@ -1,0 +1,13 @@
+<ul class="tree">
+  @for (entry of entries(); track entry.key) {
+    <li class="tree__item">
+      @if (entry.children) {
+        <span class="tree__key tree__key--group">{{ entry.key }}</span>
+        <app-rule-tree [fields]="entry.children" />
+      } @else {
+        <span class="tree__key">{{ entry.key }}</span>
+        <span class="tree__value">{{ entry.value }}</span>
+      }
+    </li>
+  }
+</ul>

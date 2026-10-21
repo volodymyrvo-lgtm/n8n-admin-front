@@ -283,3 +283,53 @@ a, img {
   background: color-mix(in oklch, oklch(70% 0.19 25) 18%, transparent);
   color: oklch(78% 0.17 25);
 }
+
+/* Name cell with the "view contents" eye right after the name (lists of editable entities). */
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Read-only sections inside ViewModalComponent. */
+.view-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.view-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.view-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px 18px;
+}
+
+.view-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.view-text {
+  font: 400 13.5px/1.55 'Work Sans', system-ui, sans-serif;
+  color: oklch(90% 0.004 260);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.view-text--mono {
+  font: 400 13px/1.6 'JetBrains Mono', monospace;
+}
+
+.view-muted {
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+  color: oklch(52% 0.008 260);
+}

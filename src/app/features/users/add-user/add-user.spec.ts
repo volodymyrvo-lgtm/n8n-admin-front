@@ -27,6 +27,38 @@ describe('AddUserComponent', () => {
     httpMock.verify();
   });
 
+  it('offers all four roles', () => {
+    const fixture = TestBed.createComponent(AddUserComponent);
+    fixture.detectChanges();
+
+    const values = Array.from(fixture.nativeElement.querySelectorAll('#userRole option')).map((o) => (o as HTMLOptionElement).value);
+    expect(values).toEqual(['admin', 'user', 'reader', 'analyst']);
+  });
+
+  it('hides the password by default and lets the admin reveal and hide it again', () => {
+    const fixture = TestBed.createComponent(AddUserComponent);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const input = () => el.querySelector('#userPassword') as HTMLInputElement;
+    const toggle = el.querySelector('[data-testid="toggle-password"]') as HTMLButtonElement;
+
+    expect(input().type).toBe('password');
+    expect(toggle.getAttribute('aria-pressed')).toBe('false');
+
+    toggle.click();
+    fixture.detectChanges();
+    expect(input().type).toBe('text');
+    expect(toggle.getAttribute('aria-pressed')).toBe('true');
+
+    fixture.componentInstance['form'].controls.password.setValue('secret123');
+    fixture.detectChanges();
+    expect(input().value).toBe('secret123');
+
+    toggle.click();
+    fixture.detectChanges();
+    expect(input().type).toBe('password');
+  });
+
   it('does not submit while the form is invalid', () => {
     const fixture = TestBed.createComponent(AddUserComponent);
     const usersService = TestBed.inject(UsersService);

@@ -16,7 +16,7 @@ import { LanguageSwitcherComponent } from '../../shared/components/language-swit
  * `data.section` ('seo') picks which menu is shown.
  */
 export class DashboardLayoutComponent {
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 

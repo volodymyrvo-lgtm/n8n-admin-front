@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -24,6 +24,13 @@ export class AddUserComponent {
     role: this.fb.nonNullable.control<UserRole>('user', Validators.required),
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
+
+  /** Lets whoever is creating the account check the password they typed (it's for someone else, so a typo is easy to miss). */
+  protected readonly isPasswordVisible = signal(false);
+
+  protected togglePasswordVisibility(): void {
+    this.isPasswordVisible.update((visible) => !visible);
+  }
 
   submit(): void {
     if (this.form.invalid) {

@@ -38,7 +38,10 @@
       </div>
       @for (entry of glossariesService.entries(); track entry.id) {
         <div class="data-table__row" style="grid-template-columns: 1.2fr 1.4fr 1.4fr 1fr auto;">
-          <span class="data-table__cell-primary">{{ entry.english_term }}</span>
+          <span class="name-cell">
+            <span class="data-table__cell-primary">{{ entry.english_term }}</span>
+            <app-view-button [label]="'common.view' | translate" (opened)="viewed.set(entry)" />
+          </span>
           <span class="data-table__cell-muted">{{ recommendedTerms(entry).join(', ') }}</span>
           <span class="data-table__cell-muted">{{ entry.usage_note }}</span>
           <span class="data-table__cell-muted">{{ 'glossary.entry.status.' + entry.status | translate }}</span>
@@ -79,5 +82,48 @@
         <path d="M4 6h16"></path><path d="M7.5 12h9"></path><path d="M10.5 18h3"></path>
       </svg>
     </app-empty-state>
+  }
+
+  @if (viewed(); as entry) {
+    <app-view-modal [title]="entry.english_term" [subtitle]="glossary()?.glossaryName ?? ''" (closed)="viewed.set(null)">
+      <div class="view-field">
+        <span class="field-label">{{ 'glossary.entry.columnStatus' | translate }}</span>
+        <span class="view-text">{{ 'glossary.entry.status.' + entry.status | translate }}</span>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.recommended' | translate }}</span>
+        <div class="view-chips">
+          @for (term of recommendedTerms(entry); track term) {
+            <span class="status-badge status-badge--active">{{ term }}</span>
+          } @empty {
+            <span class="view-muted">—</span>
+          }
+        </div>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.doNotUse' | translate }}</span>
+        <div class="view-chips">
+          @for (term of doNotUseTerms(entry); track term) {
+            <span class="status-badge status-badge--failed">{{ term }}</span>
+          } @empty {
+            <span class="view-muted">—</span>
+          }
+        </div>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'view.sourceForms' | translate }}</span>
+        <div class="view-chips">
+          @for (form of entry.source_forms_found; track form) {
+            <span class="status-badge status-badge--neutral">{{ form }}</span>
+          } @empty {
+            <span class="view-muted">—</span>
+          }
+        </div>
+      </div>
+      <div class="view-section">
+        <span class="field-label">{{ 'glossary.entry.columnUsageNote' | translate }}</span>
+        <p class="view-text">{{ entry.usage_note || '—' }}</p>
+      </div>
+    </app-view-modal>
   }
 </div>

@@ -5,7 +5,11 @@
       "prev": "Предыдущая страница",
       "next": "Следующая страница",
       "pageOf": "Страница {{page}} из {{total}}"
-    }
+    },
+    "view": "Посмотреть содержимое",
+    "close": "Закрыть",
+    "copy": "Копировать",
+    "copied": "Скопировано"
   },
   "app": {
     "title": "Панель администратора n8n"
@@ -181,7 +185,11 @@
       "admin": "Администратор",
       "user": "Пользователь",
       "ADMIN": "Администратор",
-      "USER": "Пользователь"
+      "USER": "Пользователь",
+      "reader": "Читатель",
+      "analyst": "Аналитик",
+      "READER": "Читатель",
+      "ANALYST": "Аналитик"
     },
     "add": {
       "title": "Новый пользователь",
@@ -194,7 +202,9 @@
       "passwordPlaceholder": "••••••••••",
       "passwordError": "Пароль должен содержать не менее 6 символов",
       "submit": "Создать пользователя",
-      "cancel": "Отмена"
+      "cancel": "Отмена",
+      "showPassword": "Показать пароль",
+      "hidePassword": "Скрыть пароль"
     },
     "toast": {
       "created": "Пользователь создан",
@@ -379,6 +389,10 @@
     "dashboard": {
       "title": "Дашборд",
       "description": "Расходы на LLM, запросы и токены по флоу, типам и моделям."
+    },
+    "errors": {
+      "title": "Логи ошибок",
+      "description": "Сбои, о которых сообщил n8n, с деталями джобы."
     }
   },
   "usage": {
@@ -562,5 +576,57 @@
     "toneOfVoice": "Тон общения",
     "humanizer": "Хьюманайзер",
     "ruleSetPlaceholder": "Выберите набор правил"
+  },
+  "view": {
+    "types": "Типы",
+    "fields": "Поля",
+    "noFields": "В этом наборе правил нет полей.",
+    "message": "Текст промпта",
+    "sourceLanguage": "Исходный язык",
+    "targetLanguage": "Целевой язык",
+    "entries": "Термины",
+    "schemaVersion": "Версия схемы",
+    "purpose": "Назначение",
+    "instructions": "Инструкции",
+    "recommended": "Рекомендуется",
+    "doNotUse": "Не использовать",
+    "sourceForms": "Найденные исходные формы"
+  },
+  "jobErrors": {
+    "title": "Логи ошибок",
+    "subtitle": "Сбои, о которых сообщил n8n: сначала новые, вместе с джобой, к которой они относятся.",
+    "emptyTitle": "Ошибок нет",
+    "emptyDescription": "Пока ничего не падало - ошибки от n8n появятся здесь.",
+    "loadFailed": "Не удалось загрузить логи ошибок.",
+    "retry": "Повторить",
+    "unknownWorkflow": "Неизвестный workflow",
+    "reportedAt": "Получено",
+    "error": "Ошибка",
+    "message": "Сообщение",
+    "workflow": "Workflow",
+    "failedNode": "Упавшая нода",
+    "executionId": "Execution",
+    "noDetails": "К этой ошибке не пришло деталей.",
+    "job": "Джоба",
+    "jobId": "ID джобы",
+    "jobLoading": "Загружаем детали джобы...",
+    "jobMissing": "Этой джобы больше нет.",
+    "jobFailed": "Не удалось загрузить джобу.",
+    "kind": {
+      "communication": "Контент",
+      "seo": "SEO"
+    },
+    "status": "Статус",
+    "jobType": "Тип джобы",
+    "taskStatus": "Статус задачи",
+    "messageType": "Тип сообщения",
+    "board": "Борд",
+    "taskDescription": "Описание задачи",
+    "language": "Язык",
+    "pageTask": "Page task",
+    "prompt": "Промпт",
+    "runDate": "Дата запуска",
+    "llm": "LLM",
+    "copy": "Копировать"
   }
 }

@@ -7,14 +7,26 @@ import { RuleSetsService } from '../../core/services/rule-sets.service';
 import { ToastService } from '../../core/services/toast.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state';
 import { PaginatorComponent } from '../../shared/components/paginator/paginator';
+import { RuleTreeComponent } from '../../shared/components/rule-tree/rule-tree';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner';
+import { ViewButtonComponent } from '../../shared/components/view-button/view-button';
+import { ViewModalComponent } from '../../shared/components/view-modal/view-modal';
 
 /** Rows per page for the client-side pager below - rule sets are hand-curated configuration data, not an ever-growing log, so a full fetch plus frontend paging (rather than backend page/limit params) is enough here. See JobListComponent for the contrasting case. */
 const PAGE_SIZE = 20;
 
 @Component({
   selector: 'app-rule-sets',
-  imports: [RouterLink, TranslatePipe, EmptyStateComponent, SpinnerComponent, PaginatorComponent],
+  imports: [
+    RouterLink,
+    TranslatePipe,
+    EmptyStateComponent,
+    SpinnerComponent,
+    PaginatorComponent,
+    ViewButtonComponent,
+    ViewModalComponent,
+    RuleTreeComponent,
+  ],
   templateUrl: './rule-sets.html',
   styleUrl: './rule-sets.css',
 })
@@ -33,6 +45,9 @@ export class RuleSetsComponent implements OnInit {
 
   protected readonly setTypes: readonly SetType[] = this.kind === 'seo' ? SEO_SET_TYPES : SET_TYPES;
   protected readonly selectedTypes = signal<SetType[]>([]);
+
+  /** The rule set open in the read-only view modal (any user can open it). */
+  protected readonly viewed = signal<RuleSet | null>(null);
 
   protected readonly filteredRuleSets = computed(() => {
     const selected = this.selectedTypes();
@@ -86,5 +101,14 @@ export class RuleSetsComponent implements OnInit {
         this.toast.success(this.translate.instant('ruleSets.toast.deleted'));
       });
     }
+  }
+
+  /** The rule set's fields as pretty JSON, for the modal's "Copy" button. */
+  protected ruleSetJson(ruleSet: RuleSet): string {
+    return JSON.stringify(ruleSet.ruleSet, null, 2);
+  }
+
+  protected hasFields(ruleSet: RuleSet): boolean {
+    return Object.keys(ruleSet.ruleSet ?? {}).length > 0;
   }
 }

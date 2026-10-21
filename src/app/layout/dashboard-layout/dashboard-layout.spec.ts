@@ -2,14 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
+import { areasOf, AccessArea } from '../../core/access';
 import { AuthService } from '../../core/services/auth.service';
 import { DashboardLayoutComponent } from './dashboard-layout';
 
 describe('DashboardLayoutComponent', () => {
-  let authServiceStub: { logout: ReturnType<typeof vi.fn> };
+  let authServiceStub: { logout: ReturnType<typeof vi.fn>; canAccess: (area: AccessArea) => boolean };
 
   beforeEach(async () => {
-    authServiceStub = { logout: vi.fn() };
+    authServiceStub = { logout: vi.fn(), canAccess: () => true };
 
     await TestBed.configureTestingModule({
       imports: [DashboardLayoutComponent],
@@ -78,5 +79,25 @@ describe('DashboardLayoutComponent', () => {
       expect(hrefs).toEqual(['/seo/jobs', '/seo/jobs/new', '/seo/rule-sets', '/seo/prompts']);
       expect(el.querySelector('.sidebar__section')).not.toBeNull();
     });
+  });
+
+  function menuHrefs(role: string, seo: boolean): (string | null)[] {
+    authServiceStub.canAccess = (area) => areasOf(role).includes(area);
+    TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { data: seo ? { section: 'seo' } : {} } } });
+    const fixture = TestBed.createComponent(DashboardLayoutComponent);
+    fixture.detectChanges();
+    return Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.sidebar__nav a')).map((a) => a.getAttribute('href'));
+  }
+
+  it('a reader only sees the document links in the Content menu', () => {
+    expect(menuHrefs('reader', false)).toEqual(['/rule-sets', '/prompts', '/glossary']);
+  });
+
+  it('a reader only sees the document links in the SEO menu', () => {
+    expect(menuHrefs('reader', true)).toEqual(['/seo/rule-sets', '/seo/prompts']);
+  });
+
+  it('an analyst sees no section links', () => {
+    expect(menuHrefs('analyst', false)).toEqual([]);
   });
 });
