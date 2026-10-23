@@ -1,0 +1,42 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'designAdd.title' | translate }}</h1>
+    <p class="page-subtitle">{{ 'designAdd.subtitle' | translate }}</p>
+  </div>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form__field">
+      <label class="field-label" for="designTaskDescription">{{ 'designAdd.taskDescription' | translate }}</label>
+      <div
+        class="field-textarea"
+        [class.field-control--invalid]="form.controls.taskDescription.invalid && form.controls.taskDescription.touched"
+      >
+        <textarea
+          id="designTaskDescription"
+          rows="6"
+          formControlName="taskDescription"
+          [placeholder]="'designAdd.taskDescriptionPlaceholder' | translate"
+        ></textarea>
+      </div>
+      @if (form.controls.taskDescription.invalid && form.controls.taskDescription.touched) {
+        <span class="form__error">
+          {{ (form.controls.taskDescription.hasError('maxlength') ? 'designAdd.taskDescriptionTooLong' : 'designAdd.taskDescriptionError') | translate: { max: taskDescriptionMaxLength } }}
+        </span>
+      }
+    </div>
+
+    <div class="form__field">
+      <label class="toggle-row">
+        <input type="checkbox" class="toggle-input" formControlName="isTesting" />
+        <span class="toggle-track"><span class="toggle-knob"></span></span>
+        <span class="toggle-label">{{ 'addJob.isTesting' | translate }}</span>
+      </label>
+      <p class="form__hint">{{ 'designAdd.isTestingHint' | translate }}</p>
+    </div>
+
+    <div class="form__actions">
+      <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting()">{{ 'designAdd.submit' | translate }}</button>
+      <a routerLink="/design/jobs" class="link-muted">{{ 'designAdd.cancel' | translate }}</a>
+    </div>
+  </form>
+</div>

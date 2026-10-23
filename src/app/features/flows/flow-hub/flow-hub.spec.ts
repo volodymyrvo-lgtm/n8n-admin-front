@@ -63,7 +63,7 @@ describe('FlowHubComponent', () => {
     expect(fixture.componentInstance['userInitials']()).toBe('?');
   });
 
-  it('links the content generation, SEO, dashboard and error logs cards to /jobs, /seo, /usage and /job-errors, and renders the other three flows as disabled buttons', async () => {
+  it('links the content, design, SEO, dashboard and error logs cards to /jobs, /design, /seo, /usage and /job-errors, and renders the other two flows as disabled buttons', async () => {
     configure({ id: 'u-1', username: 'volodymyr.vo@royale.team', role: 'admin' }, authServiceStub);
     await TestBed.compileComponents();
 
@@ -72,11 +72,11 @@ describe('FlowHubComponent', () => {
     const el: HTMLElement = fixture.nativeElement;
 
     const activeLinks = Array.from(el.querySelectorAll('.flow-card--active'));
-    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A', 'A', 'A']);
-    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual(['/jobs', '/seo', '/usage', '/job-errors']);
+    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A', 'A', 'A', 'A']);
+    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual(['/jobs', '/design', '/seo', '/usage', '/job-errors']);
 
     const soonButtons = el.querySelectorAll('.flow-card--soon');
-    expect(soonButtons.length).toBe(3);
+    expect(soonButtons.length).toBe(2);
     soonButtons.forEach((button) => {
       expect(button.tagName).toBe('BUTTON');
       expect((button as HTMLButtonElement).disabled).toBe(true);
@@ -108,9 +108,9 @@ describe('FlowHubComponent', () => {
 
     const hrefs = (el: HTMLElement) => Array.from(el.querySelectorAll('a.flow-card')).map((a) => a.getAttribute('href'));
 
-    it('a reader gets the Content and SEO tiles pointing straight at the documents, and the Error Logs tile', async () => {
+    it('a reader gets the Content and SEO tiles pointing straight at the documents, the Design tile (banners) and the Error Logs tile', async () => {
       const el = await render('reader');
-      expect(hrefs(el)).toEqual(['/rule-sets', '/seo/rule-sets', '/job-errors']);
+      expect(hrefs(el)).toEqual(['/rule-sets', '/design', '/seo/rule-sets', '/job-errors']);
       expect(el.querySelectorAll('button.flow-card--soon').length).toBe(0);
     });
 

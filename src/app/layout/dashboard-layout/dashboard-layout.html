@@ -62,6 +62,40 @@
           </a>
         }
       </nav>
+    } @else if (isDesign) {
+      <nav class="sidebar__nav">
+        <span class="sidebar__section">{{ 'nav.designSection' | translate }}</span>
+
+        @if (authService.canAccess('jobs')) {
+          <a routerLink="/design/jobs" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path>
+              <path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path>
+            </svg>
+            <span>{{ 'nav.allJobs' | translate }}</span>
+          </a>
+        }
+
+        @if (authService.canAccess('jobs')) {
+          <a routerLink="/design/jobs/new" routerLinkActive="nav-item--active" class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path>
+            </svg>
+            <span>{{ 'nav.addJob' | translate }}</span>
+          </a>
+        }
+
+        @if (authService.canAccess('banners')) {
+          <a routerLink="/design/banners" routerLinkActive="nav-item--active" class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <circle cx="8.5" cy="9.5" r="1.5"></circle>
+              <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+            </svg>
+            <span>{{ 'nav.banners' | translate }}</span>
+          </a>
+        }
+      </nav>
     } @else {
       <nav class="sidebar__nav">
         @if (authService.canAccess('jobs')) {

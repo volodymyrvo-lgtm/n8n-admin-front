@@ -294,3 +294,59 @@ export function parseSeoPrompt(prompt: string): { language: string; promptId: st
   const match = /^(\S+)\s+(\S+)$/.exec(prompt.trim());
   return match ? { language: match[1], promptId: match[2] } : null;
 }
+
+// ---------------------------------------------------------------------------
+// Design jobs - the same `/jobs` resource again, `kind: 'design'`.
+// See DesignJobsService. A design job is just a task description.
+// ---------------------------------------------------------------------------
+
+/**
+ * A run of a design job, as returned by `GET /jobs?kind=design`.
+ * It carries the common run bookkeeping (steps, status, dates, spend, table
+ * link) and the one field the job is made of - `taskDescription`.
+ */
+export interface DesignJobRun {
+  id: string;
+  kind: 'design';
+  steps: JobSteps;
+  status: JobRunStatus;
+  runDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+  runnedById: string | null;
+  llm: string | null;
+  spend: Record<string, number>;
+  tableUrl: string | null;
+  taskDescription: string;
+}
+
+/** Same paginated envelope as `PaginatedJobRuns`, for `GET /jobs?kind=design`. */
+export interface PaginatedDesignJobRuns {
+  items: DesignJobRun[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+/** The design form's limit on the task description. */
+export const DESIGN_TASK_DESCRIPTION_MAX_LENGTH = 2000;
+
+/** The new-design-job form's values: the task description, plus `isTesting` that only picks which n8n webhook is triggered. */
+export interface CreateDesignJobFormValue {
+  taskDescription: string;
+  isTesting: boolean;
+}
+
+/**
+ * The one body of a design job - posted to our backend (`POST /jobs/design`)
+ * and to the n8n webhook alike. The webhook additionally gets the `jobId`
+ * the backend assigned (see `CreateDesignJobN8nPayload`).
+ */
+export interface CreateDesignJobPayload {
+  taskDescription: string;
+}
+
+/** What the n8n webhook receives: the same body as the backend plus the created job's id. */
+export interface CreateDesignJobN8nPayload extends CreateDesignJobPayload {
+  jobId: string;
+}

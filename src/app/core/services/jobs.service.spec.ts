@@ -154,6 +154,16 @@ describe('JobsService', () => {
     expect(service.jobRuns()[0].status).toBe('pending');
   });
 
+  it('ignores job.updated events of design jobs, which belong to the design page', () => {
+    const service = TestBed.inject(JobsService);
+    service.jobRuns.set([makeRun({ id: '1', status: 'pending' })]);
+    service.connectJobUpdates();
+
+    updatedHandler()({ ...makeRun({ id: '1', status: 'success' }), kind: 'design' } as unknown as SeoJobRun);
+
+    expect(service.jobRuns()[0].status).toBe('pending');
+  });
+
   it('ignores a job.updated event for an id not on the currently loaded page', () => {
     const service = TestBed.inject(JobsService);
     service.jobRuns.set([makeRun({ id: '1' })]);

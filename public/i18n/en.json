@@ -28,7 +28,9 @@
     "logout": "Log out",
     "prompts": "Prompts",
     "glossary": "Glossary",
-    "seoSection": "SEO Generation"
+    "seoSection": "SEO Generation",
+    "designSection": "Design Generation",
+    "banners": "Banners"
   },
   "login": {
     "title": "Sign in to the console",
@@ -372,7 +374,7 @@
     },
     "design": {
       "title": "Design Generation",
-      "description": "Visuals, banners and ad creatives."
+      "description": "Banners and ad creatives: design jobs and their results."
     },
     "acquisition": {
       "title": "Acquisition Generation",
@@ -614,7 +616,8 @@
     "jobFailed": "Could not load the job.",
     "kind": {
       "communication": "Content",
-      "seo": "SEO"
+      "seo": "SEO",
+      "design": "Design"
     },
     "status": "Status",
     "jobType": "Job type",
@@ -628,5 +631,49 @@
     "runDate": "Run date",
     "llm": "LLM",
     "copy": "Copy"
+  },
+  "designJobs": {
+    "title": "Design jobs",
+    "subtitle": "Generation runs for banners and visuals.",
+    "newJob": "New design job",
+    "emptyTitle": "No design jobs yet",
+    "emptyDescription": "Create the first design job to generate a banner.",
+    "card": {
+      "taskDescription": "Task description"
+    }
+  },
+  "designAdd": {
+    "title": "Add Design Job",
+    "subtitle": "Describe the banner you need and trigger its generation via n8n.",
+    "taskDescription": "Task description",
+    "taskDescriptionPlaceholder": "Describe what should be designed",
+    "taskDescriptionError": "Task description is required",
+    "taskDescriptionTooLong": "Task description must be at most {{max}} characters",
+    "isTestingHint": "Sends this job's n8n trigger to the test webhook instead of production.",
+    "submit": "Create job",
+    "cancel": "Cancel",
+    "toast": {
+      "created": "Design job created"
+    },
+    "n8nError": "Job saved, but the n8n trigger failed",
+    "n8nNotConfigured": "Job saved, but the design n8n webhook is not configured"
+  },
+  "banners": {
+    "title": "Banners",
+    "subtitle": "Banners generated for design jobs.",
+    "emptyTitle": "No banners yet",
+    "emptyDescription": "Banners will show up here once n8n generates them.",
+    "loadFailed": "Could not load the banners",
+    "refresh": "Refresh",
+    "imageUnavailable": "Image unavailable",
+    "job": "Job",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "sending": "Sending",
+      "sent": "Sent",
+      "send_failed": "Send failed"
+    }
   }
 }

@@ -1,0 +1,161 @@
+<div class="page">
+  <div class="page__header-row">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'designJobs.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'designJobs.subtitle' | translate }}</p>
+    </div>
+    <a routerLink="/design/jobs/new" class="page-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14"></path><path d="M5 12h14"></path>
+      </svg>
+      {{ 'designJobs.newJob' | translate }}
+    </a>
+  </div>
+
+  @if (designJobsService.loading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (designJobsService.jobs().length > 0) {
+    <div class="job-cards">
+      @for (run of designJobsService.jobs(); track run.id) {
+        <div class="job-card" [class]="cardStatusClass(run.status)">
+          <button
+            type="button"
+            class="job-card__header"
+            (click)="toggleExpanded(run.id)"
+            [attr.aria-expanded]="isExpanded(run.id)"
+          >
+            <span class="job-card__status-icon" [class]="'job-card__status-icon--' + run.status">
+              @if (run.status === 'success') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+              } @else if (run.status === 'failed') {
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                </svg>
+              } @else {
+                <app-spinner [size]="18" />
+              }
+            </span>
+
+            <span class="job-card__title-group">
+              <span class="job-card__title">{{ run.taskDescription }}</span>
+              <span class="job-card__subtitle">{{ run.createdAt | date: 'medium' }}@if (run.llm) { · {{ run.llm }} }</span>
+            </span>
+
+            <span class="job-card__steps">
+              @for (step of stepEntries(run.steps); track step.key) {
+                <span
+                  class="job-card__step-icon"
+                  [class]="'job-card__step-icon--' + step.status"
+                  [attr.title]="step.key"
+                >
+                  @if (step.status === 'success') {
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 6 9 17l-5-5"></path>
+                    </svg>
+                  } @else if (step.status === 'failed') {
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                    </svg>
+                  } @else {
+                    <app-spinner [size]="14" />
+                  }
+                </span>
+              }
+            </span>
+
+            <svg
+              class="job-card__chevron"
+              [class.job-card__chevron--open]="isExpanded(run.id)"
+              width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </button>
+
+          @if (isExpanded(run.id)) {
+            <div class="job-card__body">
+              <div class="job-card__meta">
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.runBy' | translate }}</span>
+                  <span [title]="runnerName(run.runnedById)">{{ runnerName(run.runnedById) }}</span>
+                </div>
+                <div class="job-card__meta-item">
+                  <span class="field-label">{{ 'jobs.card.runDate' | translate }}</span>
+                  <span>{{ run.runDate ? (run.runDate | date: 'medium') : '—' }}</span>
+                </div>
+                @if (run.llm) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.llm' | translate }}</span>
+                    <span>{{ run.llm }}</span>
+                  </div>
+                }
+                @if (run.tableUrl) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.tableUrl' | translate }}</span>
+                    <a class="job-card__table-link" [href]="run.tableUrl" target="_blank" rel="noopener">{{ 'jobs.card.tableUrlLabel' | translate }}</a>
+                  </div>
+                }
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'designJobs.card.taskDescription' | translate }}</span>
+                <p class="job-card__description" data-testid="task-description">{{ run.taskDescription }}</p>
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'jobs.card.spend' | translate }}</span>
+                <div class="job-card__spend-list">
+                  @for (entry of spendEntries(run.spend); track entry.key) {
+                    <div class="job-card__spend-row">
+                      <span>{{ entry.key }}</span>
+                      <span>{{ entry.value | currency: 'USD' }}</span>
+                    </div>
+                  }
+                  <div class="job-card__spend-row job-card__spend-row--total">
+                    <span>{{ 'jobs.card.spendTotal' | translate }}</span>
+                    <span>{{ spendTotal(run.spend) | currency: 'USD' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="job-card__section">
+                <span class="field-label">{{ 'jobs.card.steps' | translate }}</span>
+                <div class="job-card__step-list">
+                  @for (step of stepEntries(run.steps); track step.key) {
+                    <div class="job-card__step-row">
+                      <span class="job-card__step-icon" [class]="'job-card__step-icon--' + step.status">
+                        @if (step.status === 'success') {
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6 9 17l-5-5"></path>
+                          </svg>
+                        } @else if (step.status === 'failed') {
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"></path><path d="M6 6l12 12"></path>
+                          </svg>
+                        } @else {
+                          <app-spinner [size]="14" />
+                        }
+                      </span>
+                      <span>{{ step.key }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+    <app-paginator [page]="designJobsService.page()" [totalPages]="totalPages()" (pageChange)="goToPage($event)" />
+  } @else {
+    <app-empty-state [title]="'designJobs.emptyTitle' | translate" [description]="'designJobs.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+        <circle cx="8.5" cy="9.5" r="1.5"></circle>
+        <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+      </svg>
+    </app-empty-state>
+  }
+</div>

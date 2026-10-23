@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
 import { environment } from '@env';
 import {
+  DesignJobRun,
   buildSeoPrompt,
   CreateSeoJobBackendPayload,
   CreateSeoJobFormValue,
@@ -170,7 +171,7 @@ export class SeoJobsService {
       auth: { token: this.authService.getToken() },
     });
 
-    this.socket.on('job.updated', (job: JobRun | SeoJobRun) => {
+    this.socket.on('job.updated', (job: JobRun | SeoJobRun | DesignJobRun) => {
       if (job.kind !== 'seo') {
         return;
       }

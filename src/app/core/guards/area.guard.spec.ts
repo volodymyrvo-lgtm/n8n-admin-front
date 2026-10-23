@@ -25,6 +25,11 @@ describe('areaGuard', () => {
     expect(run('reader', 'jobs', 'documents')).toBe(true);
   });
 
+  it('lets a reader open the banners and sends an analyst away from them', () => {
+    expect(run('reader', 'banners')).toBe(true);
+    expect(run('analyst', 'banners')).toBe('/usage');
+  });
+
   it('sends a reader away from the dashboard and the jobs to the documents', () => {
     expect(run('reader', 'dashboard')).toBe('/rule-sets');
   });

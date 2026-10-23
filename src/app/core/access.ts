@@ -10,14 +10,15 @@ import { UserRole } from './models/user.model';
  * - `users`: the users list
  * - `dashboard`: the LLM spend dashboard
  * - `errors`: the job error logs
+ * - `banners`: the design banners (the list; deleting them is admin-only on top of this)
  */
-export type AccessArea = 'jobs' | 'documents' | 'users' | 'dashboard' | 'errors';
+export type AccessArea = 'jobs' | 'documents' | 'users' | 'dashboard' | 'errors' | 'banners';
 
 export const ROLE_AREAS: Record<UserRole, readonly AccessArea[]> = {
-  admin: ['jobs', 'documents', 'users', 'dashboard', 'errors'],
-  user: ['jobs', 'documents', 'users', 'dashboard', 'errors'],
-  /** Looks at the documents (rule sets, prompts, glossaries) and the error logs, nothing else. */
-  reader: ['documents', 'errors'],
+  admin: ['jobs', 'documents', 'users', 'dashboard', 'errors', 'banners'],
+  user: ['jobs', 'documents', 'users', 'dashboard', 'errors', 'banners'],
+  /** Looks at the documents (rule sets, prompts, glossaries), the error logs and the banners, nothing else. */
+  reader: ['documents', 'errors', 'banners'],
   /** Sees the dashboard and nothing else. */
   analyst: ['dashboard'],
 };

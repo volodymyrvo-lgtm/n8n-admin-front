@@ -81,6 +81,31 @@ describe('DashboardLayoutComponent', () => {
     });
   });
 
+  describe('in the Design section', () => {
+    beforeEach(() => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [DashboardLayoutComponent],
+        providers: [
+          provideTranslateService(),
+          provideRouter([]),
+          { provide: AuthService, useValue: authServiceStub },
+          { provide: ActivatedRoute, useValue: { snapshot: { data: { section: 'design' } } } },
+        ],
+      });
+    });
+
+    it('shows only the design menu: all jobs, add job and banners', () => {
+      const fixture = TestBed.createComponent(DashboardLayoutComponent);
+      fixture.detectChanges();
+      const el: HTMLElement = fixture.nativeElement;
+
+      const hrefs = Array.from(el.querySelectorAll('.nav-item')).map((a) => a.getAttribute('href'));
+      expect(hrefs).toEqual(['/design/jobs', '/design/jobs/new', '/design/banners']);
+      expect(el.querySelector('.sidebar__section')).not.toBeNull();
+    });
+  });
+
   function menuHrefs(role: string, seo: boolean): (string | null)[] {
     authServiceStub.canAccess = (area) => areasOf(role).includes(area);
     TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { data: seo ? { section: 'seo' } : {} } } });
@@ -91,6 +116,15 @@ describe('DashboardLayoutComponent', () => {
 
   it('a reader only sees the document links in the Content menu', () => {
     expect(menuHrefs('reader', false)).toEqual(['/rule-sets', '/prompts', '/glossary']);
+  });
+
+  it('a reader only sees the banners in the Design menu', () => {
+    authServiceStub.canAccess = (area) => areasOf('reader').includes(area);
+    TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { data: { section: 'design' } } } });
+    const fixture = TestBed.createComponent(DashboardLayoutComponent);
+    fixture.detectChanges();
+    const hrefs = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.sidebar__nav a')).map((a) => a.getAttribute('href'));
+    expect(hrefs).toEqual(['/design/banners']);
   });
 
   it('a reader only sees the document links in the SEO menu', () => {

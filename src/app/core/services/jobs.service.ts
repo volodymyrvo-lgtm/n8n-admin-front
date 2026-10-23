@@ -8,6 +8,7 @@ import {
   CreateJobFormValue,
   CreateJobN8nLocalizationPayload,
   CreateJobN8nPayload,
+  DesignJobRun,
   JobRun,
   PaginatedJobRuns,
   SeoJobRun,
@@ -226,8 +227,8 @@ export class JobsService {
     // `job.updated` is broadcast for every job of every kind - this page
     // only shows the communication ones (a payload without `kind`
     // predates the field and is a communication job).
-    this.socket.on('job.updated', (job: JobRun | SeoJobRun) => {
-      if (job.kind === 'seo') {
+    this.socket.on('job.updated', (job: JobRun | SeoJobRun | DesignJobRun) => {
+      if (job.kind && job.kind !== 'communication') {
         return;
       }
       this.applyJobUpdate(job);

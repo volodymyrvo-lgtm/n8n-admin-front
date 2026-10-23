@@ -9,6 +9,9 @@ import { guestGuard } from './core/guards/guest.guard';
 /** A section's landing page: its jobs list, or - for a role without jobs (the reader) - its rule sets. */
 const sectionHome = () => (inject(AuthService).canAccess('jobs') ? 'jobs' : 'rule-sets');
 
+/** The Design section's landing page: its jobs list, or - for a role without jobs (the reader) - the banners. */
+const designHome = () => (inject(AuthService).canAccess('jobs') ? 'jobs' : 'banners');
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -104,6 +107,36 @@ export const routes: Routes = [
             data: { kind: 'seo' },
             loadComponent: () =>
               import('./features/prompts/prompt-form/prompt-form').then((m) => m.PromptFormComponent),
+          },
+        ],
+      },
+      // Design Generation: its own section (the same sidebar layout, told by
+      // `data.section` to show the design menu) - the jobs list, the "add job"
+      // form and the banners.
+      {
+        path: 'design',
+        canActivate: [areaGuard('jobs', 'banners')],
+        data: { section: 'design' },
+        loadComponent: () =>
+          import('./layout/dashboard-layout/dashboard-layout').then((m) => m.DashboardLayoutComponent),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: designHome },
+          {
+            path: 'jobs',
+            canActivate: [areaGuard('jobs')],
+            loadComponent: () =>
+              import('./features/design/design-job-list/design-job-list').then((m) => m.DesignJobListComponent),
+          },
+          {
+            path: 'jobs/new',
+            canActivate: [areaGuard('jobs')],
+            loadComponent: () =>
+              import('./features/design/add-design-job/add-design-job').then((m) => m.AddDesignJobComponent),
+          },
+          {
+            path: 'banners',
+            canActivate: [areaGuard('banners')],
+            loadComponent: () => import('./features/design/banners/banners').then((m) => m.BannersComponent),
           },
         ],
       },

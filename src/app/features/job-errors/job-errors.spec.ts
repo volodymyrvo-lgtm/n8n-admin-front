@@ -185,4 +185,30 @@ describe('JobErrorsComponent', () => {
     expect(logout).toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/login');
   });
+
+  it('shows the details of a design job: kind badge, status, description and model', async () => {
+    await TestBed.configureTestingModule({
+      imports: [JobErrorsComponent],
+      providers: [provideTranslateService(), provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(JobErrorsComponent);
+    fixture.detectChanges();
+    httpMock
+      .expectOne((r) => r.url === `${API}/job-errors`)
+      .flush({ items: [{ id: 'e9', jobId: 'j-design', error: { message: 'boom' }, createdAt: '2026-10-21T19:28:24.813Z' }], total: 1, page: 1, limit: 10 });
+    httpMock.expectOne(`${API}/jobs/j-design`).flush({
+      id: 'j-design', kind: 'design', status: 'failed', taskDescription: 'Autumn promo banner', llm: 'gpt_5_6_sol',
+      runDate: '2026-10-21T19:20:00.000Z', steps: {}, spend: {}, tableUrl: null, runnedById: null,
+    });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="job-kind"]')?.textContent?.trim()).toBe('jobErrors.kind.design');
+    const card = open(fixture as never, 0);
+    const job = card.querySelector('[data-testid="job-section"]') as HTMLElement;
+    expect(job.textContent).toContain('j-design');
+    expect(job.textContent).toContain('Autumn promo banner');
+    expect(job.textContent).toContain('gpt_5_6_sol');
+    expect(job.textContent).toContain('jobs.status.failed');
+  });
 });

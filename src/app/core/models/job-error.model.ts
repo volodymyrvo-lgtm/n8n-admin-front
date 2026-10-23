@@ -1,4 +1,4 @@
-import { JobRun, SeoJobRun } from './job.model';
+import { DesignJobRun, JobRun, SeoJobRun } from './job.model';
 
 /**
  * One row of `GET /job-errors`: a failure that n8n reported for a job.
@@ -22,7 +22,7 @@ export interface PaginatedJobErrors {
 }
 
 /** The job a log belongs to (`GET /jobs/:id`) - either family; `kind` tells which. */
-export type AnyJobRun = JobRun | SeoJobRun;
+export type AnyJobRun = JobRun | SeoJobRun | DesignJobRun;
 
 /** Where a job's details stand: being fetched, loaded, gone (deleted) or failed to load. */
 export type JobLookup = { state: 'loading' } | { state: 'ready'; job: AnyJobRun } | { state: 'missing' } | { state: 'error' };

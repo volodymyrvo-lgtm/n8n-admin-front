@@ -49,6 +49,11 @@ export class FlowHubComponent {
     () => this.authService.canAccess('jobs') || this.authService.canAccess('documents'),
   );
 
+  /** The Design tile: for roles that work with design jobs, and for those who may only look at the banners (the reader). */
+  protected readonly showDesign = computed(
+    () => this.authService.canAccess('jobs') || this.authService.canAccess('banners'),
+  );
+
   logout(): void {
     this.authService.logout();
     this.router.navigateByUrl('/login');

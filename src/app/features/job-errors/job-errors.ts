@@ -104,21 +104,28 @@ export class JobErrorsComponent implements OnInit {
 
   /** The job's own fields for the card, by family. */
   protected jobFields(job: AnyJobRun): JobField[] {
-    const fields: { labelKey: string; value: string | null }[] =
-      job.kind === 'seo'
-        ? [
-            { labelKey: 'jobErrors.language', value: job.language },
-            { labelKey: 'jobErrors.pageTask', value: job.pageTask },
-            { labelKey: 'jobErrors.llm', value: job.llm },
-            { labelKey: 'jobErrors.prompt', value: job.prompt },
-          ]
-        : [
-            { labelKey: 'jobErrors.jobType', value: job.jobType },
-            { labelKey: 'jobErrors.taskStatus', value: job.taskStatus },
-            { labelKey: 'jobErrors.messageType', value: job.messageType },
-            { labelKey: 'jobErrors.board', value: job.board },
-            { labelKey: 'jobErrors.llm', value: job.llm },
-          ];
+    let fields: { labelKey: string; value: string | null }[];
+    switch (job.kind) {
+      case 'seo':
+        fields = [
+          { labelKey: 'jobErrors.language', value: job.language },
+          { labelKey: 'jobErrors.pageTask', value: job.pageTask },
+          { labelKey: 'jobErrors.llm', value: job.llm },
+          { labelKey: 'jobErrors.prompt', value: job.prompt },
+        ];
+        break;
+      case 'design':
+        fields = [{ labelKey: 'jobErrors.llm', value: job.llm }];
+        break;
+      default:
+        fields = [
+          { labelKey: 'jobErrors.jobType', value: job.jobType },
+          { labelKey: 'jobErrors.taskStatus', value: job.taskStatus },
+          { labelKey: 'jobErrors.messageType', value: job.messageType },
+          { labelKey: 'jobErrors.board', value: job.board },
+          { labelKey: 'jobErrors.llm', value: job.llm },
+        ];
+    }
     return fields.flatMap((field) => (field.value ? [{ labelKey: field.labelKey, value: field.value }] : []));
   }
 

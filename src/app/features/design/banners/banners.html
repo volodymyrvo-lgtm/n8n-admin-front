@@ -1,0 +1,70 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'banners.title' | translate }}</h1>
+    <p class="page-subtitle">{{ 'banners.subtitle' | translate }}</p>
+  </div>
+
+  @if (bannersService.loading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (bannersService.failed()) {
+    <div class="banners-alert" role="alert" data-testid="load-failed">
+      <span>{{ 'banners.loadFailed' | translate }}</span>
+      <button type="button" class="banners-btn" data-testid="retry" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+    </div>
+  } @else if (bannersService.banners().length > 0) {
+    <div class="banner-grid">
+      @for (banner of bannersService.banners(); track banner.id) {
+        <article class="banner-card" data-testid="banner-card">
+          <div class="banner-card__preview">
+            @if (showImage(banner)) {
+              <img
+                [src]="banner.imageUrl"
+                [alt]="banner.figmaImageName"
+                loading="lazy"
+                (error)="onImageError(banner.id)"
+              />
+            } @else {
+              <div class="banner-card__placeholder" data-testid="image-placeholder">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                  <circle cx="8.5" cy="9.5" r="1.5"></circle>
+                  <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+                </svg>
+                <span>{{ 'banners.imageUnavailable' | translate }}</span>
+                <button type="button" class="banners-btn" data-testid="refresh-image" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+              </div>
+            }
+          </div>
+
+          <div class="banner-card__body">
+            <div class="banner-card__title-row">
+              <span class="banner-card__name" [title]="banner.figmaImageName">{{ banner.figmaImageName }}</span>
+              @let status = statusView(banner.status);
+              <span class="status-badge" [class]="status.badgeClass" data-testid="status">{{ status.labelKey ? (status.labelKey | translate) : status.raw }}</span>
+            </div>
+
+            <div class="banner-card__meta">
+              <span>{{ banner.createdAt | date: 'medium' }}</span>
+              <span>{{ fileSize(banner.sizeBytes) }}</span>
+            </div>
+
+            @if (banner.jobId) {
+              <span class="banner-card__job" data-testid="job" [title]="banner.jobId">
+                {{ 'banners.job' | translate }} {{ shortId(banner.jobId) }}
+              </span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+    <app-paginator [page]="bannersService.page()" [totalPages]="totalPages()" (pageChange)="goToPage($event)" />
+  } @else {
+    <app-empty-state [title]="'banners.emptyTitle' | translate" [description]="'banners.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+        <circle cx="8.5" cy="9.5" r="1.5"></circle>
+        <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+      </svg>
+    </app-empty-state>
+  }
+</div>

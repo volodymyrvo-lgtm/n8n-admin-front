@@ -11,9 +11,9 @@ import { LanguageSwitcherComponent } from '../../shared/components/language-swit
   styleUrl: './dashboard-layout.css',
 })
 /**
- * The sidebar shell shared by the two flows that have one: Content
- * Generation (the default menu) and SEO Generation. The route's
- * `data.section` ('seo') picks which menu is shown.
+ * The sidebar shell shared by the flows that have one: Content Generation
+ * (the default menu), SEO Generation and Design Generation. The route's
+ * `data.section` ('seo' / 'design') picks which menu is shown.
  */
 export class DashboardLayoutComponent {
   protected readonly authService = inject(AuthService);
@@ -21,6 +21,7 @@ export class DashboardLayoutComponent {
   private readonly route = inject(ActivatedRoute);
 
   protected readonly isSeo = this.route.snapshot.data?.['section'] === 'seo';
+  protected readonly isDesign = this.route.snapshot.data?.['section'] === 'design';
 
   logout(): void {
     this.authService.logout();
