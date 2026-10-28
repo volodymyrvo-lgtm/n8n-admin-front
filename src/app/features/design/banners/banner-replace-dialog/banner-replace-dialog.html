@@ -1,0 +1,60 @@
+<div class="backdrop" (mousedown)="onBackdropMouseDown($event)">
+  <form class="panel" role="dialog" aria-modal="true" [attr.aria-label]="'banners.replace.title' | translate" (submit)="$event.preventDefault(); submit()">
+    <h2 class="panel__title">{{ 'banners.replace.title' | translate }}</h2>
+    <p class="panel__message">{{ 'banners.replace.message' | translate: { name: banner().figmaImageName } }}</p>
+
+    <label class="panel__field">
+      <span class="panel__label">{{ 'banners.replace.file' | translate }}</span>
+      <input
+        #fileInput
+        type="file"
+        class="panel__file"
+        accept="image/png"
+        data-testid="replace-file"
+        [disabled]="busy()"
+        (change)="onFileChange($event)"
+      />
+      <span class="panel__hint">{{ 'banners.replace.fileHint' | translate }}</span>
+    </label>
+
+    @if (problem(); as issue) {
+      <p class="panel__error" role="alert" data-testid="replace-problem">
+        {{ ('banners.replace.problem.' + issue) | translate }}
+      </p>
+    }
+
+    @if (previewUrl(); as url) {
+      <div class="panel__preview">
+        <img [src]="url" [alt]="'banners.replace.previewAlt' | translate" data-testid="replace-preview" />
+        @if (file(); as chosen) {
+          <span class="panel__hint">{{ chosen.name }} · {{ fileSize(chosen.size) }}</span>
+        }
+      </div>
+    }
+
+    <label class="panel__field">
+      <span class="panel__label">{{ 'banners.replace.name' | translate }}</span>
+      <input
+        type="text"
+        class="panel__input"
+        autocomplete="off"
+        data-testid="replace-name"
+        [value]="name()"
+        [disabled]="busy()"
+        (input)="onNameInput($event)"
+      />
+      @if (nameBlank()) {
+        <span class="panel__error" data-testid="replace-name-blank">{{ 'banners.replace.nameBlank' | translate }}</span>
+      }
+    </label>
+
+    <div class="panel__actions">
+      <button type="button" class="panel__btn" data-testid="replace-cancel" [disabled]="busy()" (click)="cancel()">
+        {{ 'banners.replace.cancel' | translate }}
+      </button>
+      <button type="submit" class="panel__btn panel__btn--primary" data-testid="replace-submit" [disabled]="!canSubmit()">
+        {{ 'banners.replace.submit' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

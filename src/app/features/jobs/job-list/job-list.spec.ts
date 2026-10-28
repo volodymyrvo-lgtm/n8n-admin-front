@@ -99,6 +99,35 @@ describe('JobListComponent', () => {
     return { fixture };
   }
 
+  it('shows an email HTML update job without the fields it does not have, and its banner flag', () => {
+    const { fixture } = createAndLoad([
+      makeRun({
+        taskStatus: 'welcome_email_html_update',
+        taskDescription: 'Update footer',
+        isBannerUpdate: true,
+        jobType: '',
+        messageType: '',
+        board: '',
+        llm: '',
+        sm: '',
+        spend: {},
+      }),
+    ]);
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('.job-card__subtitle')?.textContent?.trim()).toBe('welcome_email_html_update');
+
+    (el.querySelector('.job-card__header') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    const labels = Array.from(el.querySelectorAll('.job-card__meta-item .field-label')).map((l) => l.textContent?.trim());
+    expect(labels).toContain('jobs.card.isBannerUpdate');
+    expect(labels).not.toContain('jobs.card.llm');
+    expect(labels).not.toContain('jobs.card.systemMessage');
+    expect(labels).not.toContain('jobs.card.messageType');
+    expect(el.textContent).toContain('jobs.card.yes');
+  });
+
   it('shows the empty state when there are no job runs', () => {
     const { fixture } = createAndLoad([]);
 

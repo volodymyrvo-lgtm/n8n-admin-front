@@ -51,4 +51,12 @@ describe('authInterceptor', () => {
     expect(seen.headers.has('Authorization')).toBe(false);
     expect(seen).toBe(original);
   });
+
+  it('does not attach the token to the static email template files', () => {
+    authServiceStub.getToken = () => 'abc123';
+
+    const seen = run(new HttpRequest('GET', '/email-templates/index.json'));
+
+    expect(seen.headers.has('Authorization')).toBe(false);
+  });
 });

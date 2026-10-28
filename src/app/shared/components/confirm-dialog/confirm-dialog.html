@@ -1,0 +1,29 @@
+<div class="backdrop" (mousedown)="onBackdropMouseDown($event)">
+  <form class="panel" role="alertdialog" aria-modal="true" [attr.aria-label]="title()" (submit)="$event.preventDefault(); confirm()">
+    <h2 class="panel__title">{{ title() }}</h2>
+    <p class="panel__message">{{ message() }}</p>
+
+    @if (requiredText(); as word) {
+      <label class="panel__field">
+        <span class="panel__hint">{{ 'common.confirmType' | translate: { word } }}</span>
+        <input
+          #typedInput
+          type="text"
+          class="panel__input"
+          autocomplete="off"
+          data-testid="confirm-input"
+          [value]="typed()"
+          (input)="onInput($event)"
+          [disabled]="busy()"
+        />
+      </label>
+    }
+
+    <div class="panel__actions">
+      <button #cancelButton type="button" class="panel__btn" data-testid="cancel" [disabled]="busy()" (click)="cancel()">{{ cancelLabel() }}</button>
+      <button type="submit" class="panel__btn" [class.panel__btn--danger]="tone() === 'danger'" [class.panel__btn--primary]="tone() === 'primary'" data-testid="confirm" [disabled]="!canConfirm()">
+        {{ confirmLabel() }}
+      </button>
+    </div>
+  </form>
+</div>

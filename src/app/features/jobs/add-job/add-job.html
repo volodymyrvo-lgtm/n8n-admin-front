@@ -5,16 +5,18 @@
   </div>
 
   <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="form__field">
-      <label class="field-label" for="jobType">{{ 'addJob.jobType' | translate }}</label>
-      <div class="field-control">
-        <select id="jobType" formControlName="jobType">
-          @for (option of jobTypeOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-          }
-        </select>
+    @if (!isEmailHtmlUpdate()) {
+      <div class="form__field">
+        <label class="field-label" for="jobType">{{ 'addJob.jobType' | translate }}</label>
+        <div class="field-control">
+          <select id="jobType" formControlName="jobType">
+            @for (option of jobTypeOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
       </div>
-    </div>
+    }
 
     <div class="form__field">
       <label class="field-label" for="taskStatus">{{ 'addJob.taskStatus' | translate }}</label>
@@ -27,27 +29,29 @@
       </div>
     </div>
 
-    <div class="form__field">
-      <label class="field-label" for="messageType">{{ 'addJob.messageType' | translate }}</label>
-      <div class="field-control">
-        <select id="messageType" formControlName="messageType">
-          @for (option of messageTypeOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-          }
-        </select>
+    @if (!isEmailHtmlUpdate()) {
+      <div class="form__field">
+        <label class="field-label" for="messageType">{{ 'addJob.messageType' | translate }}</label>
+        <div class="field-control">
+          <select id="messageType" formControlName="messageType">
+            @for (option of messageTypeOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
       </div>
-    </div>
 
-    <div class="form__field">
-      <label class="field-label" for="board">{{ 'addJob.board' | translate }}</label>
-      <div class="field-control">
-        <select id="board" formControlName="board">
-          @for (option of boardOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-          }
-        </select>
+      <div class="form__field">
+        <label class="field-label" for="board">{{ 'addJob.board' | translate }}</label>
+        <div class="field-control">
+          <select id="board" formControlName="board">
+            @for (option of boardOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
       </div>
-    </div>
+    }
 
     <div class="form__field">
       <label class="field-label" for="taskDescription">{{ 'addJob.taskDescription' | translate }}</label>
@@ -67,7 +71,18 @@
       }
     </div>
 
-    @if (!isUpdate()) {
+    @if (isWelcomeEmailUpdate()) {
+      <div class="form__field">
+        <label class="toggle-row">
+          <input type="checkbox" class="toggle-input" formControlName="isBannerUpdate" data-testid="is-banner-update" />
+          <span class="toggle-track"><span class="toggle-knob"></span></span>
+          <span class="toggle-label">{{ 'addJob.isBannerUpdate' | translate }}</span>
+        </label>
+        <p class="form__hint">{{ 'addJob.isBannerUpdateHint' | translate }}</p>
+      </div>
+    }
+
+    @if (!isUpdate() && !isEmailHtmlUpdate()) {
       <div class="form__field">
         <label class="field-label" for="systemMessage">{{ 'addJob.systemMessage' | translate }}</label>
         <div

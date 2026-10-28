@@ -35,6 +35,8 @@ export interface JobRun {
   messageType: string;
   board: string;
   taskDescription: string;
+  /** Only on a `welcome_email_html_update` job: whether the banner is being updated as well. */
+  isBannerUpdate?: boolean | null;
   status: JobRunStatus;
   runDate: string | null;
   createdAt: string;
@@ -67,8 +69,31 @@ export interface PaginatedJobRuns {
 export type JobTypeOption = 'email' | 'sms' | 'web_push' | 'notification_center' | 'in_app';
 export const JOB_TYPE_OPTIONS: readonly JobTypeOption[] = ['email', 'sms', 'web_push', 'notification_center', 'in_app'];
 
-export type TaskStatusOption = 'new' | 'update' | 'localization';
-export const TASK_STATUS_OPTIONS: readonly TaskStatusOption[] = ['new', 'update', 'localization'];
+export type TaskStatusOption =
+  | 'new'
+  | 'update'
+  | 'localization'
+  | 'welcome_email_html_update'
+  | 'system_email_html_update';
+export const TASK_STATUS_OPTIONS: readonly TaskStatusOption[] = [
+  'new',
+  'update',
+  'localization',
+  'welcome_email_html_update',
+  'system_email_html_update',
+];
+
+/**
+ * The two "update the email HTML" task statuses. Unlike every other status they
+ * have their own, tiny form (just the task description - plus `isBannerUpdate`
+ * for the welcome one) and their own n8n webhooks, and they send a much smaller
+ * body - see `CreateEmailHtmlUpdateBackendPayload` / `CreateEmailHtmlUpdateN8nPayload`.
+ */
+export type EmailHtmlUpdateStatus = Extract<TaskStatusOption, 'welcome_email_html_update' | 'system_email_html_update'>;
+
+export function isEmailHtmlUpdateStatus(status: string): status is EmailHtmlUpdateStatus {
+  return status === 'welcome_email_html_update' || status === 'system_email_html_update';
+}
 
 /** Same set of channels as JobTypeOption - kept as a separate alias since the two fields are conceptually distinct on the backend. */
 export type MessageTypeOption = JobTypeOption;
@@ -117,6 +142,8 @@ export interface CreateJobFormValue {
   promptId: string | null;
   glossaryId: string | null;
   llm: string | null;
+  /** Only meaningful for `welcome_email_html_update` (always `false` otherwise). */
+  isBannerUpdate: boolean;
   isTesting: boolean;
 }
 
@@ -137,6 +164,25 @@ export interface CreateJobBackendPayload {
   ruleIds: string[];
   sm: string;
   llm: string;
+}
+
+/**
+ * Backend body of an email-HTML-update job: nothing but the status and the task
+ * description, plus `isBannerUpdate` (a real `true`/`false`) for the welcome one.
+ */
+export interface CreateEmailHtmlUpdateBackendPayload {
+  steps: JobSteps;
+  taskStatus: EmailHtmlUpdateStatus;
+  taskDescription: string;
+  isBannerUpdate?: boolean;
+}
+
+/** n8n body of an email-HTML-update job: the same fields as the backend one, plus the created job's id. */
+export interface CreateEmailHtmlUpdateN8nPayload {
+  taskStatus: EmailHtmlUpdateStatus;
+  taskDescription: string;
+  isBannerUpdate?: boolean;
+  jobId: string;
 }
 
 /**

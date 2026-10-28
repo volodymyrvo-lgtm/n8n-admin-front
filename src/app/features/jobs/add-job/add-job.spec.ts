@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
-import { JobsService } from '../../../core/services/jobs.service';
+import { EMAIL_HTML_UPDATE_WEBHOOK_URLS, JobsService } from '../../../core/services/jobs.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AddJobComponent } from './add-job';
 
@@ -82,6 +82,7 @@ describe('AddJobComponent', () => {
       promptId: 'prompt-1',
       glossaryId: '',
       llm: 'claude_sonnet_5',
+      isBannerUpdate: false,
       isTesting: false,
     });
     fixture.componentInstance.submit();
@@ -160,6 +161,7 @@ describe('AddJobComponent', () => {
       promptId: 'prompt-1',
       glossaryId: '',
       llm: 'claude_sonnet_5',
+      isBannerUpdate: false,
       isTesting: false,
     });
     fixture.componentInstance.submit();
@@ -205,6 +207,7 @@ describe('AddJobComponent', () => {
       promptId: 'prompt-1',
       glossaryId: '',
       llm: 'claude_sonnet_5',
+      isBannerUpdate: false,
       isTesting: true,
     });
     fixture.componentInstance.submit();
@@ -374,6 +377,7 @@ describe('AddJobComponent', () => {
         promptId: '',
         glossaryId: '',
         llm: '',
+        isBannerUpdate: false,
         isTesting: false,
       });
       // setValue() alone doesn't re-run syncTaskStatusFields (an effect,
@@ -511,6 +515,7 @@ describe('AddJobComponent', () => {
         promptId: 'prompt-1',
         glossaryId: 'glossary-1',
         llm: 'gpt_6_astra',
+        isBannerUpdate: false,
         isTesting: false,
       });
       // setValue() alone doesn't re-run syncLocalizationFields (an effect,
@@ -558,6 +563,170 @@ describe('AddJobComponent', () => {
         jobId: 'new-2',
       });
       n8nReq.flush({});
+    });
+  });
+
+  describe('email HTML update task statuses', () => {
+    const WELCOME = { live: 'https://n8n.test/webhook/welcome', test: 'https://n8n.test/webhook-test/welcome' };
+    const SYSTEM = { live: 'https://n8n.test/webhook/system', test: 'https://n8n.test/webhook-test/system' };
+
+    function setup(urls = { welcome_email_html_update: WELCOME, system_email_html_update: SYSTEM }) {
+      // The record is created per test injector, so overwriting it here doesn't leak into other tests.
+      Object.assign(TestBed.inject(EMAIL_HTML_UPDATE_WEBHOOK_URLS), urls);
+      const fixture = TestBed.createComponent(AddJobComponent);
+      fixture.detectChanges();
+      httpMock.expectOne('http://localhost:3000/rules').flush([]);
+      httpMock.expectOne('http://localhost:3000/prompts').flush([]);
+      httpMock.expectOne('http://localhost:3000/glossaries').flush([]);
+      fixture.detectChanges();
+      vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+      return fixture;
+    }
+
+    function selectStatus(fixture: ReturnType<typeof setup>, status: string) {
+      fixture.componentInstance['form'].controls.taskStatus.setValue(status as never);
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    }
+
+    const FIELD_IDS = ['jobType', 'messageType', 'board', 'systemMessage', 'llm', 'mainRuleSet', 'glossary', 'toneOfVoiceRuleSet', 'humanizerRuleSet'];
+
+    it('offers both statuses', () => {
+      const el = setup().nativeElement as HTMLElement;
+      const options = Array.from(el.querySelectorAll('#taskStatus option')).map((o) => o.getAttribute('value'));
+      expect(options).toContain('welcome_email_html_update');
+      expect(options).toContain('system_email_html_update');
+    });
+
+    it('welcome_email_html_update shows only the task description, the banner switch and the test toggle', () => {
+      const fixture = setup();
+      const el = selectStatus(fixture, 'welcome_email_html_update');
+
+      for (const id of FIELD_IDS) {
+        expect(el.querySelector('#' + id), id).toBeNull();
+      }
+      expect(el.querySelector('#taskDescription')).toBeTruthy();
+      expect(el.querySelector('[data-testid="is-banner-update"]')).toBeTruthy();
+      expect(el.querySelector('input[formControlName="isTesting"]')).toBeTruthy();
+    });
+
+    it('system_email_html_update shows only the task description (no banner switch)', () => {
+      const fixture = setup();
+      const el = selectStatus(fixture, 'system_email_html_update');
+
+      for (const id of FIELD_IDS) {
+        expect(el.querySelector('#' + id), id).toBeNull();
+      }
+      expect(el.querySelector('#taskDescription')).toBeTruthy();
+      expect(el.querySelector('[data-testid="is-banner-update"]')).toBeNull();
+    });
+
+    it('is valid with just a task description, and not without one', () => {
+      const fixture = setup();
+      selectStatus(fixture, 'welcome_email_html_update');
+      const form = fixture.componentInstance['form'];
+
+      expect(form.valid).toBe(false);
+      form.controls.taskDescription.setValue('Update footer');
+      expect(form.valid).toBe(true);
+    });
+
+    it('posts the small welcome body with a real isBannerUpdate boolean to the welcome webhook', () => {
+      const fixture = setup();
+      selectStatus(fixture, 'welcome_email_html_update');
+      const form = fixture.componentInstance['form'];
+      form.controls.taskDescription.setValue('Update footer');
+      form.controls.isBannerUpdate.setValue(true);
+
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body).toEqual({
+        steps: { step1: { status: 'pending' } },
+        taskStatus: 'welcome_email_html_update',
+        taskDescription: 'Update footer',
+        isBannerUpdate: true,
+      });
+      backendReq.flush({ id: 'job-1', kind: 'communication', taskStatus: 'welcome_email_html_update', taskDescription: 'Update footer', isBannerUpdate: true, steps: {}, status: 'pending' });
+
+      const n8nReq = httpMock.expectOne(WELCOME.live);
+      expect(n8nReq.request.body).toEqual({
+        taskStatus: 'welcome_email_html_update',
+        taskDescription: 'Update footer',
+        isBannerUpdate: true,
+        jobId: 'job-1',
+      });
+      n8nReq.flush({});
+    });
+
+    it('sends isBannerUpdate: false (not omitted) when the switch is off', () => {
+      const fixture = setup();
+      selectStatus(fixture, 'welcome_email_html_update');
+      fixture.componentInstance['form'].controls.taskDescription.setValue('Update footer');
+
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body.isBannerUpdate).toBe(false);
+      backendReq.flush({ id: 'job-1' });
+      const n8nReq = httpMock.expectOne(WELCOME.live);
+      expect(n8nReq.request.body.isBannerUpdate).toBe(false);
+      n8nReq.flush({});
+    });
+
+    it('posts only the task description to the system webhook, and drops a banner flag left over from welcome', () => {
+      const fixture = setup();
+      const form = fixture.componentInstance['form'];
+      selectStatus(fixture, 'welcome_email_html_update');
+      form.controls.isBannerUpdate.setValue(true);
+      selectStatus(fixture, 'system_email_html_update');
+      form.controls.taskDescription.setValue('Fix footer link');
+
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body).toEqual({
+        steps: { step1: { status: 'pending' } },
+        taskStatus: 'system_email_html_update',
+        taskDescription: 'Fix footer link',
+      });
+      backendReq.flush({ id: 'job-2' });
+      const n8nReq = httpMock.expectOne(SYSTEM.live);
+      expect(n8nReq.request.body).toEqual({
+        taskStatus: 'system_email_html_update',
+        taskDescription: 'Fix footer link',
+        jobId: 'job-2',
+      });
+      n8nReq.flush({});
+    });
+
+    it('uses the status\'s own test webhook when the testing toggle is on', () => {
+      const fixture = setup();
+      selectStatus(fixture, 'system_email_html_update');
+      const form = fixture.componentInstance['form'];
+      form.controls.taskDescription.setValue('Fix footer link');
+      form.controls.isTesting.setValue(true);
+
+      fixture.componentInstance.submit();
+
+      httpMock.expectOne('http://localhost:3000/jobs').flush({ id: 'job-3' });
+      httpMock.expectNone(SYSTEM.live);
+      httpMock.expectOne(SYSTEM.test).flush({});
+    });
+
+    it('tells the user when no webhook is configured for the status, without calling n8n', () => {
+      const fixture = setup({
+        welcome_email_html_update: { live: '', test: '' },
+        system_email_html_update: SYSTEM,
+      });
+      const toastError = vi.spyOn(TestBed.inject(ToastService), 'error');
+      selectStatus(fixture, 'welcome_email_html_update');
+      fixture.componentInstance['form'].controls.taskDescription.setValue('Update footer');
+
+      fixture.componentInstance.submit();
+
+      httpMock.expectOne('http://localhost:3000/jobs').flush({ id: 'job-4' });
+      expect(toastError).toHaveBeenCalledWith('addJob.n8nNotConfigured');
     });
   });
 });

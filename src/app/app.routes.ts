@@ -158,6 +158,12 @@ export const routes: Routes = [
             loadComponent: () => import('./features/jobs/add-job/add-job').then((m) => m.AddJobComponent),
           },
           {
+            path: 'email',
+            canActivate: [areaGuard('jobs')],
+            loadComponent: () =>
+              import('./features/email/email-generation/email-generation').then((m) => m.EmailGenerationComponent),
+          },
+          {
             path: 'rule-sets',
             canActivate: [areaGuard('documents')],
             loadComponent: () => import('./features/rule-sets/rule-sets').then((m) => m.RuleSetsComponent),

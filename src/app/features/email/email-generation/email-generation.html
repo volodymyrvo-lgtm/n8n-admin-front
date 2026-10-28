@@ -1,0 +1,180 @@
+<div class="page">
+  <div class="email-header">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'emailGeneration.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'emailGeneration.subtitle' | translate }}</p>
+    </div>
+
+    @if (templates().length > 0) {
+      <label class="email-select">
+        <span>{{ 'emailGeneration.template' | translate }}</span>
+        <select data-testid="template-select" (change)="selectTemplate(inputValue($event))">
+          @for (item of templates(); track item.id) {
+            <option [value]="item.id" [selected]="item.id === selectedId()">{{ item.name }}</option>
+          }
+        </select>
+      </label>
+    }
+  </div>
+
+  @if (listLoading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (listFailed()) {
+    <div class="email-alert" role="alert" data-testid="list-failed">{{ 'emailGeneration.listFailed' | translate }}</div>
+  } @else if (templates().length === 0) {
+    <app-empty-state [title]="'emailGeneration.emptyTitle' | translate" [description]="'emailGeneration.emptyDescription' | translate" />
+  } @else if (templateLoading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (templateFailed()) {
+    <div class="email-alert" role="alert" data-testid="template-failed">{{ 'emailGeneration.templateFailed' | translate }}</div>
+  } @else if (manifest(); as template) {
+    <div class="email-layout">
+      <section class="email-panel">
+        <div class="email-tabs" role="tablist">
+          <button type="button" role="tab" class="email-tab" data-testid="tab-fields" [class.email-tab--active]="tab() === 'fields'" [attr.aria-selected]="tab() === 'fields'" (click)="setTab('fields')">
+            {{ 'emailGeneration.tabFields' | translate }}
+          </button>
+          <button type="button" role="tab" class="email-tab" data-testid="tab-mjml" [class.email-tab--active]="tab() === 'mjml'" [attr.aria-selected]="tab() === 'mjml'" (click)="setTab('mjml')">
+            {{ 'emailGeneration.tabMjml' | translate }}
+            @if (sourceChanged()) {
+              <span class="email-dot" [title]="'emailGeneration.edited' | translate" data-testid="source-edited"></span>
+            }
+          </button>
+        </div>
+
+        @if (tab() === 'fields') {
+          <div class="email-form" role="tabpanel" data-testid="fields-panel">
+            @for (entry of entries(); track $index) {
+              @if (entry.kind === 'fields') {
+                <fieldset class="email-section">
+                  @if (entry.title) {
+                    <legend>{{ entry.title }}</legend>
+                  }
+                  @for (field of entry.fields; track field.key) {
+                    <label class="email-field">
+                      <span class="email-field__label">{{ field.label }}</span>
+                      @if (field.type === 'textarea') {
+                        <textarea rows="3" [attr.data-testid]="'field-' + field.key" [value]="values().fields[field.key] ?? ''" (input)="setField(field.key, inputValue($event))"></textarea>
+                      } @else {
+                        <input type="text" autocomplete="off" [attr.data-testid]="'field-' + field.key" [value]="values().fields[field.key] ?? ''" (input)="setField(field.key, inputValue($event))" />
+                      }
+                      @if (badUrl(field, values().fields[field.key])) {
+                        <span class="email-field__error" data-testid="bad-url">{{ 'emailGeneration.badUrl' | translate }}</span>
+                      }
+                      @if (field.hint) {
+                        <span class="email-field__hint">{{ field.hint }}</span>
+                      }
+                    </label>
+                  }
+                </fieldset>
+              } @else {
+                @let group = entry.group;
+                <fieldset class="email-section" [attr.data-testid]="'group-' + group.key">
+                  <legend>{{ group.label }}</legend>
+                  <div class="email-list" cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="dropItem(group, $event)">
+                    @for (item of items(group); track $index; let itemIndex = $index) {
+                      <div class="email-item" cdkDrag [cdkDragDisabled]="items(group).length < 2" data-testid="group-item">
+                        <div class="email-item__head">
+                          <span class="email-item__title">
+                            @if (items(group).length > 1) {
+                              <button
+                                type="button"
+                                class="email-handle"
+                                cdkDragHandle
+                                data-testid="drag-handle"
+                                [attr.aria-label]="'emailGeneration.dragHandle' | translate: { name: group.itemLabel + ' ' + (itemIndex + 1) }"
+                                (keydown.arrowup)="moveBy(group, itemIndex, -1, $event)"
+                                (keydown.arrowdown)="moveBy(group, itemIndex, 1, $event)"
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                  <circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle>
+                                  <circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle>
+                                  <circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle>
+                                </svg>
+                              </button>
+                            }
+                            {{ group.itemLabel }} {{ itemIndex + 1 }}
+                          </span>
+                          <button type="button" class="email-link" data-testid="remove-item" [disabled]="!canRemove(group)" (click)="removeItem(group, itemIndex)">
+                            {{ 'emailGeneration.remove' | translate }}
+                          </button>
+                        </div>
+                        @for (field of group.fields; track field.key) {
+                          <label class="email-field">
+                            <span class="email-field__label">{{ field.label }}</span>
+                            @if (field.type === 'textarea') {
+                              <textarea rows="3" [value]="item[field.key] ?? ''" (input)="setItemField(group, itemIndex, field.key, inputValue($event))"></textarea>
+                            } @else {
+                              <input type="text" autocomplete="off" [value]="item[field.key] ?? ''" (input)="setItemField(group, itemIndex, field.key, inputValue($event))" />
+                            }
+                            @if (badUrl(field, item[field.key])) {
+                              <span class="email-field__error">{{ 'emailGeneration.badUrl' | translate }}</span>
+                            }
+                          </label>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <button type="button" class="email-btn" data-testid="add-item" [disabled]="!canAdd(group)" (click)="addItem(group)">
+                    + {{ group.addLabel }}
+                  </button>
+                </fieldset>
+              }
+            }
+
+            <button type="button" class="email-link" data-testid="reset-values" (click)="resetValues()">{{ 'emailGeneration.resetValues' | translate }}</button>
+          </div>
+        } @else {
+          <div class="email-source" role="tabpanel" data-testid="mjml-panel">
+            <div class="email-source__bar">
+              <span class="email-field__hint">{{ 'emailGeneration.sourceHint' | translate }}</span>
+              <button type="button" class="email-link" data-testid="reset-source" [disabled]="!sourceChanged()" (click)="resetSource()">
+                {{ 'emailGeneration.resetSource' | translate }}
+              </button>
+            </div>
+            @if (unknownVariables().length > 0) {
+              <p class="email-field__error" role="alert" data-testid="unknown-variables">
+                {{ 'emailGeneration.unknownVariables' | translate }} {{ unknownVariables().join(', ') }}
+              </p>
+            }
+            @defer {
+              <app-code-editor [value]="source()" ariaLabel="MJML" (valueChange)="source.set($event)" />
+            } @placeholder {
+              <app-spinner [label]="'common.loading' | translate" />
+            }
+          </div>
+        }
+      </section>
+
+      <section class="email-preview" [attr.aria-label]="'emailGeneration.preview' | translate">
+        <div class="email-preview__bar">
+          <div class="email-devices" role="group" [attr.aria-label]="'emailGeneration.device' | translate">
+            <button type="button" class="email-btn" data-testid="device-desktop" [class.email-btn--active]="device() === 'desktop'" [attr.aria-pressed]="device() === 'desktop'" (click)="setDevice('desktop')">
+              {{ 'emailGeneration.desktop' | translate }}
+            </button>
+            <button type="button" class="email-btn" data-testid="device-mobile" [class.email-btn--active]="device() === 'mobile'" [attr.aria-pressed]="device() === 'mobile'" (click)="setDevice('mobile')">
+              {{ 'emailGeneration.mobile' | translate }}
+            </button>
+          </div>
+          @if (compiling()) {
+            <span class="email-field__hint" data-testid="compiling">{{ 'emailGeneration.compiling' | translate }}</span>
+          }
+        </div>
+
+        @if (compiled(); as result) {
+          @if (result.errors.length > 0) {
+            <ul class="email-errors" role="alert" data-testid="compile-errors">
+              @for (error of result.errors; track $index) {
+                <li>{{ error.line ? 'L' + error.line + ': ' : '' }}{{ error.message }}</li>
+              }
+            </ul>
+          }
+        }
+
+        <div class="email-frame" [class.email-frame--mobile]="device() === 'mobile'">
+          <iframe #preview sandbox="" [title]="'emailGeneration.preview' | translate" data-testid="preview"></iframe>
+        </div>
+      </section>
+    </div>
+  }
+</div>

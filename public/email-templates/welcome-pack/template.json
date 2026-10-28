@@ -1,0 +1,210 @@
+{
+  "id": "welcome-pack",
+  "name": "Welcome pack",
+  "description": "Welcome bonus email with a choice of deposit packs.",
+  "fields": [
+    {
+      "key": "logo_url",
+      "label": "Logo link",
+      "type": "url",
+      "default": "https://example.com",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "play now",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_url",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/play",
+      "section": "Header"
+    },
+    {
+      "key": "banner_image",
+      "label": "Banner image URL",
+      "type": "url",
+      "default": "https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01M2T1A4656XWQP9DPW5EN1PM0.png",
+      "section": "Banner"
+    },
+    {
+      "key": "banner_url",
+      "label": "Banner link",
+      "type": "url",
+      "default": "https://example.com/bonus",
+      "section": "Banner"
+    },
+    {
+      "key": "main_title",
+      "label": "Main title",
+      "type": "text",
+      "default": "CHOOSE YOUR WELCOME REWARD",
+      "section": "Content"
+    },
+    {
+      "key": "intro_text",
+      "label": "Intro text",
+      "type": "textarea",
+      "default": "the reels are ready for your opening move.",
+      "section": "Content",
+      "hint": "Shown after the {{snippets.greetings_en}} greeting."
+    },
+    {
+      "key": "closing_text",
+      "label": "Closing text",
+      "type": "textarea",
+      "default": "Your opening move sets the tone. Choose the pack that feels right and make Royalé yours from the first spin.",
+      "section": "Closing text"
+    },
+    {
+      "key": "button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "CHOOSE YOUR BONUS",
+      "section": "Main button"
+    },
+    {
+      "key": "button_link",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/choose-bonus",
+      "section": "Main button"
+    },
+    {
+      "key": "tik_tok",
+      "label": "TikTok link",
+      "type": "url",
+      "default": "https://tiktok.com",
+      "section": "Social links"
+    },
+    {
+      "key": "inst",
+      "label": "Instagram link",
+      "type": "url",
+      "default": "https://instagram.com",
+      "section": "Social links"
+    },
+    {
+      "key": "face_book",
+      "label": "Facebook link",
+      "type": "url",
+      "default": "https://facebook.com",
+      "section": "Social links"
+    },
+    {
+      "key": "telegram",
+      "label": "Telegram link",
+      "type": "url",
+      "default": "https://t.me",
+      "section": "Social links"
+    },
+    {
+      "key": "whatsup",
+      "label": "WhatsApp link",
+      "type": "url",
+      "default": "https://wa.me",
+      "section": "Social links"
+    },
+    {
+      "key": "support_email",
+      "label": "Support email",
+      "type": "text",
+      "default": "support@royale.io",
+      "section": "Footer"
+    },
+    {
+      "key": "legal_text",
+      "label": "Legal text",
+      "type": "textarea",
+      "default": "%Brand% is owned and operated by XXXX that is incorporated under the laws of the XXXX, company registration number XXX. %Brand% is operating under license No. XXXXX issued by XXXXX.",
+      "section": "Footer"
+    }
+  ],
+  "groups": [
+    {
+      "key": "after_greeting",
+      "label": "After greeting text",
+      "addLabel": "Add text",
+      "itemLabel": "Text",
+      "min": 0,
+      "max": 5,
+      "after": "intro_text",
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "defaults": [
+        {
+          "text": "Choose the welcome level that fits how you want to start:"
+        }
+      ]
+    },
+    {
+      "key": "bonuses",
+      "label": "Bonus blocks",
+      "addLabel": "Add bonus block",
+      "itemLabel": "Bonus",
+      "min": 0,
+      "max": 10,
+      "fields": [
+        {
+          "key": "title",
+          "label": "Title",
+          "type": "text",
+          "default": "100% Bonus + 70 Free Spins on %fs_title%"
+        },
+        {
+          "key": "deposit",
+          "label": "Deposit from",
+          "type": "text",
+          "default": "10 AZN"
+        }
+      ],
+      "defaults": [
+        {
+          "title": "100% Bonus + 70 Free Spins on %fs_title%",
+          "deposit": "10 AZN"
+        },
+        {
+          "title": "100% Bonus + 85 Free Spins on %fs_title%",
+          "deposit": "30 AZN"
+        },
+        {
+          "title": "100% Bonus + 100 Free Spins on %fs_title%",
+          "deposit": "60 AZN"
+        }
+      ],
+      "after": "intro_text"
+    },
+    {
+      "key": "summary",
+      "label": "Summary text",
+      "addLabel": "Add text",
+      "itemLabel": "Text",
+      "min": 0,
+      "max": 5,
+      "after": "intro_text",
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "defaults": [
+        {
+          "text": "Across the full Welcome Pack, you can receive up to 510% in Bonuses + 630 Free Spins."
+        }
+      ]
+    }
+  ]
+}

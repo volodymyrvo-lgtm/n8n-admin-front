@@ -1,70 +1,196 @@
 <div class="page">
-  <div class="page-header">
-    <h1 class="page-title">{{ 'banners.title' | translate }}</h1>
-    <p class="page-subtitle">{{ 'banners.subtitle' | translate }}</p>
-  </div>
-
-  @if (bannersService.loading()) {
-    <app-spinner [label]="'common.loading' | translate" />
-  } @else if (bannersService.failed()) {
-    <div class="banners-alert" role="alert" data-testid="load-failed">
-      <span>{{ 'banners.loadFailed' | translate }}</span>
-      <button type="button" class="banners-btn" data-testid="retry" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+  <div class="banners-header">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'banners.title' | translate }}</h1>
+      <p class="page-subtitle">{{ 'banners.subtitle' | translate }}</p>
     </div>
-  } @else if (bannersService.banners().length > 0) {
-    <div class="banner-grid">
-      @for (banner of bannersService.banners(); track banner.id) {
-        <article class="banner-card" data-testid="banner-card">
-          <div class="banner-card__preview">
-            @if (showImage(banner)) {
-              <img
-                [src]="banner.imageUrl"
-                [alt]="banner.figmaImageName"
-                loading="lazy"
-                (error)="onImageError(banner.id)"
-              />
-            } @else {
-              <div class="banner-card__placeholder" data-testid="image-placeholder">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                  <circle cx="8.5" cy="9.5" r="1.5"></circle>
-                  <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
-                </svg>
-                <span>{{ 'banners.imageUnavailable' | translate }}</span>
-                <button type="button" class="banners-btn" data-testid="refresh-image" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
-              </div>
-            }
-          </div>
-
-          <div class="banner-card__body">
-            <div class="banner-card__title-row">
-              <span class="banner-card__name" [title]="banner.figmaImageName">{{ banner.figmaImageName }}</span>
-              @let status = statusView(banner.status);
-              <span class="status-badge" [class]="status.badgeClass" data-testid="status">{{ status.labelKey ? (status.labelKey | translate) : status.raw }}</span>
-            </div>
-
-            <div class="banner-card__meta">
-              <span>{{ banner.createdAt | date: 'medium' }}</span>
-              <span>{{ fileSize(banner.sizeBytes) }}</span>
-            </div>
-
-            @if (banner.jobId) {
-              <span class="banner-card__job" data-testid="job" [title]="banner.jobId">
-                {{ 'banners.job' | translate }} {{ shortId(banner.jobId) }}
-              </span>
-            }
-          </div>
-        </article>
+    <div class="banners-actions">
+      @if (canSend() && bannersService.total() > 0) {
+        <button
+          type="button"
+          class="banners-btn banners-btn--primary"
+          data-testid="send-all"
+          [disabled]="sendBlocked()"
+          [attr.title]="destinationUnknown() ? ('banners.send.folderUnknown' | translate) : null"
+          (click)="askSend('all')"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 2 11 13"></path><path d="M22 2 15 22l-4-9-9-4z"></path>
+          </svg>
+          {{ 'banners.send.all' | translate }}
+        </button>
+      }
+      @if (authService.isAdmin() && bannersService.total() > 0) {
+        <button type="button" class="banners-btn banners-btn--danger" data-testid="cancel-all" (click)="askCancelAll()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>
+          </svg>
+          {{ 'banners.cancelAll' | translate }}
+        </button>
       }
     </div>
-    <app-paginator [page]="bannersService.page()" [totalPages]="totalPages()" (pageChange)="goToPage($event)" />
-  } @else {
-    <app-empty-state [title]="'banners.emptyTitle' | translate" [description]="'banners.emptyDescription' | translate">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-        <circle cx="8.5" cy="9.5" r="1.5"></circle>
-        <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
-      </svg>
-    </app-empty-state>
+  </div>
+
+  <div class="banners-layout">
+    <app-banner-folders [selectedId]="selectedFolderId()" (selectedChange)="selectFolder($event)" />
+
+    <div class="banners-content">
+      @if (bannersService.loading()) {
+        <app-spinner [label]="'common.loading' | translate" />
+      } @else if (bannersService.failed()) {
+        <div class="banners-alert" role="alert" data-testid="load-failed">
+          <span>{{ 'banners.loadFailed' | translate }}</span>
+          <button type="button" class="banners-btn" data-testid="retry" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+        </div>
+      } @else if (bannersService.banners().length > 0) {
+        @if (canSend()) {
+          <div class="banners-toolbar">
+            <label class="banners-check">
+              <input type="checkbox" data-testid="select-all" [checked]="allSelected()" (change)="toggleAllSelected()" />
+              <span>{{ 'banners.selectAll' | translate }}</span>
+            </label>
+            @if (selectedCount() > 0) {
+              <span class="banners-toolbar__count" data-testid="selected-count">{{ 'banners.selected' | translate: { count: selectedCount() } }}</span>
+              <button
+                type="button"
+                class="banners-btn banners-btn--primary"
+                data-testid="send-selected"
+                [disabled]="sendBlocked()"
+                [attr.title]="destinationUnknown() ? ('banners.send.folderUnknown' | translate) : null"
+                (click)="askSend('selected')"
+              >
+                {{ 'banners.send.selected' | translate: { count: selectedCount() } }}
+              </button>
+              @if (authService.isAdmin()) {
+                <button type="button" class="banners-btn banners-btn--danger" data-testid="cancel-selected" (click)="askCancelSelected()">
+                  {{ 'banners.cancelSelected' | translate: { count: selectedCount() } }}
+                </button>
+              }
+            }
+          </div>
+        }
+
+        <div class="banner-grid">
+          @for (banner of bannersService.banners(); track banner.id) {
+            <article class="banner-card" [class.banner-card--selected]="isSelected(banner.id)" data-testid="banner-card">
+              <div class="banner-card__preview">
+                @if (canSend()) {
+                  <input
+                    type="checkbox"
+                    class="banner-card__check"
+                    data-testid="select"
+                    [checked]="isSelected(banner.id)"
+                    [attr.aria-label]="'banners.select' | translate: { name: banner.figmaImageName }"
+                    (change)="toggleSelected(banner.id)"
+                  />
+                }
+                @if (showImage(banner)) {
+                  <img
+                    [src]="banner.imageUrl"
+                    [alt]="banner.figmaImageName"
+                    loading="lazy"
+                    (error)="onImageError(banner.id)"
+                  />
+                } @else {
+                  <div class="banner-card__placeholder" data-testid="image-placeholder">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                      <circle cx="8.5" cy="9.5" r="1.5"></circle>
+                      <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+                    </svg>
+                    <span>{{ 'banners.imageUnavailable' | translate }}</span>
+                    <button type="button" class="banners-btn" data-testid="refresh-image" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+                  </div>
+                }
+              </div>
+
+              <div class="banner-card__body">
+                <div class="banner-card__title-row">
+                  <span class="banner-card__name" [title]="banner.figmaImageName">{{ banner.figmaImageName }}</span>
+                  @let status = statusView(banner.status);
+                  <span class="status-badge" [class]="status.badgeClass" data-testid="status">{{ status.labelKey ? (status.labelKey | translate) : status.raw }}</span>
+                </div>
+
+                <div class="banner-card__meta">
+                  <span>{{ banner.createdAt | date: 'medium' }}</span>
+                  <span>{{ fileSize(banner.sizeBytes) }}</span>
+                </div>
+
+                @if (banner.jobId || authService.isAdmin()) {
+                  <div class="banner-card__footer">
+                    @if (banner.jobId) {
+                      <span class="banner-card__job" data-testid="job" [title]="banner.jobId">
+                        {{ 'banners.job' | translate }} {{ shortId(banner.jobId) }}
+                      </span>
+                    }
+                    @if (authService.isAdmin()) {
+                      <button type="button" class="banners-btn banner-card__replace" data-testid="replace" (click)="askReplace(banner)">
+                        {{ 'banners.replace.button' | translate }}
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        </div>
+        <app-paginator [page]="bannersService.page()" [totalPages]="totalPages()" (pageChange)="goToPage($event)" />
+      } @else {
+        <app-empty-state [title]="'banners.emptyTitle' | translate" [description]="'banners.emptyDescription' | translate">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <circle cx="8.5" cy="9.5" r="1.5"></circle>
+            <path d="M21 15l-5-5-4 4-3-3-6 6"></path>
+          </svg>
+        </app-empty-state>
+      }
+    </div>
+  </div>
+
+  @if (replacingBanner(); as banner) {
+    <app-banner-replace-dialog
+      [banner]="banner"
+      [busy]="bannersService.replacing()"
+      (submitted)="replace($event)"
+      (cancelled)="closeReplace()"
+    />
+  }
+
+  @if (confirmingSend(); as mode) {
+    <app-confirm-dialog
+      [title]="(mode === 'all' ? 'banners.send.allTitle' : 'banners.send.selectedTitle') | translate: { count: selectedCount() }"
+      [message]="(mode === 'all' ? 'banners.send.allMessage' : 'banners.send.selectedMessage') | translate: { destination: destinationLabel() }"
+      [confirmLabel]="(mode === 'all' ? 'banners.send.allConfirm' : 'banners.send.selectedConfirm') | translate: { count: selectedCount() }"
+      [cancelLabel]="'banners.send.cancel' | translate"
+      tone="primary"
+      [busy]="bannersService.sending()"
+      (confirmed)="send()"
+      (cancelled)="closeSend()"
+    />
+  }
+
+  @if (confirmingCancelSelected()) {
+    <app-confirm-dialog
+      [title]="'banners.cancelSelectedTitle' | translate: { count: selectedCount() }"
+      [message]="'banners.cancelSelectedMessage' | translate"
+      [confirmLabel]="'banners.cancelSelectedConfirm' | translate: { count: selectedCount() }"
+      [cancelLabel]="'banners.cancelAllKeep' | translate"
+      [busy]="bannersService.deleting()"
+      (confirmed)="cancelSelected()"
+      (cancelled)="closeCancelSelected()"
+    />
+  }
+
+  @if (confirmingCancelAll()) {
+    <app-confirm-dialog
+      [title]="'banners.cancelAllTitle' | translate"
+      [message]="'banners.cancelAllMessage' | translate"
+      [confirmLabel]="'banners.cancelAllConfirm' | translate"
+      [cancelLabel]="'banners.cancelAllKeep' | translate"
+      [requiredText]="cancelAllWord"
+      [busy]="bannersService.deleting()"
+      (confirmed)="cancelAll()"
+      (cancelled)="closeCancelAll()"
+    />
   }
 </div>

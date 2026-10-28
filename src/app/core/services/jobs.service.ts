@@ -1,14 +1,18 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, InjectionToken, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
 import { environment } from '@env';
 import {
+  CreateEmailHtmlUpdateBackendPayload,
+  CreateEmailHtmlUpdateN8nPayload,
   CreateJobBackendPayload,
   CreateJobFormValue,
   CreateJobN8nLocalizationPayload,
   CreateJobN8nPayload,
   DesignJobRun,
+  EmailHtmlUpdateStatus,
+  isEmailHtmlUpdateStatus,
   JobRun,
   PaginatedJobRuns,
   SeoJobRun,
@@ -41,12 +45,43 @@ export interface JobRunsQuery {
 const N8N_WEBHOOK_URL = environment.n8nWebhookUrl;
 const TEST_N8N_WEBHOOK_URL = environment.testN8nWebhookUrl;
 
+/** The n8n webhooks of one email-HTML-update status; `test` is used when the form's testing toggle is on. */
+export interface WebhookUrls {
+  live: string;
+  test: string;
+}
+
+/**
+ * Where the webhooks of the two email-HTML-update statuses come from (see .env.example:
+ * WELCOME_EMAIL_HTML_UPDATE / SYSTEM_EMAIL_HTML_UPDATE and their TEST_ twins) - the
+ * generated environment by default, swappable in tests. Optional like the SEO ones: a
+ * blank value doesn't break the build, the job just isn't triggered and the user is told.
+ */
+export const EMAIL_HTML_UPDATE_WEBHOOK_URLS = new InjectionToken<Record<EmailHtmlUpdateStatus, WebhookUrls>>(
+  'EMAIL_HTML_UPDATE_WEBHOOK_URLS',
+  {
+    providedIn: 'root',
+    factory: () => ({
+      welcome_email_html_update: {
+        live: environment.welcomeEmailHtmlUpdateWebhookUrl,
+        test: environment.testWelcomeEmailHtmlUpdateWebhookUrl,
+      },
+      system_email_html_update: {
+        live: environment.systemEmailHtmlUpdateWebhookUrl,
+        test: environment.testSystemEmailHtmlUpdateWebhookUrl,
+      },
+    }),
+  },
+);
+
 export interface CreateJobCallbacks {
   /** Called once the job run has been created on our backend and added to `jobRuns`. */
   onBackendSuccess?: (created: JobRun) => void;
   onBackendError?: () => void;
   /** Called if the separate, best-effort n8n trigger request fails. */
   onN8nError?: () => void;
+  /** The record exists, but no webhook URL is configured for this task status (see .env.example), so nothing was triggered. */
+  onN8nNotConfigured?: () => void;
 }
 
 /**
@@ -56,6 +91,7 @@ export interface CreateJobCallbacks {
 export class JobsService {
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
+  private readonly emailHtmlUpdateWebhooks = inject(EMAIL_HTML_UPDATE_WEBHOOK_URLS);
   private socket: Socket | null = null;
 
   /**
@@ -176,6 +212,31 @@ export class JobsService {
   }
 
   /**
+   * Backend body of a `welcome_email_html_update` / `system_email_html_update` job: a
+   * pending step, the status and the task description - and `isBannerUpdate` (a real
+   * boolean) for the welcome one only; the system one never carries it.
+   */
+  buildEmailHtmlUpdateBackendPayload(
+    value: CreateJobFormValue & { taskStatus: EmailHtmlUpdateStatus },
+  ): CreateEmailHtmlUpdateBackendPayload {
+    return {
+      steps: { step1: { status: 'pending' } },
+      taskStatus: value.taskStatus,
+      taskDescription: value.taskDescription,
+      ...(value.taskStatus === 'welcome_email_html_update' ? { isBannerUpdate: value.isBannerUpdate === true } : {}),
+    };
+  }
+
+  /** The n8n body of the same job: the backend one without the steps, plus the created job's id. */
+  buildEmailHtmlUpdateN8nPayload(
+    value: CreateJobFormValue & { taskStatus: EmailHtmlUpdateStatus },
+    jobId: string,
+  ): CreateEmailHtmlUpdateN8nPayload {
+    const { steps: _steps, ...body } = this.buildEmailHtmlUpdateBackendPayload(value);
+    return { ...body, jobId };
+  }
+
+  /**
    * Creates a job: POSTs the DB-shaped payload to our backend first (so
    * it's tracked and shows up in `jobRuns`), then - only once that
    * succeeds and we have the new job's id - POSTs the n8n-shaped payload
@@ -184,6 +245,11 @@ export class JobsService {
    * `onN8nError` but doesn't undo the job record already created.
    */
   createJob(value: CreateJobFormValue, callbacks?: CreateJobCallbacks): void {
+    if (isEmailHtmlUpdateStatus(value.taskStatus)) {
+      this.createEmailHtmlUpdateJob({ ...value, taskStatus: value.taskStatus }, callbacks);
+      return;
+    }
+
     const backendPayload = this.buildBackendPayload(value);
 
     this.http.post<JobRun>(JOBS_URL, backendPayload).subscribe({
@@ -199,6 +265,30 @@ export class JobsService {
         const n8nPayload = this.buildN8nPayload(value, created.id);
         const n8nUrl = value.isTesting ? TEST_N8N_WEBHOOK_URL : N8N_WEBHOOK_URL;
         this.http.post(n8nUrl, n8nPayload).subscribe({
+          error: () => callbacks?.onN8nError?.(),
+        });
+      },
+      error: () => callbacks?.onBackendError?.(),
+    });
+  }
+
+  /** Same two steps as `createJob`, with the small body and the status's own webhook. */
+  private createEmailHtmlUpdateJob(
+    value: CreateJobFormValue & { taskStatus: EmailHtmlUpdateStatus },
+    callbacks?: CreateJobCallbacks,
+  ): void {
+    this.http.post<JobRun>(JOBS_URL, this.buildEmailHtmlUpdateBackendPayload(value)).subscribe({
+      next: (created) => {
+        this.jobRuns.update((runs) => [created, ...runs]);
+        callbacks?.onBackendSuccess?.(created);
+
+        const urls = this.emailHtmlUpdateWebhooks[value.taskStatus];
+        const url = value.isTesting ? urls.test : urls.live;
+        if (!url) {
+          callbacks?.onN8nNotConfigured?.();
+          return;
+        }
+        this.http.post(url, this.buildEmailHtmlUpdateN8nPayload(value, created.id)).subscribe({
           error: () => callbacks?.onN8nError?.(),
         });
       },

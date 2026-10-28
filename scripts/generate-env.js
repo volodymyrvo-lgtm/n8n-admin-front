@@ -71,7 +71,7 @@ const REQUIRED_VARS = [
   'TEST_N8N_WEBHOOK_URL'
 ];
 
-// The SEO and design webhooks are optional on purpose: the SEO section needs them to
+// The SEO, design and email-HTML-update webhooks are optional on purpose: the SEO section needs them to
 // actually start a job, but a missing value must not break the whole
 // build/deploy - SeoJobsService reports a clear error instead (the job
 // record is still created, it just isn't triggered in n8n).
@@ -101,6 +101,10 @@ export const environment = {
   testSeoN8nWebhookUrl: ${jsString(env.TEST_SEO_N8N_WEBHOOK_URL || '')},
   designN8nWebhookUrl: ${jsString(env.BANNERS_N8N_WEBHOOK_URL || '')},
   testDesignN8nWebhookUrl: ${jsString(env.BANNERS_TEST_N8N_WEBHOOK_URL || '')},
+  welcomeEmailHtmlUpdateWebhookUrl: ${jsString(env.WELCOME_EMAIL_HTML_UPDATE || '')},
+  testWelcomeEmailHtmlUpdateWebhookUrl: ${jsString(env.TEST_WELCOME_EMAIL_HTML_UPDATE || '')},
+  systemEmailHtmlUpdateWebhookUrl: ${jsString(env.SYSTEM_EMAIL_HTML_UPDATE || '')},
+  testSystemEmailHtmlUpdateWebhookUrl: ${jsString(env.TEST_SYSTEM_EMAIL_HTML_UPDATE || '')},
 };
 `;
 

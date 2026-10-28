@@ -84,7 +84,11 @@
 
             <span class="job-card__title-group">
               <span class="job-card__title">{{ run.taskDescription }}</span>
-              <span class="job-card__subtitle">{{ run.board }} · {{ run.jobType }}</span>
+              @if (run.board || run.jobType) {
+                <span class="job-card__subtitle">{{ run.board }} · {{ run.jobType }}</span>
+              } @else {
+                <span class="job-card__subtitle">{{ run.taskStatus }}</span>
+              }
             </span>
 
             <span class="job-card__steps">
@@ -129,22 +133,34 @@
                   <span class="field-label">{{ 'jobs.card.runDate' | translate }}</span>
                   <span>{{ run.runDate ? (run.runDate | date: 'medium') : '—' }}</span>
                 </div>
-                <div class="job-card__meta-item">
-                  <span class="field-label">{{ 'jobs.card.messageType' | translate }}</span>
-                  <span>{{ run.messageType }}</span>
-                </div>
+                @if (run.messageType) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.messageType' | translate }}</span>
+                    <span>{{ run.messageType }}</span>
+                  </div>
+                }
                 <div class="job-card__meta-item">
                   <span class="field-label">{{ 'jobs.card.taskStatus' | translate }}</span>
                   <span>{{ run.taskStatus }}</span>
                 </div>
-                <div class="job-card__meta-item">
-                  <span class="field-label">{{ 'jobs.card.llm' | translate }}</span>
-                  <span>{{ run.llm }}</span>
-                </div>
-                <div class="job-card__meta-item">
-                  <span class="field-label">{{ 'jobs.card.systemMessage' | translate }}</span>
-                  <span>{{ promptName(run.sm) }}</span>
-                </div>
+                @if (run.isBannerUpdate != null) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.isBannerUpdate' | translate }}</span>
+                    <span>{{ (run.isBannerUpdate ? 'jobs.card.yes' : 'jobs.card.no') | translate }}</span>
+                  </div>
+                }
+                @if (run.llm) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.llm' | translate }}</span>
+                    <span>{{ run.llm }}</span>
+                  </div>
+                }
+                @if (run.sm) {
+                  <div class="job-card__meta-item">
+                    <span class="field-label">{{ 'jobs.card.systemMessage' | translate }}</span>
+                    <span>{{ promptName(run.sm) }}</span>
+                  </div>
+                }
                 @if (run.glossaryId) {
                   <div class="job-card__meta-item">
                     <span class="field-label">{{ 'jobs.card.glossary' | translate }}</span>

@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   BOARD_OPTIONS,
   CreateJobFormValue,
+  isEmailHtmlUpdateStatus,
   JOB_TYPE_OPTIONS,
   LLM_OPTIONS,
   MESSAGE_TYPE_OPTIONS,
@@ -51,6 +52,7 @@ export class AddJobComponent implements  OnInit {
     promptId: ['', Validators.required],
     glossaryId: [''],
     llm: ['', Validators.required],
+    isBannerUpdate: [false],
     isTesting: [false],
   });
 
@@ -84,6 +86,16 @@ export class AddJobComponent implements  OnInit {
    * empty.
    */
   protected readonly isUpdate = computed(() => this.selectedTaskStatus() === 'update');
+
+  /**
+   * The two email-HTML-update statuses are the smallest jobs of all: the form shows only
+   * the task description (and the testing toggle that picks their test webhook), the other
+   * fields are hidden and not sent - see JobsService.buildEmailHtmlUpdateBackendPayload.
+   */
+  protected readonly isEmailHtmlUpdate = computed(() => isEmailHtmlUpdateStatus(this.selectedTaskStatus()));
+
+  /** Only the welcome email update has the yes/no "banner update" switch. */
+  protected readonly isWelcomeEmailUpdate = computed(() => this.selectedTaskStatus() === 'welcome_email_html_update');
 
   /**
    * Rule sets tagged for the currently selected job type - only those make
@@ -132,7 +144,8 @@ export class AddJobComponent implements  OnInit {
    */
   private readonly syncTaskStatusFields = effect(() => {
     const localization = this.isLocalization();
-    const update = this.isUpdate();
+    // The email-HTML-update statuses need none of the generation fields either, same as "update".
+    const update = this.isUpdate() || this.isEmailHtmlUpdate();
 
     const mainRuleSetId = this.form.controls.mainRuleSetId;
     const glossaryId = this.form.controls.glossaryId;
@@ -168,6 +181,11 @@ export class AddJobComponent implements  OnInit {
       llm.setValidators(Validators.required);
     }
 
+    // The banner switch only exists on the welcome email update - never keep a stale `true` from it.
+    if (!this.isWelcomeEmailUpdate()) {
+      this.form.controls.isBannerUpdate.setValue(false, { emitEvent: false });
+    }
+
     mainRuleSetId.updateValueAndValidity({ emitEvent: false });
     glossaryId.updateValueAndValidity({ emitEvent: false });
     promptId.updateValueAndValidity({ emitEvent: false });
@@ -199,6 +217,7 @@ export class AddJobComponent implements  OnInit {
       promptId: raw.promptId || null,
       glossaryId: raw.glossaryId || null,
       llm: raw.llm || null,
+      isBannerUpdate: raw.isBannerUpdate,
       isTesting: raw.isTesting,
     };
 
@@ -212,6 +231,9 @@ export class AddJobComponent implements  OnInit {
       },
       onN8nError: () => {
         this.toast.error(this.translate.instant('addJob.n8nError'));
+      },
+      onN8nNotConfigured: () => {
+        this.toast.error(this.translate.instant('addJob.n8nNotConfigured'));
       },
     });
   }

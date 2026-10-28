@@ -1,0 +1,111 @@
+<section class="folders" [attr.aria-label]="'banners.folders.title' | translate" data-testid="folders">
+  <header class="folders__header">
+    <h2 class="folders__title">{{ 'banners.folders.title' | translate }}</h2>
+    @if (authService.isAdmin() && !creatingFolder() && !foldersService.failed()) {
+      <button type="button" class="folders-btn" data-testid="new-folder" (click)="openCreateForm()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14"></path><path d="M5 12h14"></path>
+        </svg>
+        {{ 'banners.folders.new' | translate }}
+      </button>
+    }
+  </header>
+
+  @if (selectedFolder(); as folder) {
+    <div class="folders__selected" data-testid="selected-folder">
+      <span class="folders__selected-label">{{ 'banners.folders.destination' | translate }}</span>
+      <span class="folders__selected-path" [title]="folder.name">
+        @for (part of selectedPath(); track part.id; let last = $last) {
+          <span class="folders__crumb" data-testid="folder-crumb">{{ part.name }}</span>@if (!last) {<span class="folders__sep" aria-hidden="true">/</span>}
+        }
+      </span>
+      <button type="button" class="folders__clear" data-testid="clear-folder" (click)="clearSelection()">
+        {{ 'banners.folders.clear' | translate }}
+      </button>
+    </div>
+  } @else {
+    <p class="folders__hint">{{ 'banners.folders.hint' | translate }}</p>
+  }
+
+  @if (creatingFolder()) {
+    <form class="folders__form" data-testid="folder-form" (submit)="$event.preventDefault(); createFolder()">
+      <label class="folders__field">
+        <span>{{ 'banners.folders.name' | translate }}</span>
+        <input
+          type="text"
+          data-testid="folder-name"
+          [value]="newName()"
+          [attr.maxlength]="nameMaxLength"
+          [attr.placeholder]="'banners.folders.namePlaceholder' | translate"
+          autocomplete="off"
+          (input)="newName.set($any($event.target).value)"
+        />
+      </label>
+      <label class="folders__field">
+        <span>{{ 'banners.folders.parent' | translate }}</span>
+        <select data-testid="folder-parent" [value]="newParentId() === null ? '' : newParentId()" (change)="onParentChange($any($event.target).value)">
+          <option value="" [selected]="newParentId() === null">{{ 'banners.folders.topLevel' | translate }}</option>
+          @for (option of parentOptions(); track option.folder.id) {
+            <option [value]="option.folder.id" [selected]="newParentId() === option.folder.id">{{ optionLabel(option.folder.name, option.depth) }}</option>
+          }
+        </select>
+      </label>
+      <div class="folders__actions">
+        <button type="button" class="folders-btn" data-testid="folder-cancel" [disabled]="foldersService.creating()" (click)="closeCreateForm()">
+          {{ 'banners.folders.cancel' | translate }}
+        </button>
+        <button type="submit" class="folders-btn folders-btn--primary" data-testid="folder-submit" [disabled]="!canSubmit()">
+          {{ 'banners.folders.create' | translate }}
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (foldersService.loading() && foldersService.folders().length === 0) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (foldersService.failed()) {
+    <div class="folders__alert" role="alert" data-testid="folders-failed">
+      <span>{{ 'banners.folders.loadFailed' | translate }}</span>
+      <button type="button" class="folders-btn" data-testid="folders-retry" (click)="reload()">{{ 'banners.refresh' | translate }}</button>
+    </div>
+  } @else if (rows().length === 0) {
+    <p class="folders__empty" data-testid="folders-empty">{{ 'banners.folders.empty' | translate }}</p>
+  } @else {
+    <ul class="folders__tree" role="tree" [attr.aria-label]="'banners.folders.title' | translate">
+      @for (row of rows(); track row.folder.id) {
+        <li
+          class="folders__row"
+          role="treeitem"
+          data-testid="folder-row"
+          [class.folders__row--selected]="row.folder.id === selectedId()"
+          [attr.aria-level]="row.depth + 1"
+          [attr.aria-selected]="row.folder.id === selectedId()"
+          [attr.aria-expanded]="row.hasChildren ? row.expanded : null"
+          [style.padding-left]="indent(row.depth)"
+        >
+          @if (row.hasChildren) {
+            <button
+              type="button"
+              class="folders__toggle"
+              data-testid="folder-toggle"
+              [attr.aria-label]="(row.expanded ? 'banners.folders.collapse' : 'banners.folders.expand') | translate: { name: row.folder.name }"
+              (click)="toggleExpanded(row.folder.id)"
+            >
+              <svg class="folders__chevron" [class.folders__chevron--open]="row.expanded" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m9 6 6 6-6 6"></path>
+              </svg>
+            </button>
+          } @else {
+            <span class="folders__toggle folders__toggle--leaf" aria-hidden="true"></span>
+          }
+          <button type="button" class="folders__item" data-testid="folder-select" [title]="row.folder.name" (click)="select(row.folder.id)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            </svg>
+            <span class="folders__name">{{ row.folder.name }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -1,4 +1,4 @@
-import { bannerStatusView, formatFileSize } from './banner.model';
+import { BANNER_IMAGE_MAX_BYTES, bannerImageProblem, bannerStatusView, formatFileSize } from './banner.model';
 
 describe('banner model', () => {
   it('gives every known status a label key and a badge colour', () => {
@@ -20,5 +20,22 @@ describe('banner model', () => {
     expect(formatFileSize(2.5 * 1024 * 1024)).toBe('2.5 MB');
     expect(formatFileSize(-1)).toBe('—');
     expect(formatFileSize(NaN)).toBe('—');
+  });
+
+  describe('bannerImageProblem', () => {
+    it('accepts a PNG up to 10 MB, including exactly 10 MB', () => {
+      expect(bannerImageProblem({ type: 'image/png', size: 1 })).toBeNull();
+      expect(bannerImageProblem({ type: 'image/png', size: BANNER_IMAGE_MAX_BYTES })).toBeNull();
+    });
+
+    it('rejects anything that is not a PNG', () => {
+      expect(bannerImageProblem({ type: 'image/jpeg', size: 100 })).toBe('type');
+      expect(bannerImageProblem({ type: '', size: 100 })).toBe('type');
+    });
+
+    it('rejects a file over 10 MB and an empty one', () => {
+      expect(bannerImageProblem({ type: 'image/png', size: BANNER_IMAGE_MAX_BYTES + 1 })).toBe('size');
+      expect(bannerImageProblem({ type: 'image/png', size: 0 })).toBe('empty');
+    });
   });
 });

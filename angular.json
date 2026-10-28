@@ -18,6 +18,8 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": ["mjml-browser", "boolbase"],
+            "loader": { ".mjml": "text" },
             "assets": [
               {
                 "glob": "**/*",

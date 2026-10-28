@@ -1,0 +1,256 @@
+:host {
+  --accent: #ff6b4a;
+  display: block;
+  min-width: 0;
+}
+
+.folders {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid oklch(24% 0.015 260);
+  border-radius: 12px;
+  background: oklch(17% 0.012 260);
+  font-family: 'Work Sans', system-ui, sans-serif;
+}
+
+.folders__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.folders__title {
+  margin: 0;
+  font: 600 14px 'Work Sans', system-ui, sans-serif;
+  color: oklch(92% 0.004 260);
+}
+
+.folders-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid oklch(30% 0.015 260);
+  border-radius: 7px;
+  background: transparent;
+  color: oklch(78% 0.006 260);
+  font: 500 12px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.folders-btn:hover:not(:disabled) {
+  background: oklch(24% 0.015 260);
+  color: oklch(95% 0.004 260);
+}
+
+.folders-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.folders-btn--primary {
+  border-color: color-mix(in oklch, var(--accent) 60%, transparent);
+  background: color-mix(in oklch, var(--accent) 16%, transparent);
+  color: oklch(90% 0.06 40);
+}
+
+.folders__hint,
+.folders__empty {
+  margin: 0;
+  font: 400 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(58% 0.008 260);
+}
+
+.folders__selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in oklch, var(--accent) 45%, transparent);
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--accent) 8%, transparent);
+  font: 400 12.5px 'Work Sans', system-ui, sans-serif;
+}
+
+.folders__selected-label {
+  color: oklch(62% 0.008 260);
+}
+
+.folders__selected-path {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+  font-weight: 500;
+  color: oklch(92% 0.004 260);
+}
+
+.folders__sep {
+  margin: 0 3px;
+  color: oklch(52% 0.008 260);
+}
+
+.folders__clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: oklch(70% 0.1 40);
+  font: 500 12px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.folders__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid oklch(26% 0.015 260);
+  border-radius: 8px;
+  background: oklch(14% 0.012 260);
+}
+
+.folders__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font: 500 12px 'Work Sans', system-ui, sans-serif;
+  color: oklch(68% 0.008 260);
+}
+
+.folders__field input,
+.folders__field select {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid oklch(30% 0.015 260);
+  border-radius: 7px;
+  background: oklch(12% 0.012 260);
+  color: oklch(92% 0.004 260);
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+}
+
+.folders__field input:focus,
+.folders__field select:focus {
+  outline: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.folders__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.folders__alert {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1.5px solid color-mix(in oklch, oklch(70% 0.19 25) 40%, transparent);
+  border-radius: 8px;
+  background: color-mix(in oklch, oklch(70% 0.19 25) 8%, transparent);
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  color: oklch(85% 0.05 25);
+}
+
+.folders__tree {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.folders__row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  border-radius: 7px;
+}
+
+.folders__row--selected {
+  background: color-mix(in oklch, var(--accent) 14%, transparent);
+}
+
+.folders__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 22px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: oklch(62% 0.008 260);
+  cursor: pointer;
+}
+
+.folders__toggle--leaf {
+  cursor: default;
+}
+
+.folders__chevron {
+  transition: transform 0.15s ease;
+}
+
+.folders__chevron--open {
+  transform: rotate(90deg);
+}
+
+.folders__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 28px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: oklch(80% 0.006 260);
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.folders__item:hover {
+  background: oklch(22% 0.015 260);
+  color: oklch(95% 0.004 260);
+}
+
+.folders__row--selected .folders__item {
+  color: oklch(96% 0.01 40);
+  font-weight: 500;
+}
+
+.folders__item svg {
+  flex: none;
+}
+
+.folders__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.folders-btn:focus-visible,
+.folders__toggle:focus-visible,
+.folders__item:focus-visible,
+.folders__clear:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 70%, transparent);
+  outline-offset: 1px;
+}

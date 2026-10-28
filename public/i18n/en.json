@@ -9,7 +9,8 @@
     "view": "View contents",
     "close": "Close",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "confirmType": "Type {{word}} to confirm"
   },
   "app": {
     "title": "n8n Admin Panel"
@@ -30,7 +31,8 @@
     "glossary": "Glossary",
     "seoSection": "SEO Generation",
     "designSection": "Design Generation",
-    "banners": "Banners"
+    "banners": "Banners",
+    "emailGeneration": "Email Generation"
   },
   "login": {
     "title": "Sign in to the console",
@@ -81,6 +83,9 @@
       "steps": "Steps",
       "ruleSets": "Rule sets",
       "noRuleSets": "No linked rule sets",
+      "isBannerUpdate": "Banner update",
+      "yes": "Yes",
+      "no": "No",
       "llm": "LLM",
       "systemMessage": "System message",
       "glossary": "Glossary",
@@ -107,6 +112,8 @@
     "llmPlaceholder": "Select a model",
     "llmError": "Select a model",
     "isTesting": "Test environment",
+    "isBannerUpdate": "Banner update",
+    "isBannerUpdateHint": "Turn on if the banner has to be updated together with the welcome email.",
     "isTestingHint": "Sends this job's n8n trigger to the test webhook instead of production.",
     "mainRuleSet": "Main rule set",
     "mainRuleSetError": "Select a main rule set",
@@ -119,7 +126,8 @@
     "submit": "Create job",
     "cancel": "Cancel",
     "backendError": "Failed to save the job",
-    "n8nError": "Job saved, but the n8n trigger failed"
+    "n8nError": "Job saved, but the n8n trigger failed",
+    "n8nNotConfigured": "Job saved, but no n8n webhook is configured for this task status, so nothing was triggered"
   },
   "ruleSets": {
     "title": "Rule Sets",
@@ -674,6 +682,99 @@
       "sending": "Sending",
       "sent": "Sent",
       "send_failed": "Send failed"
+    },
+    "cancelAll": "Cancel all",
+    "cancelAllTitle": "Cancel all banners?",
+    "cancelAllMessage": "This permanently deletes ALL banners and their image files, whatever filters are set. It cannot be undone.",
+    "cancelAllConfirm": "Delete all banners",
+    "cancelAllKeep": "Keep them",
+    "toast": {
+      "cancelledAll": "Deleted banners: {{count}}",
+      "cancelledSelected": "Deleted banners: {{count}}",
+      "sentAll": "Banners sent to {{destination}}",
+      "sentSelected": "Sent {{count}} banners to {{destination}}",
+      "replaced": "Banner replaced: {{name}}"
+    },
+    "selectAll": "Select all on this page",
+    "selected": "Selected: {{count}}",
+    "select": "Select {{name}}",
+    "cancelSelected": "Cancel selected ({{count}})",
+    "cancelSelectedTitle": "Cancel {{count}} selected banners?",
+    "cancelSelectedMessage": "The selected banners and their image files will be deleted permanently. It cannot be undone.",
+    "cancelSelectedConfirm": "Delete {{count}} banners",
+    "folders": {
+      "title": "Customer folders",
+      "new": "New folder",
+      "destination": "Destination folder:",
+      "clear": "Clear",
+      "hint": "Pick the folder banners will be sent to.",
+      "name": "Folder name",
+      "namePlaceholder": "e.g. Summer campaign",
+      "parent": "Create inside",
+      "topLevel": "Top level",
+      "create": "Create",
+      "cancel": "Cancel",
+      "loadFailed": "Could not load the folders",
+      "empty": "No folders yet.",
+      "expand": "Expand {{name}}",
+      "collapse": "Collapse {{name}}",
+      "toast": {
+        "created": "Folder created: {{name}}"
+      }
+    },
+    "send": {
+      "all": "Send all",
+      "selected": "Send selected ({{count}})",
+      "root": "the root folder",
+      "folderUnknown": "The chosen folder isn't in the folder list (yet)",
+      "cancel": "Not now",
+      "allTitle": "Send all banners?",
+      "allMessage": "Every banner that hasn't been sent yet will be sent to {{destination}}.",
+      "allConfirm": "Send all",
+      "selectedTitle": "Send {{count}} selected banners?",
+      "selectedMessage": "The selected banners will be sent to {{destination}}.",
+      "selectedConfirm": "Send {{count}} banners"
+    },
+    "replace": {
+      "button": "Replace",
+      "title": "Replace banner picture",
+      "message": "Upload a new picture for “{{name}}”. You can rename the banner too.",
+      "file": "New picture",
+      "fileHint": "PNG only, up to 10 MB.",
+      "name": "Banner name",
+      "nameBlank": "The name can't be empty",
+      "cancel": "Cancel",
+      "submit": "Replace",
+      "previewAlt": "Preview of the new picture",
+      "problem": {
+        "type": "Only PNG files are allowed.",
+        "size": "The file is larger than 10 MB.",
+        "empty": "The file is empty."
+      }
     }
+  },
+  "emailGeneration": {
+    "title": "Email Generation",
+    "subtitle": "Fill in an email template and preview the result.",
+    "template": "Template",
+    "listFailed": "Could not load the email templates",
+    "templateFailed": "Could not load this template",
+    "emptyTitle": "No email templates yet",
+    "emptyDescription": "Add a template folder to public/email-templates and rebuild.",
+    "tabFields": "Fields",
+    "tabMjml": "MJML",
+    "edited": "The template was edited",
+    "badUrl": "This link can't be used in an email and will be left out.",
+    "remove": "Remove",
+    "resetValues": "Reset all fields",
+    "sourceHint": "Edits here apply to this page only, not to the template file.",
+    "resetSource": "Reset template",
+    "unknownVariables": "Variables not declared for this template:",
+    "preview": "Email preview",
+    "device": "Preview width",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "compiling": "Compiling…",
+    "dragHandle": "Reorder {{name}}: drag, or use the up and down arrow keys"
   }
 }

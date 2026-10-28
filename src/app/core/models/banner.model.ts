@@ -25,6 +25,48 @@ export interface PaginatedBanners {
   limit: number;
 }
 
+/** `DELETE /banners` (admin only) removes every banner and answers with how many it removed. */
+export interface DeleteAllBannersResponse {
+  deletedCount: number;
+}
+
+/** Body of `POST /banners/bulk-delete` (admin only): the banners to delete. */
+export interface BulkDeleteBannersRequest {
+  ids: string[];
+}
+
+/** What `POST /banners/bulk-delete` may answer with; the count is optional because only the request shape is specified. */
+export interface BulkDeleteBannersResponse {
+  deletedCount?: number;
+}
+
+/**
+ * Body of `POST /banners/send`. Both fields are optional and combine:
+ * no `ids` = every banner that isn't `sent` yet; no `parentId` = the root
+ * folder. An empty body therefore sends everything to the root.
+ */
+export interface SendBannersRequest {
+  ids?: string[];
+  parentId?: number;
+}
+
+/** `PUT /banners/:id/image` accepts PNG only, up to 10 MB. */
+export const BANNER_IMAGE_MIME_TYPE = 'image/png';
+export const BANNER_IMAGE_MAX_BYTES = 10 * 1024 * 1024;
+
+/** Why a file can't replace a banner's picture, or `null` if it can (the backend checks again and answers 400 / 413). */
+export type BannerImageProblem = 'type' | 'size' | 'empty';
+
+export function bannerImageProblem(file: Pick<File, 'type' | 'size'>): BannerImageProblem | null {
+  if (file.type !== BANNER_IMAGE_MIME_TYPE) {
+    return 'type';
+  }
+  if (file.size === 0) {
+    return 'empty';
+  }
+  return file.size > BANNER_IMAGE_MAX_BYTES ? 'size' : null;
+}
+
 export interface BannersQuery {
   page?: number;
   limit?: number;

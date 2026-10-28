@@ -55,6 +55,7 @@ function makeFormValue(overrides: Partial<CreateJobFormValue> = {}): CreateJobFo
     promptId: 'prompt-1',
     glossaryId: null,
     llm: 'claude_sonnet_5',
+    isBannerUpdate: false,
     isTesting: false,
     ...overrides,
   };
