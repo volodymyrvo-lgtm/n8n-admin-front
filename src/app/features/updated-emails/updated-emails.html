@@ -1,0 +1,60 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'updatedEmails.title' | translate }}</h1>
+    <p class="page-subtitle">{{ 'updatedEmails.subtitle' | translate }}</p>
+  </div>
+
+  @if (emailsService.loading()) {
+    <app-spinner [label]="'common.loading' | translate" />
+  } @else if (emailsService.failed()) {
+    <div class="ue-alert" role="alert" data-testid="list-failed">
+      <span>{{ 'updatedEmails.loadFailed' | translate }}</span>
+      <button type="button" class="ue-btn" (click)="refresh(emailsService.page())">{{ 'updatedEmails.retry' | translate }}</button>
+    </div>
+  } @else if (emailsService.emails().length > 0) {
+    <div class="data-table">
+      <div class="data-table__head" style="grid-template-columns: 2fr 1fr;">
+        <span class="field-label">{{ 'updatedEmails.columnEmail' | translate }}</span>
+        <span class="field-label">{{ 'updatedEmails.columnUpdated' | translate }}</span>
+      </div>
+      @for (item of emailsService.emails(); track item.id) {
+        <div class="data-table__row" style="grid-template-columns: 2fr 1fr;" data-testid="email-row">
+          <span class="name-cell">
+            <button type="button" class="ue-open" data-testid="open-email" (click)="open(item)">{{ item.emailId }}</button>
+            <app-view-button [label]="'updatedEmails.view' | translate" (opened)="open(item)" />
+          </span>
+          <span class="ue-date">{{ item.createdAt | date: 'medium' }}</span>
+        </div>
+      }
+    </div>
+    <app-paginator [page]="emailsService.page()" [totalPages]="totalPages()" (pageChange)="refresh($event)" />
+  } @else {
+    <app-empty-state [title]="'updatedEmails.emptyTitle' | translate" [description]="'updatedEmails.emptyDescription' | translate">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+        <path d="m3 7 9 6 9-6"></path>
+      </svg>
+    </app-empty-state>
+  }
+
+  @if (viewed(); as item) {
+    <app-view-modal
+      [title]="item.emailId"
+      [subtitle]="(item.createdAt | date: 'medium') ?? ''"
+      [copyText]="viewedEmail()?.body ?? null"
+      [wide]="true"
+      (closed)="close()"
+    >
+      @if (viewLoading()) {
+        <app-spinner [label]="'updatedEmails.loadingEmail' | translate" />
+      } @else if (viewFailed()) {
+        <div class="ue-alert" role="alert" data-testid="email-failed">
+          <span>{{ 'updatedEmails.emailFailed' | translate }}</span>
+          <button type="button" class="ue-btn" data-testid="retry-email" (click)="retry()">{{ 'updatedEmails.retry' | translate }}</button>
+        </div>
+      } @else {
+        <iframe #preview class="ue-frame" sandbox="" [title]="'updatedEmails.preview' | translate" data-testid="email-frame"></iframe>
+      }
+    </app-view-modal>
+  }
+</div>

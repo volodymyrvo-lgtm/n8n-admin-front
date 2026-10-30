@@ -3,6 +3,12 @@ import { EmailTemplateManifest, defaultEmailValues, emailTemplateIssues, renderE
 import { MjmlCompilerService } from '../services/mjml-compiler.service';
 import welcomePackSource from '../../../../public/email-templates/welcome-pack/template.mjml';
 import welcomePackManifest from '../../../../public/email-templates/welcome-pack/template.json';
+import rewardEnSource from '../../../../public/email-templates/reward-in-play-en/template.mjml';
+import rewardEnManifest from '../../../../public/email-templates/reward-in-play-en/template.json';
+import rewardAzSource from '../../../../public/email-templates/reward-in-play-az/template.mjml';
+import rewardAzManifest from '../../../../public/email-templates/reward-in-play-az/template.json';
+import rewardRuSource from '../../../../public/email-templates/reward-in-play-ru/template.mjml';
+import rewardRuManifest from '../../../../public/email-templates/reward-in-play-ru/template.json';
 
 /**
  * Every template shipped in public/email-templates. Add a new template's two
@@ -11,6 +17,9 @@ import welcomePackManifest from '../../../../public/email-templates/welcome-pack
  */
 const TEMPLATES: { folder: string; source: string; manifest: EmailTemplateManifest }[] = [
   { folder: 'welcome-pack', source: welcomePackSource, manifest: welcomePackManifest as EmailTemplateManifest },
+  { folder: 'reward-in-play-en', source: rewardEnSource, manifest: rewardEnManifest as EmailTemplateManifest },
+  { folder: 'reward-in-play-az', source: rewardAzSource, manifest: rewardAzManifest as EmailTemplateManifest },
+  { folder: 'reward-in-play-ru', source: rewardRuSource, manifest: rewardRuManifest as EmailTemplateManifest },
 ];
 
 describe.each(TEMPLATES)('email template $folder', ({ folder, source, manifest }) => {
@@ -38,6 +47,16 @@ describe.each(TEMPLATES)('email template $folder', ({ folder, source, manifest }
       const result = await compiler.compile(renderEmailTemplate(source, manifest, values).mjml);
       expect(result.errors).toEqual([]);
       expect(result.html).toContain('<html');
+    }
+  });
+
+  it('leaves the Customer.io tokens (greeting snippet, unsubscribe link) untouched', async () => {
+    const compiler = TestBed.inject(MjmlCompilerService);
+    const { mjml } = renderEmailTemplate(source, manifest, defaultEmailValues(manifest));
+    const { html } = await compiler.compile(mjml);
+
+    for (const token of source.match(/\{\{[^}]+\}\}|%%[a-z_]+%%/g) ?? []) {
+      expect(html, token).toContain(token);
     }
   });
 });

@@ -21,6 +21,8 @@ export class ViewModalComponent implements AfterViewInit {
   readonly subtitle = input<string>('');
   /** When set, a "Copy" button copies this text to the clipboard. */
   readonly copyText = input<string | null>(null);
+  /** A wider panel for content that needs the room, e.g. an email preview. */
+  readonly wide = input<boolean>(false);
 
   readonly closed = output<void>();
 

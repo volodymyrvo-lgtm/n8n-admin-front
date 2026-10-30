@@ -53,6 +53,7 @@ describe('DashboardLayoutComponent', () => {
     const hrefs = Array.from(fixture.nativeElement.querySelectorAll('.nav-item')).map((a) => (a as HTMLElement).getAttribute('href'));
     expect(hrefs).toContain('/jobs');
     expect(hrefs).toContain('/email');
+    expect(hrefs).toContain('/updated-emails');
     expect(hrefs).not.toContain('/seo/jobs');
     expect(fixture.nativeElement.querySelector('.sidebar__section')).toBeNull();
   });

@@ -1,0 +1,151 @@
+<mjml>
+    <mj-head>
+        <mj-font name="Montserrat" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" />
+
+        <mj-attributes>
+            <mj-all font-family="Arial, sans-serif" />
+            <mj-text color="#ffffff" font-size="14px" line-height="22px" />
+        </mj-attributes>
+
+        <mj-style inline="inline">
+            .footer-link { color: #cfb06e !important; text-decoration: underline; }
+            .fixed-35 {
+                width: 35px !important;
+                max-width: 35px !important;
+            }
+            .fixed-badge {
+                width: 120px !important;
+                max-width: 120px !important;
+            }
+        </mj-style>
+        <mj-style>
+            .age {
+                width: 60px !important;
+            }
+        </mj-style>
+    </mj-head>
+
+    <mj-body background-color="#111111">
+
+        <mj-wrapper background-url="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KS59FC75YNCAPQGSQEQB864S.png" background-repeat="repeat" full-width="full-width" padding="40px 0">
+
+            <!-- HEADER -->
+            <mj-section background-color="#0A0A0A" border-top="1px solid #C9A84C" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="30px 25px">
+                <mj-group>
+                    <mj-column width="50%" vertical-align="middle">
+                        <mj-image src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KRWYBH71X57H0TAFHMCC55N9.png" alt="ROYALÉ" padding="0" width="203px" align="left" href="[[logo_url]]"/>
+                    </mj-column>
+                    <mj-column width="50%" vertical-align="middle">
+                        <mj-button background-color="#C9A84C" color="#0A0A0A" font-weight="700" font-size="11px" border-radius="4px" href="[[header_button_url]]" align="right" padding="0" height="30px" inner-padding="0 15px" letter-spacing="1px" text-transform="uppercase">
+                            [[header_button_text]]
+                        </mj-button>
+                    </mj-column>
+                </mj-group>
+            </mj-section>
+
+            <!-- MAIN BANNER -->
+            <mj-section background-color="#0A0A0A" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="0 25px 35px 25px">
+                <mj-column>
+                    <mj-image src="[[banner_image]]" alt="Casino Bonus Hero" padding="0" border-radius="4px" href="[[banner_url]]"/>
+                </mj-column>
+            </mj-section>
+
+            <mj-section background-color="#0A0A0A" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="0 25px 0 25px">
+                <mj-column padding="0">
+                    <mj-text padding="0" align="center" color="#C9A84C" text-transform="uppercase" line-height="1.1">
+                        <h1>
+                            [[main_title]]
+                        </h1>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <!-- TEXT BLOCK -->
+            <mj-section background-color="#0A0A0A" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="0 25px 25px 25px">
+                <mj-column padding="0" width="100%">
+                    <mj-text align="center" font-size="14px" line-height="22px" color="#cccccc" padding="0 0 15px 0">
+                        {{snippets.greetings_ru}} [[intro_text]]
+                    </mj-text>
+                </mj-column>
+                <mj-column padding="10px 0 30px 0" width="100%">
+                    <mj-button background-color="#C9A84C" color="#0A0A0A" font-weight="700" font-size="15px" border-radius="4px" href="[[button_link]]" inner-padding="14px 40px" letter-spacing="1px" padding="0" text-transform="uppercase" width="100%">
+                        [[button_text]]
+                    </mj-button>
+                </mj-column>
+
+                <!-- OFFER BLOCKS: how many there are is decided in the form (the "Add offer" button) -->
+                <!-- repeat:offers -->
+                <mj-column background-color="#222121" padding="0 0 0 0" width="100%">
+                    <mj-text align="center" font-size="14px">
+                        <span style="font-weight: 700;color: #C9A84C;display: block;max-width: 200px;margin: 0 auto;">[[title]]</span>
+                    </mj-text>
+                </mj-column>
+                <!-- separator -->
+                <mj-column>
+                    <mj-spacer height="10px" />
+                </mj-column>
+                <!-- /repeat -->
+
+                <mj-column width="100%" padding="30px 0 0 0">
+                    <!-- repeat:after_offer -->
+                    <mj-text align="center" font-size="14px" line-height="22px" color="#cccccc" padding="0">
+                        [[text]]
+                    </mj-text>
+                    <!-- separator -->
+                    <mj-spacer height="15px" />
+                    <!-- /repeat -->
+                </mj-column>
+            </mj-section>
+
+            <!-- BUTTON -->
+            <mj-section background-color="#0A0A0A" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="0 25px 25px 25px">
+                <mj-column padding="0">
+                    <mj-button background-color="#C9A84C" color="#0A0A0A" font-weight="700" font-size="15px" border-radius="4px" href="[[button_link]]" inner-padding="14px 40px" letter-spacing="1px" padding="0" text-transform="uppercase" width="100%">
+                        [[button_text]]
+                    </mj-button>
+                </mj-column>
+            </mj-section>
+
+            <!-- SOCIAL AND SUPPORT -->
+            <mj-section background-color="#0A0A0A" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="0 25px 25px 32px">
+                <mj-column>
+                    <mj-divider border-width="1px" border-color="#222222" padding="0 0 15px 0" />
+                    <mj-social font-size="15px" icon-size="36px" mode="horizontal" padding="0 0 15px 0">
+                        <mj-social-element src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7EK8TTJB9AQZ0WMEQXMN8.png" border-radius="20px" href="[[tik_tok]]" padding="0 15px 0 0"/>
+                        <mj-social-element src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7EK8V3V014CBVC9XTC562.png" border-radius="20px" href="[[inst]]" padding="0 15px 0 0"/>
+                        <mj-social-element src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7EK8W8C35QHBE0PMH8E8F.png" border-radius="20px" href="[[face_book]]" padding="0 15px 0 0"/>
+                        <mj-social-element src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7EK8VK9MYM4TF8MJ5SYDH.png" border-radius="20px" href="[[telegram]]" padding="0 15px 0 0"/>
+                        <mj-social-element src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7EK8XQXTV18DBDJ841FS9.png" border-radius="20px" href="[[whatsup]]" />
+                    </mj-social>
+                    <mj-divider border-width="1px" border-color="#222222" padding="0 0 32px 0" />
+                    <mj-text font-size="12px" color="#ffffff" line-height="18px" padding="0 0 0 0">
+                        Наша команда поддержки на связи круглосуточно: <a href="mailto:[[support_email]]" class="footer-link">[[support_email]]</a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+            <!-- FOOTER -->
+            <mj-section background-color="#0A0A0A" border-bottom="1px solid #C9A84C" border-left="1px solid #C9A84C" border-right="1px solid #C9A84C" padding="9px 25px 30px 25px">
+                <mj-group width="100%">
+                    <mj-column padding="0" width="35px" mj-class="age" css-class="fixed-35">
+                        <mj-image src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE80779QMQF81V7AX0FD93S.png" width="28px" height="29px" align="left" padding="0"/>
+                    </mj-column>
+                    <mj-column padding="0" width="255px" css-class="fixed-badge">
+                        <mj-image src="https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01KZE7ZWP1JAWVMYAPF04QCH02.png" width="114px" height="30px" align="left" padding="0"/>
+                    </mj-column>
+                </mj-group>
+                <mj-column width="100%" padding="10px 0 0 0">
+                    <mj-text font-size="10px" color="#555555" line-height="16px" padding="0 0 12px">
+                        [[legal_text]]
+                    </mj-text>
+                    <mj-text color="#555555" padding="0" font-size="10px">
+                        <a href="%%unsub_url%%" style="color: #555555; text-decoration: underline;">
+                            Unsubscribe
+                        </a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+
+        </mj-wrapper>
+    </mj-body>
+</mjml>

@@ -32,7 +32,8 @@
     "seoSection": "SEO-генерация",
     "designSection": "Генерация дизайна",
     "banners": "Баннеры",
-    "emailGeneration": "Генерация email"
+    "emailGeneration": "Генерация email",
+    "updatedEmails": "Обновлённые письма"
   },
   "login": {
     "title": "Вход в консоль",
@@ -601,6 +602,20 @@
     "recommended": "Рекомендуется",
     "doNotUse": "Не использовать",
     "sourceForms": "Найденные исходные формы"
+  },
+  "updatedEmails": {
+    "title": "Обновлённые письма",
+    "subtitle": "Письма, изменённые джобами обновления HTML, сначала новые. Откройте письмо, чтобы увидеть результат.",
+    "columnEmail": "Письмо",
+    "columnUpdated": "Обновлено",
+    "view": "Открыть письмо",
+    "preview": "Превью обновлённого письма",
+    "loadingEmail": "Загружаем письмо…",
+    "emptyTitle": "Обновлённых писем пока нет",
+    "emptyDescription": "Здесь появятся письма, обновлённые джобами welcome и system email HTML update.",
+    "loadFailed": "Не удалось загрузить обновлённые письма.",
+    "emailFailed": "Не удалось загрузить это письмо.",
+    "retry": "Повторить"
   },
   "jobErrors": {
     "title": "Логи ошибок",

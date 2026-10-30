@@ -22,6 +22,11 @@
   box-shadow: 0 24px 60px oklch(5% 0.01 260 / 0.6);
 }
 
+.panel--wide {
+  max-width: 760px;
+  max-height: min(92vh, 980px);
+}
+
 .panel__header {
   display: flex;
   align-items: flex-start;

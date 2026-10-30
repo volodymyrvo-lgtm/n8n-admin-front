@@ -32,7 +32,8 @@
     "seoSection": "SEO Generation",
     "designSection": "Design Generation",
     "banners": "Banners",
-    "emailGeneration": "Email Generation"
+    "emailGeneration": "Email Generation",
+    "updatedEmails": "Updated emails"
   },
   "login": {
     "title": "Sign in to the console",
@@ -601,6 +602,20 @@
     "recommended": "Recommended",
     "doNotUse": "Do not use",
     "sourceForms": "Source forms found"
+  },
+  "updatedEmails": {
+    "title": "Updated emails",
+    "subtitle": "Emails changed by the email HTML update jobs, newest first. Open one to see the result.",
+    "columnEmail": "Email",
+    "columnUpdated": "Updated",
+    "view": "View email",
+    "preview": "Updated email preview",
+    "loadingEmail": "Loading the email…",
+    "emptyTitle": "No updated emails yet",
+    "emptyDescription": "Emails updated by the welcome and system email HTML update jobs will show up here.",
+    "loadFailed": "Could not load the updated emails.",
+    "emailFailed": "Could not load this email.",
+    "retry": "Retry"
   },
   "jobErrors": {
     "title": "Error logs",

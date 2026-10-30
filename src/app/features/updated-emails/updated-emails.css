@@ -1,0 +1,79 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 100%;
+}
+
+.name-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ue-open {
+  padding: 0;
+  border: none;
+  background: none;
+  color: oklch(95% 0.004 260);
+  font: 600 14px 'Work Sans', system-ui, sans-serif;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.ue-open:hover {
+  color: var(--accent);
+}
+
+.ue-open:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--accent) 60%, transparent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.ue-date {
+  font: 400 13px 'Work Sans', system-ui, sans-serif;
+  color: oklch(62% 0.008 260);
+}
+
+.ue-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid oklch(38% 0.09 25);
+  border-radius: 10px;
+  background: oklch(22% 0.04 25);
+  color: oklch(85% 0.05 25);
+  font: 400 13.5px 'Work Sans', system-ui, sans-serif;
+}
+
+.ue-btn {
+  flex: none;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid oklch(30% 0.015 260);
+  border-radius: 6px;
+  background: transparent;
+  color: oklch(78% 0.006 260);
+  font: 500 12.5px 'Work Sans', system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.ue-btn:hover {
+  background: oklch(24% 0.015 260);
+  color: oklch(95% 0.004 260);
+}
+
+.ue-frame {
+  display: block;
+  width: 100%;
+  height: min(70vh, 760px);
+  min-height: 420px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+}

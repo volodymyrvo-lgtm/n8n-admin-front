@@ -1,0 +1,171 @@
+{
+  "id": "reward-in-play-ru",
+  "name": "Reward still in play (RU)",
+  "description": "Russian email: the fourth Sportsbook reward is still waiting.",
+  "fields": [
+    {
+      "key": "logo_url",
+      "label": "Logo link",
+      "type": "url",
+      "default": "https://example.com",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "играть",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_url",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/play",
+      "section": "Header"
+    },
+    {
+      "key": "banner_image",
+      "label": "Banner image URL",
+      "type": "url",
+      "default": "https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01M4NP9H319S5PKGHGKTH96K0Q.png",
+      "section": "Banner"
+    },
+    {
+      "key": "banner_url",
+      "label": "Banner link",
+      "type": "url",
+      "default": "https://example.com/bonus",
+      "section": "Banner"
+    },
+    {
+      "key": "main_title",
+      "label": "Main title",
+      "type": "text",
+      "default": "ВАШ БОНУС ВСЁ ЕЩЕ В ИГРЕ",
+      "section": "Content"
+    },
+    {
+      "key": "intro_text",
+      "label": "Intro text",
+      "type": "textarea",
+      "default": "каждый новый матч приносит новый счет и новый выбор. Ваш четвертый бонус для ставок на спорт всё еще ждет в приветственном пакете Royalé:",
+      "section": "Content",
+      "hint": "Shown after the {{snippets.greetings_ru}} greeting."
+    },
+    {
+      "key": "button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "ЗАБРАТЬ БОНУС",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "button_link",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/claim",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "tik_tok",
+      "label": "TikTok link",
+      "type": "url",
+      "default": "https://tiktok.com",
+      "section": "Social links"
+    },
+    {
+      "key": "inst",
+      "label": "Instagram link",
+      "type": "url",
+      "default": "https://instagram.com",
+      "section": "Social links"
+    },
+    {
+      "key": "face_book",
+      "label": "Facebook link",
+      "type": "url",
+      "default": "https://facebook.com",
+      "section": "Social links"
+    },
+    {
+      "key": "telegram",
+      "label": "Telegram link",
+      "type": "url",
+      "default": "https://t.me",
+      "section": "Social links"
+    },
+    {
+      "key": "whatsup",
+      "label": "WhatsApp link",
+      "type": "url",
+      "default": "https://wa.me",
+      "section": "Social links"
+    },
+    {
+      "key": "support_email",
+      "label": "Support email",
+      "type": "text",
+      "default": "support@royale.io",
+      "section": "Footer"
+    },
+    {
+      "key": "legal_text",
+      "label": "Legal text",
+      "type": "textarea",
+      "default": "%Brand% принадлежит и управляется компанией XXXX, зарегистрированной в соответствии с законодательством XXXX, регистрационный номер компании XXX. %Brand% работает по лицензии № XXXXX, выданной XXXXX.",
+      "section": "Footer"
+    }
+  ],
+  "groups": [
+    {
+      "key": "offers",
+      "label": "Offer blocks",
+      "addLabel": "Add offer",
+      "itemLabel": "Offer",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "title",
+          "label": "Offer",
+          "type": "text",
+          "default": "Бонус до 20,000 AZN + бесплатная ставка 35 AZN"
+        }
+      ],
+      "defaults": [
+        {
+          "title": "Бонус до 20,000 AZN + бесплатная ставка 35 AZN"
+        }
+      ]
+    },
+    {
+      "key": "after_offer",
+      "label": "Text after the offers",
+      "addLabel": "Add text",
+      "itemLabel": "Text",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "defaults": [
+        {
+          "text": "Еще одна часть приветственного пакета, чтобы усилить ваши прогнозы на спорт."
+        },
+        {
+          "text": "Или можете выбрать опцию казино: бонус до 20,000 AZN + 185 бесплатных вращений."
+        }
+      ]
+    }
+  ]
+}

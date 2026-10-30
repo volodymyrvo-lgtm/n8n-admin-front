@@ -1,0 +1,171 @@
+{
+  "id": "reward-in-play-en",
+  "name": "Reward still in play (EN)",
+  "description": "English email: the fourth Sportsbook reward is still waiting.",
+  "fields": [
+    {
+      "key": "logo_url",
+      "label": "Logo link",
+      "type": "url",
+      "default": "https://example.com",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "play now",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_url",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/play",
+      "section": "Header"
+    },
+    {
+      "key": "banner_image",
+      "label": "Banner image URL",
+      "type": "url",
+      "default": "https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01M4NP9G4M9551C4FF2ZGA43RN.png",
+      "section": "Banner"
+    },
+    {
+      "key": "banner_url",
+      "label": "Banner link",
+      "type": "url",
+      "default": "https://example.com/bonus",
+      "section": "Banner"
+    },
+    {
+      "key": "main_title",
+      "label": "Main title",
+      "type": "text",
+      "default": "YOUR REWARD IS STILL IN PLAY",
+      "section": "Content"
+    },
+    {
+      "key": "intro_text",
+      "label": "Intro text",
+      "type": "textarea",
+      "default": "every new game brings another scoreline to follow and another call to make. Your fourth Sportsbook reward is still waiting in your Royalé welcome:",
+      "section": "Content",
+      "hint": "Shown after the {{snippets.greetings_en}} greeting."
+    },
+    {
+      "key": "button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "CLAIM YOUR BONUS",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "button_link",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/claim",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "tik_tok",
+      "label": "TikTok link",
+      "type": "url",
+      "default": "https://tiktok.com",
+      "section": "Social links"
+    },
+    {
+      "key": "inst",
+      "label": "Instagram link",
+      "type": "url",
+      "default": "https://instagram.com",
+      "section": "Social links"
+    },
+    {
+      "key": "face_book",
+      "label": "Facebook link",
+      "type": "url",
+      "default": "https://facebook.com",
+      "section": "Social links"
+    },
+    {
+      "key": "telegram",
+      "label": "Telegram link",
+      "type": "url",
+      "default": "https://t.me",
+      "section": "Social links"
+    },
+    {
+      "key": "whatsup",
+      "label": "WhatsApp link",
+      "type": "url",
+      "default": "https://wa.me",
+      "section": "Social links"
+    },
+    {
+      "key": "support_email",
+      "label": "Support email",
+      "type": "text",
+      "default": "support@royale.io",
+      "section": "Footer"
+    },
+    {
+      "key": "legal_text",
+      "label": "Legal text",
+      "type": "textarea",
+      "default": "%Brand% is owned and operated by XXXX that is incorporated under the laws of the XXXX, company registration number XXX. %Brand% is operating under license No. XXXXX issued by XXXXX.",
+      "section": "Footer"
+    }
+  ],
+  "groups": [
+    {
+      "key": "offers",
+      "label": "Offer blocks",
+      "addLabel": "Add offer",
+      "itemLabel": "Offer",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "title",
+          "label": "Offer",
+          "type": "text",
+          "default": "Bonus up to 20,000 AZN + 35 AZN Free Bet"
+        }
+      ],
+      "defaults": [
+        {
+          "title": "Bonus up to 20,000 AZN + 35 AZN Free Bet"
+        }
+      ]
+    },
+    {
+      "key": "after_offer",
+      "label": "Text after the offers",
+      "addLabel": "Add text",
+      "itemLabel": "Text",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "defaults": [
+        {
+          "text": "One more part of your welcome is ready to keep the Sportsbook experience going."
+        },
+        {
+          "text": "Casino gives you another option at this stage: Bonus up to 20,000 AZN + 185 Free Spins."
+        }
+      ]
+    }
+  ]
+}

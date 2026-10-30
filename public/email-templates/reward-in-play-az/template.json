@@ -1,0 +1,171 @@
+{
+  "id": "reward-in-play-az",
+  "name": "Reward still in play (AZ)",
+  "description": "Azerbaijani email: the fourth Sportsbook reward is still waiting.",
+  "fields": [
+    {
+      "key": "logo_url",
+      "label": "Logo link",
+      "type": "url",
+      "default": "https://example.com",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "İndİ Oynayın",
+      "section": "Header"
+    },
+    {
+      "key": "header_button_url",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/play",
+      "section": "Header"
+    },
+    {
+      "key": "banner_image",
+      "label": "Banner image URL",
+      "type": "url",
+      "default": "https://userimg-assets-eu.customeriomail.com/images/client-env-216192/01M4NP9G7C6C8F2F4QHDVFWT46.png",
+      "section": "Banner"
+    },
+    {
+      "key": "banner_url",
+      "label": "Banner link",
+      "type": "url",
+      "default": "https://example.com/bonus",
+      "section": "Banner"
+    },
+    {
+      "key": "main_title",
+      "label": "Main title",
+      "type": "text",
+      "default": "MÜKAFATINIZ HƏLƏ OYUNDADIR",
+      "section": "Content"
+    },
+    {
+      "key": "intro_text",
+      "label": "Intro text",
+      "type": "textarea",
+      "default": "hər yeni matç yeni hesab və yeni seçim deməkdir. İdman mərcləri üzrə dördüncü mükafatınız isə Royalé-də hələ sizi gözləyir:",
+      "section": "Content",
+      "hint": "Shown after the {{snippets.greetings_az}} greeting."
+    },
+    {
+      "key": "button_text",
+      "label": "Button text",
+      "type": "text",
+      "default": "BONUSUNUZU ƏLDƏ EDİN",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "button_link",
+      "label": "Button link",
+      "type": "url",
+      "default": "https://example.com/claim",
+      "section": "Main button",
+      "hint": "Used for both buttons in the email."
+    },
+    {
+      "key": "tik_tok",
+      "label": "TikTok link",
+      "type": "url",
+      "default": "https://tiktok.com",
+      "section": "Social links"
+    },
+    {
+      "key": "inst",
+      "label": "Instagram link",
+      "type": "url",
+      "default": "https://instagram.com",
+      "section": "Social links"
+    },
+    {
+      "key": "face_book",
+      "label": "Facebook link",
+      "type": "url",
+      "default": "https://facebook.com",
+      "section": "Social links"
+    },
+    {
+      "key": "telegram",
+      "label": "Telegram link",
+      "type": "url",
+      "default": "https://t.me",
+      "section": "Social links"
+    },
+    {
+      "key": "whatsup",
+      "label": "WhatsApp link",
+      "type": "url",
+      "default": "https://wa.me",
+      "section": "Social links"
+    },
+    {
+      "key": "support_email",
+      "label": "Support email",
+      "type": "text",
+      "default": "support@royale.io",
+      "section": "Footer"
+    },
+    {
+      "key": "legal_text",
+      "label": "Legal text",
+      "type": "textarea",
+      "default": "%Brand% XXXX şirkətinə məxsusdur və onun tərəfindən idarə olunur. Şirkət XXXX qanunvericiliyinə uyğun olaraq təsis edilmişdir və XXX qeydiyyat nömrəsi ilə fəaliyyət göstərir. %Brand% XXXXX tərəfindən verilmiş XXXXX nömrəli lisenziya əsasında fəaliyyət göstərir.",
+      "section": "Footer"
+    }
+  ],
+  "groups": [
+    {
+      "key": "offers",
+      "label": "Offer blocks",
+      "addLabel": "Add offer",
+      "itemLabel": "Offer",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "title",
+          "label": "Offer",
+          "type": "text",
+          "default": "20,000 AZN-dək bonus + 35 AZN pulsuz mərc"
+        }
+      ],
+      "defaults": [
+        {
+          "title": "20,000 AZN-dək bonus + 35 AZN pulsuz mərc"
+        }
+      ]
+    },
+    {
+      "key": "after_offer",
+      "label": "Text after the offers",
+      "addLabel": "Add text",
+      "itemLabel": "Text",
+      "min": 0,
+      "max": 5,
+      "after": "button_link",
+      "fields": [
+        {
+          "key": "text",
+          "label": "Text",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "defaults": [
+        {
+          "text": "Xoş gəldin paketinizin daha bir hissəsi idman mərclərində həyəcanı davam etdirmək üçün hazırdır."
+        },
+        {
+          "text": "Bu mərhələdə kazino bonusunuzu da seçə bilərsiniz: 20,000 AZN-dək bonus + 185 pulsuz fırlanma."
+        }
+      ]
+    }
+  ]
+}

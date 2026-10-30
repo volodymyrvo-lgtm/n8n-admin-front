@@ -1,5 +1,5 @@
 <div class="backdrop" (mousedown)="onBackdropMouseDown($event)">
-  <div class="panel" role="dialog" aria-modal="true" [attr.aria-label]="title()">
+  <div class="panel" [class.panel--wide]="wide()" role="dialog" aria-modal="true" [attr.aria-label]="title()">
     <header class="panel__header">
       <div class="panel__titles">
         <h2 class="panel__title">{{ title() }}</h2>
