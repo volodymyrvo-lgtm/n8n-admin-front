@@ -74,13 +74,15 @@ export type TaskStatusOption =
   | 'update'
   | 'localization'
   | 'welcome_email_html_update'
-  | 'system_email_html_update';
+  | 'system_email_html_update'
+  | 'short_communication_update';
 export const TASK_STATUS_OPTIONS: readonly TaskStatusOption[] = [
   'new',
   'update',
   'localization',
   'welcome_email_html_update',
   'system_email_html_update',
+  'short_communication_update',
 ];
 
 /**
@@ -94,6 +96,64 @@ export type EmailHtmlUpdateStatus = Extract<TaskStatusOption, 'welcome_email_htm
 export function isEmailHtmlUpdateStatus(status: string): status is EmailHtmlUpdateStatus {
   return status === 'welcome_email_html_update' || status === 'system_email_html_update';
 }
+
+/**
+ * `short_communication_update` is another tiny job with its own form and its own n8n
+ * webhooks: the user picks a system notification (`ShortCommunicationJobType`, e.g.
+ * "Account closed"), the channel it goes out through (`ShortCommunicationMessageType`)
+ * and the language. It has no board, task description, prompt, LLM or rule sets - see
+ * `CreateShortCommunicationBackendPayload` / `CreateShortCommunicationN8nPayload`.
+ */
+export type ShortCommunicationStatus = Extract<TaskStatusOption, 'short_communication_update'>;
+
+export function isShortCommunicationStatus(status: string): status is ShortCommunicationStatus {
+  return status === 'short_communication_update';
+}
+
+/** The notifications a short communication can be written for; the label is what is sent to the backend and to n8n (`overview`). */
+export const SHORT_COMMUNICATION_JOB_TYPE_OPTIONS = [
+  'Login from new device',
+  'Account closed',
+  'Account reactived',
+  'KYC Success v1',
+  'KYC Success v2',
+  'KYC Success v3',
+  'KYC Rejected v1',
+  'KYC Rejected v2',
+  'KYC Rejected v3',
+  'One-time password',
+  'Password Recovery',
+  'Password Changed',
+  'Email Changed',
+  'Phone Changed',
+  'Limit Set',
+  'Limit Change Request',
+  'Limit Increased',
+  'Limit Cancelled',
+  'Limit Exceeded',
+  'Deposit Success',
+  'Deposit Failed',
+  'Withdrawal Pending',
+  'Withdrawal Approved',
+  'Withdrawal Rejected',
+  'Balance Adjusted',
+  'Funds Seized',
+  'Bet Voided',
+] as const;
+export type ShortCommunicationJobType = (typeof SHORT_COMMUNICATION_JOB_TYPE_OPTIONS)[number];
+
+/** The channels a short communication goes out through; sent to the backend as `messageType` and to n8n as `channel`. */
+export const SHORT_COMMUNICATION_MESSAGE_TYPE_OPTIONS = ['SMS', 'WhatsApp', 'Mobile Push', 'Notification Center'] as const;
+export type ShortCommunicationMessageType = (typeof SHORT_COMMUNICATION_MESSAGE_TYPE_OPTIONS)[number];
+
+/** The backend's spelling of a short communication's channel: lowercase snake_case ("Mobile Push" -> "mobile_push"). n8n gets the label as picked. */
+export function toSnakeCase(label: string): string {
+  return label.trim().toLowerCase().replace(/[\s-]+/g, '_');
+}
+
+/** Languages of a short communication: sent to the backend as picked (`EN`), to n8n lowercased (`en`). */
+export const SHORT_COMMUNICATION_LANGUAGE_OPTIONS = ['EN', 'AZ', 'RU'] as const;
+export type ShortCommunicationLanguage = (typeof SHORT_COMMUNICATION_LANGUAGE_OPTIONS)[number];
 
 /** Same set of channels as JobTypeOption - kept as a separate alias since the two fields are conceptually distinct on the backend. */
 export type MessageTypeOption = JobTypeOption;
@@ -144,6 +204,12 @@ export interface CreateJobFormValue {
   llm: string | null;
   /** Only meaningful for `welcome_email_html_update` (always `false` otherwise). */
   isBannerUpdate: boolean;
+  /** Only for `short_communication_update`: the picked notification (a `ShortCommunicationJobType`), `null` otherwise. */
+  shortJobType: string | null;
+  /** Only for `short_communication_update`: the picked channel (a `ShortCommunicationMessageType`), `null` otherwise. */
+  shortMessageType: string | null;
+  /** Only for `short_communication_update`: the picked language (a `ShortCommunicationLanguage`), `null` otherwise. */
+  language: string | null;
   isTesting: boolean;
 }
 
@@ -183,6 +249,27 @@ export interface CreateEmailHtmlUpdateN8nPayload {
   taskDescription: string;
   isBannerUpdate?: boolean;
   jobId: string;
+}
+
+/** Backend body of a short-communication job: a pending step, the status and the three picked values (`jobType` as the label shown in the form, `messageType` in snake_case). */
+export interface CreateShortCommunicationBackendPayload {
+  steps: JobSteps;
+  taskStatus: ShortCommunicationStatus;
+  jobType: string;
+  messageType: string;
+  language: string;
+}
+
+/**
+ * n8n body of a short-communication job: the notification (`overview`), the channel
+ * (`channel`) and the lowercased language code, plus the created job's id. The id key
+ * is `jobid` here (all lowercase), as the workflow expects it - unlike `jobId` in the other bodies.
+ */
+export interface CreateShortCommunicationN8nPayload {
+  overview: string;
+  channel: string;
+  language: string;
+  jobid: string;
 }
 
 /**

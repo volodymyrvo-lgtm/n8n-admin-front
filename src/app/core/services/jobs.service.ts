@@ -10,12 +10,16 @@ import {
   CreateJobFormValue,
   CreateJobN8nLocalizationPayload,
   CreateJobN8nPayload,
+  CreateShortCommunicationBackendPayload,
+  CreateShortCommunicationN8nPayload,
   DesignJobRun,
   EmailHtmlUpdateStatus,
   isEmailHtmlUpdateStatus,
+  isShortCommunicationStatus,
   JobRun,
   PaginatedJobRuns,
   SeoJobRun,
+  toSnakeCase,
 } from '../models/job.model';
 import { AuthService } from './auth.service';
 
@@ -74,6 +78,22 @@ export const EMAIL_HTML_UPDATE_WEBHOOK_URLS = new InjectionToken<Record<EmailHtm
   },
 );
 
+/**
+ * Where the webhooks of the short_communication_update status come from (see .env.example:
+ * SHORT_COMMUNICATION_UPDATE / TEST_SHORT_COMMUNICATION_UPDATE) - the generated environment
+ * by default, swappable in tests. Optional like the other per-status ones.
+ */
+export const SHORT_COMMUNICATION_UPDATE_WEBHOOK_URLS = new InjectionToken<WebhookUrls>(
+  'SHORT_COMMUNICATION_UPDATE_WEBHOOK_URLS',
+  {
+    providedIn: 'root',
+    factory: () => ({
+      live: environment.shortCommunicationUpdateWebhookUrl,
+      test: environment.testShortCommunicationUpdateWebhookUrl,
+    }),
+  },
+);
+
 export interface CreateJobCallbacks {
   /** Called once the job run has been created on our backend and added to `jobRuns`. */
   onBackendSuccess?: (created: JobRun) => void;
@@ -92,6 +112,7 @@ export class JobsService {
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
   private readonly emailHtmlUpdateWebhooks = inject(EMAIL_HTML_UPDATE_WEBHOOK_URLS);
+  private readonly shortCommunicationWebhooks = inject(SHORT_COMMUNICATION_UPDATE_WEBHOOK_URLS);
   private socket: Socket | null = null;
 
   /**
@@ -237,6 +258,31 @@ export class JobsService {
   }
 
   /**
+   * Backend body of a `short_communication_update` job: a pending step, the status and the
+   * three picked values: the job type as the label shown in the form, the message type in snake_case
+   * (`sms`, `whatsapp`, `mobile_push`, `notification_center`), the language as `EN`/`AZ`/`RU`.
+   */
+  buildShortCommunicationBackendPayload(value: CreateJobFormValue): CreateShortCommunicationBackendPayload {
+    return {
+      steps: { step1: { status: 'pending' } },
+      taskStatus: 'short_communication_update',
+      jobType: value.shortJobType ?? '',
+      messageType: toSnakeCase(value.shortMessageType ?? ''),
+      language: value.language ?? '',
+    };
+  }
+
+  /** The n8n body of the same job: `overview` (the job type), `channel` (the message type), the lowercased language and `jobid`. */
+  buildShortCommunicationN8nPayload(value: CreateJobFormValue, jobId: string): CreateShortCommunicationN8nPayload {
+    return {
+      overview: value.shortJobType ?? '',
+      channel: value.shortMessageType ?? '',
+      language: (value.language ?? '').toLowerCase(),
+      jobid: jobId,
+    };
+  }
+
+  /**
    * Creates a job: POSTs the DB-shaped payload to our backend first (so
    * it's tracked and shows up in `jobRuns`), then - only once that
    * succeeds and we have the new job's id - POSTs the n8n-shaped payload
@@ -247,6 +293,11 @@ export class JobsService {
   createJob(value: CreateJobFormValue, callbacks?: CreateJobCallbacks): void {
     if (isEmailHtmlUpdateStatus(value.taskStatus)) {
       this.createEmailHtmlUpdateJob({ ...value, taskStatus: value.taskStatus }, callbacks);
+      return;
+    }
+
+    if (isShortCommunicationStatus(value.taskStatus)) {
+      this.createShortCommunicationJob(value, callbacks);
       return;
     }
 
@@ -265,6 +316,26 @@ export class JobsService {
         const n8nPayload = this.buildN8nPayload(value, created.id);
         const n8nUrl = value.isTesting ? TEST_N8N_WEBHOOK_URL : N8N_WEBHOOK_URL;
         this.http.post(n8nUrl, n8nPayload).subscribe({
+          error: () => callbacks?.onN8nError?.(),
+        });
+      },
+      error: () => callbacks?.onBackendError?.(),
+    });
+  }
+
+  /** Same two steps as `createJob`, with the short-communication bodies and webhooks. */
+  private createShortCommunicationJob(value: CreateJobFormValue, callbacks?: CreateJobCallbacks): void {
+    this.http.post<JobRun>(JOBS_URL, this.buildShortCommunicationBackendPayload(value)).subscribe({
+      next: (created) => {
+        this.jobRuns.update((runs) => [created, ...runs]);
+        callbacks?.onBackendSuccess?.(created);
+
+        const url = value.isTesting ? this.shortCommunicationWebhooks.test : this.shortCommunicationWebhooks.live;
+        if (!url) {
+          callbacks?.onN8nNotConfigured?.();
+          return;
+        }
+        this.http.post(url, this.buildShortCommunicationN8nPayload(value, created.id)).subscribe({
           error: () => callbacks?.onN8nError?.(),
         });
       },

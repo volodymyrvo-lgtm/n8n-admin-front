@@ -5,7 +5,7 @@
   </div>
 
   <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    @if (!isEmailHtmlUpdate()) {
+    @if (!isEmailHtmlUpdate() && !isShortCommunication()) {
       <div class="form__field">
         <label class="field-label" for="jobType">{{ 'addJob.jobType' | translate }}</label>
         <div class="field-control">
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    @if (!isEmailHtmlUpdate()) {
+    @if (!isEmailHtmlUpdate() && !isShortCommunication()) {
       <div class="form__field">
         <label class="field-label" for="messageType">{{ 'addJob.messageType' | translate }}</label>
         <div class="field-control">
@@ -53,23 +53,79 @@
       </div>
     }
 
-    <div class="form__field">
-      <label class="field-label" for="taskDescription">{{ 'addJob.taskDescription' | translate }}</label>
-      <div
-        class="field-control"
-        [class.field-control--invalid]="form.controls.taskDescription.invalid && form.controls.taskDescription.touched"
-      >
-        <input
-          id="taskDescription"
-          type="text"
-          formControlName="taskDescription"
-          [placeholder]="'addJob.taskDescriptionPlaceholder' | translate"
-        />
+    @if (isShortCommunication()) {
+      <div class="form__field">
+        <label class="field-label" for="shortJobType">{{ 'addJob.jobType' | translate }}</label>
+        <div
+          class="field-control"
+          [class.field-control--invalid]="form.controls.shortJobType.invalid && form.controls.shortJobType.touched"
+        >
+          <select id="shortJobType" formControlName="shortJobType">
+            <option value="">{{ 'addJob.shortJobTypePlaceholder' | translate }}</option>
+            @for (option of shortJobTypeOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
+        @if (form.controls.shortJobType.invalid && form.controls.shortJobType.touched) {
+          <span class="form__error">{{ 'addJob.shortJobTypeError' | translate }}</span>
+        }
       </div>
-      @if (form.controls.taskDescription.invalid && form.controls.taskDescription.touched) {
-        <span class="form__error">{{ 'addJob.taskDescriptionError' | translate }}</span>
-      }
-    </div>
+
+      <div class="form__field">
+        <label class="field-label" for="shortMessageType">{{ 'addJob.messageType' | translate }}</label>
+        <div
+          class="field-control"
+          [class.field-control--invalid]="form.controls.shortMessageType.invalid && form.controls.shortMessageType.touched"
+        >
+          <select id="shortMessageType" formControlName="shortMessageType">
+            <option value="">{{ 'addJob.shortMessageTypePlaceholder' | translate }}</option>
+            @for (option of shortMessageTypeOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
+        @if (form.controls.shortMessageType.invalid && form.controls.shortMessageType.touched) {
+          <span class="form__error">{{ 'addJob.shortMessageTypeError' | translate }}</span>
+        }
+      </div>
+
+      <div class="form__field">
+        <label class="field-label" for="language">{{ 'addJob.language' | translate }}</label>
+        <div
+          class="field-control"
+          [class.field-control--invalid]="form.controls.language.invalid && form.controls.language.touched"
+        >
+          <select id="language" formControlName="language">
+            <option value="">{{ 'addJob.languagePlaceholder' | translate }}</option>
+            @for (option of languageOptions; track option) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
+        @if (form.controls.language.invalid && form.controls.language.touched) {
+          <span class="form__error">{{ 'addJob.languageError' | translate }}</span>
+        }
+      </div>
+    } @else {
+      <div class="form__field">
+        <label class="field-label" for="taskDescription">{{ 'addJob.taskDescription' | translate }}</label>
+        <div
+          class="field-control"
+          [class.field-control--invalid]="form.controls.taskDescription.invalid && form.controls.taskDescription.touched"
+        >
+          <input
+            id="taskDescription"
+            type="text"
+            formControlName="taskDescription"
+            [placeholder]="'addJob.taskDescriptionPlaceholder' | translate"
+          />
+        </div>
+        @if (form.controls.taskDescription.invalid && form.controls.taskDescription.touched) {
+          <span class="form__error">{{ 'addJob.taskDescriptionError' | translate }}</span>
+        }
+      </div>
+    }
 
     @if (isWelcomeEmailUpdate()) {
       <div class="form__field">
@@ -82,7 +138,7 @@
       </div>
     }
 
-    @if (!isUpdate() && !isEmailHtmlUpdate()) {
+    @if (!isUpdate() && !isEmailHtmlUpdate() && !isShortCommunication()) {
       <div class="form__field">
         <label class="field-label" for="systemMessage">{{ 'addJob.systemMessage' | translate }}</label>
         <div

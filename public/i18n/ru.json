@@ -128,7 +128,14 @@
     "cancel": "Отмена",
     "backendError": "Не удалось сохранить задачу",
     "n8nError": "Задача сохранена, но запуск в n8n не удался",
-    "n8nNotConfigured": "Задача сохранена, но для этого статуса не настроен n8n-вебхук, поэтому запуск не выполнен"
+    "n8nNotConfigured": "Задача сохранена, но для этого статуса не настроен n8n-вебхук, поэтому запуск не выполнен",
+    "shortJobTypePlaceholder": "Выберите тип задачи",
+    "shortJobTypeError": "Выберите тип задачи",
+    "shortMessageTypePlaceholder": "Выберите тип сообщения",
+    "shortMessageTypeError": "Выберите тип сообщения",
+    "language": "Язык",
+    "languagePlaceholder": "Выберите язык",
+    "languageError": "Выберите язык"
   },
   "ruleSets": {
     "title": "Наборы правил",

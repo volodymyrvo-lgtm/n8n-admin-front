@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
-import { EMAIL_HTML_UPDATE_WEBHOOK_URLS, JobsService } from '../../../core/services/jobs.service';
+import { EMAIL_HTML_UPDATE_WEBHOOK_URLS, JobsService, SHORT_COMMUNICATION_UPDATE_WEBHOOK_URLS } from '../../../core/services/jobs.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AddJobComponent } from './add-job';
 
@@ -83,6 +83,9 @@ describe('AddJobComponent', () => {
       glossaryId: '',
       llm: 'claude_sonnet_5',
       isBannerUpdate: false,
+      shortJobType: '',
+      shortMessageType: '',
+      language: '',
       isTesting: false,
     });
     fixture.componentInstance.submit();
@@ -162,6 +165,9 @@ describe('AddJobComponent', () => {
       glossaryId: '',
       llm: 'claude_sonnet_5',
       isBannerUpdate: false,
+      shortJobType: '',
+      shortMessageType: '',
+      language: '',
       isTesting: false,
     });
     fixture.componentInstance.submit();
@@ -208,6 +214,9 @@ describe('AddJobComponent', () => {
       glossaryId: '',
       llm: 'claude_sonnet_5',
       isBannerUpdate: false,
+      shortJobType: '',
+      shortMessageType: '',
+      language: '',
       isTesting: true,
     });
     fixture.componentInstance.submit();
@@ -378,6 +387,9 @@ describe('AddJobComponent', () => {
         glossaryId: '',
         llm: '',
         isBannerUpdate: false,
+        shortJobType: '',
+        shortMessageType: '',
+        language: '',
         isTesting: false,
       });
       // setValue() alone doesn't re-run syncTaskStatusFields (an effect,
@@ -516,6 +528,9 @@ describe('AddJobComponent', () => {
         glossaryId: 'glossary-1',
         llm: 'gpt_6_astra',
         isBannerUpdate: false,
+        shortJobType: '',
+        shortMessageType: '',
+        language: '',
         isTesting: false,
       });
       // setValue() alone doesn't re-run syncLocalizationFields (an effect,
@@ -727,6 +742,153 @@ describe('AddJobComponent', () => {
 
       httpMock.expectOne('http://localhost:3000/jobs').flush({ id: 'job-4' });
       expect(toastError).toHaveBeenCalledWith('addJob.n8nNotConfigured');
+    });
+  });
+
+  describe('short_communication_update task status', () => {
+    const URLS = { live: 'https://n8n.test/webhook/short', test: 'https://n8n.test/webhook-test/short' };
+
+    function setup(urls = URLS) {
+      Object.assign(TestBed.inject(SHORT_COMMUNICATION_UPDATE_WEBHOOK_URLS), urls);
+      const fixture = TestBed.createComponent(AddJobComponent);
+      fixture.detectChanges();
+      httpMock.expectOne('http://localhost:3000/rules').flush([]);
+      httpMock.expectOne('http://localhost:3000/prompts').flush([]);
+      httpMock.expectOne('http://localhost:3000/glossaries').flush([]);
+      fixture.detectChanges();
+      vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+      fixture.componentInstance['form'].controls.taskStatus.setValue('short_communication_update');
+      fixture.detectChanges();
+      return fixture;
+    }
+
+    function fill(fixture: ReturnType<typeof setup>, jobType = 'Account reactived', messageType = 'SMS', language = 'EN') {
+      const form = fixture.componentInstance['form'];
+      form.controls.shortJobType.setValue(jobType);
+      form.controls.shortMessageType.setValue(messageType);
+      form.controls.language.setValue(language);
+    }
+
+    it('offers the status', () => {
+      const el = setup().nativeElement as HTMLElement;
+      const options = Array.from(el.querySelectorAll('#taskStatus option')).map((o) => o.getAttribute('value'));
+      expect(options).toContain('short_communication_update');
+    });
+
+    it('shows only job type, message type, language and the test toggle', () => {
+      const el = setup().nativeElement as HTMLElement;
+      for (const id of ['jobType', 'messageType', 'board', 'taskDescription', 'systemMessage', 'llm', 'mainRuleSet', 'glossary', 'toneOfVoiceRuleSet', 'humanizerRuleSet']) {
+        expect(el.querySelector('#' + id), id).toBeNull();
+      }
+      expect(el.querySelectorAll('#shortJobType option:not([value=""])').length).toBe(27);
+      expect(Array.from(el.querySelectorAll('#shortMessageType option:not([value=""])')).map((o) => o.getAttribute('value'))).toEqual([
+        'SMS',
+        'WhatsApp',
+        'Mobile Push',
+        'Notification Center',
+      ]);
+      expect(Array.from(el.querySelectorAll('#language option:not([value=""])')).map((o) => o.getAttribute('value'))).toEqual(['EN', 'AZ', 'RU']);
+      expect(el.querySelector('input[formControlName="isTesting"]')).toBeTruthy();
+    });
+
+    it('needs all three values', () => {
+      const fixture = setup();
+      const form = fixture.componentInstance['form'];
+      expect(form.valid).toBe(false);
+      form.controls.shortJobType.setValue('Bet Voided');
+      form.controls.shortMessageType.setValue('SMS');
+      expect(form.valid).toBe(false);
+      form.controls.language.setValue('AZ');
+      expect(form.valid).toBe(true);
+    });
+
+    it('posts the labels and language to the backend and overview/channel/lowercase language/jobid to n8n', () => {
+      const fixture = setup();
+      fill(fixture, 'Account reactived', 'SMS', 'EN');
+
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body).toEqual({
+        steps: { step1: { status: 'pending' } },
+        taskStatus: 'short_communication_update',
+        jobType: 'Account reactived',
+        messageType: 'sms',
+        language: 'EN',
+      });
+      backendReq.flush({ id: 'job-1' });
+
+      const n8nReq = httpMock.expectOne(URLS.live);
+      expect(n8nReq.request.body).toEqual({
+        overview: 'Account reactived',
+        channel: 'SMS',
+        language: 'en',
+        jobid: 'job-1',
+      });
+      n8nReq.flush({});
+    });
+
+    it('sends the message type to the backend in snake_case, and the label to n8n', () => {
+      const fixture = setup();
+      fill(fixture, 'Funds Seized', 'Notification Center', 'AZ');
+
+      fixture.componentInstance.submit();
+
+      const backendReq = httpMock.expectOne('http://localhost:3000/jobs');
+      expect(backendReq.request.body.messageType).toBe('notification_center');
+      backendReq.flush({ id: 'job-5' });
+      const n8nReq = httpMock.expectOne(URLS.live);
+      expect(n8nReq.request.body.channel).toBe('Notification Center');
+      n8nReq.flush({});
+    });
+
+    it('maps every channel to its snake_case form', () => {
+      const service = TestBed.inject(JobsService);
+      const bodies = ['SMS', 'WhatsApp', 'Mobile Push', 'Notification Center'].map(
+        (channel) =>
+          service.buildShortCommunicationBackendPayload({
+            shortJobType: 'Bet Voided',
+            shortMessageType: channel,
+            language: 'EN',
+          } as never).messageType,
+      );
+      expect(bodies).toEqual(['sms', 'whatsapp', 'mobile_push', 'notification_center']);
+    });
+
+    it('uses the test webhook when the testing toggle is on', () => {
+      const fixture = setup();
+      fill(fixture, 'Funds Seized', 'Mobile Push', 'RU');
+      fixture.componentInstance['form'].controls.isTesting.setValue(true);
+
+      fixture.componentInstance.submit();
+
+      httpMock.expectOne('http://localhost:3000/jobs').flush({ id: 'job-2' });
+      httpMock.expectNone(URLS.live);
+      httpMock.expectOne(URLS.test).flush({});
+    });
+
+    it('tells the user when no webhook is configured, without calling n8n', () => {
+      const fixture = setup({ live: '', test: '' });
+      const toastError = vi.spyOn(TestBed.inject(ToastService), 'error');
+      fill(fixture);
+
+      fixture.componentInstance.submit();
+
+      httpMock.expectOne('http://localhost:3000/jobs').flush({ id: 'job-3' });
+      expect(toastError).toHaveBeenCalledWith('addJob.n8nNotConfigured');
+    });
+
+    it('drops the picked values when switching back to another status, and asks for the task description again', () => {
+      const fixture = setup();
+      fill(fixture);
+      const form = fixture.componentInstance['form'];
+
+      form.controls.taskStatus.setValue('new');
+      fixture.detectChanges();
+
+      expect(form.controls.shortJobType.value).toBe('');
+      expect(form.controls.language.value).toBe('');
+      expect(form.controls.taskDescription.hasError('required')).toBe(true);
     });
   });
 });

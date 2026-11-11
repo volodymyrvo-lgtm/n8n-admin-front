@@ -128,7 +128,14 @@
     "cancel": "Cancel",
     "backendError": "Failed to save the job",
     "n8nError": "Job saved, but the n8n trigger failed",
-    "n8nNotConfigured": "Job saved, but no n8n webhook is configured for this task status, so nothing was triggered"
+    "n8nNotConfigured": "Job saved, but no n8n webhook is configured for this task status, so nothing was triggered",
+    "shortJobTypePlaceholder": "Select a job type",
+    "shortJobTypeError": "Select a job type",
+    "shortMessageTypePlaceholder": "Select a message type",
+    "shortMessageTypeError": "Select a message type",
+    "language": "Language",
+    "languagePlaceholder": "Select a language",
+    "languageError": "Select a language"
   },
   "ruleSets": {
     "title": "Rule Sets",

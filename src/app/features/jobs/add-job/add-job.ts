@@ -7,9 +7,13 @@ import {
   BOARD_OPTIONS,
   CreateJobFormValue,
   isEmailHtmlUpdateStatus,
+  isShortCommunicationStatus,
   JOB_TYPE_OPTIONS,
   LLM_OPTIONS,
   MESSAGE_TYPE_OPTIONS,
+  SHORT_COMMUNICATION_JOB_TYPE_OPTIONS,
+  SHORT_COMMUNICATION_LANGUAGE_OPTIONS,
+  SHORT_COMMUNICATION_MESSAGE_TYPE_OPTIONS,
   TASK_STATUS_OPTIONS,
 } from '../../../core/models/job.model';
 import { GlossariesService } from '../../../core/services/glossaries.service';
@@ -39,6 +43,9 @@ export class AddJobComponent implements  OnInit {
   protected readonly messageTypeOptions = MESSAGE_TYPE_OPTIONS;
   protected readonly boardOptions = BOARD_OPTIONS;
   protected readonly llmOptions = LLM_OPTIONS;
+  protected readonly shortJobTypeOptions = SHORT_COMMUNICATION_JOB_TYPE_OPTIONS;
+  protected readonly shortMessageTypeOptions = SHORT_COMMUNICATION_MESSAGE_TYPE_OPTIONS;
+  protected readonly languageOptions = SHORT_COMMUNICATION_LANGUAGE_OPTIONS;
 
   protected readonly form = this.fb.nonNullable.group({
     jobType: [this.jobTypeOptions[0], Validators.required],
@@ -53,6 +60,11 @@ export class AddJobComponent implements  OnInit {
     glossaryId: [''],
     llm: ['', Validators.required],
     isBannerUpdate: [false],
+    // The short communication's own three fields (see `isShortCommunication`) - separate from
+    // jobType/messageType, whose options are the channels of the other statuses.
+    shortJobType: [''],
+    shortMessageType: [''],
+    language: [''],
     isTesting: [false],
   });
 
@@ -93,6 +105,13 @@ export class AddJobComponent implements  OnInit {
    * fields are hidden and not sent - see JobsService.buildEmailHtmlUpdateBackendPayload.
    */
   protected readonly isEmailHtmlUpdate = computed(() => isEmailHtmlUpdateStatus(this.selectedTaskStatus()));
+
+  /**
+   * `short_communication_update` shows only its own three selects (job type, message type, language)
+   * and the testing toggle - no board, task description, prompt, LLM or rule sets - see
+   * JobsService.buildShortCommunicationBackendPayload.
+   */
+  protected readonly isShortCommunication = computed(() => isShortCommunicationStatus(this.selectedTaskStatus()));
 
   /** Only the welcome email update has the yes/no "banner update" switch. */
   protected readonly isWelcomeEmailUpdate = computed(() => this.selectedTaskStatus() === 'welcome_email_html_update');
@@ -145,7 +164,8 @@ export class AddJobComponent implements  OnInit {
   private readonly syncTaskStatusFields = effect(() => {
     const localization = this.isLocalization();
     // The email-HTML-update statuses need none of the generation fields either, same as "update".
-    const update = this.isUpdate() || this.isEmailHtmlUpdate();
+    const update = this.isUpdate() || this.isEmailHtmlUpdate() || this.isShortCommunication();
+    const shortCommunication = this.isShortCommunication();
 
     const mainRuleSetId = this.form.controls.mainRuleSetId;
     const glossaryId = this.form.controls.glossaryId;
@@ -180,6 +200,27 @@ export class AddJobComponent implements  OnInit {
       promptId.setValidators(Validators.required);
       llm.setValidators(Validators.required);
     }
+
+    // The short communication swaps the task description for its three selects.
+    const taskDescription = this.form.controls.taskDescription;
+    const shortControls = [
+      this.form.controls.shortJobType,
+      this.form.controls.shortMessageType,
+      this.form.controls.language,
+    ];
+    if (shortCommunication) {
+      taskDescription.clearValidators();
+      taskDescription.setValue('');
+      shortControls.forEach((control) => control.setValidators(Validators.required));
+    } else {
+      taskDescription.setValidators(Validators.required);
+      shortControls.forEach((control) => {
+        control.clearValidators();
+        control.setValue('');
+      });
+    }
+    taskDescription.updateValueAndValidity({ emitEvent: false });
+    shortControls.forEach((control) => control.updateValueAndValidity({ emitEvent: false }));
 
     // The banner switch only exists on the welcome email update - never keep a stale `true` from it.
     if (!this.isWelcomeEmailUpdate()) {
@@ -218,6 +259,9 @@ export class AddJobComponent implements  OnInit {
       glossaryId: raw.glossaryId || null,
       llm: raw.llm || null,
       isBannerUpdate: raw.isBannerUpdate,
+      shortJobType: raw.shortJobType || null,
+      shortMessageType: raw.shortMessageType || null,
+      language: raw.language || null,
       isTesting: raw.isTesting,
     };
 

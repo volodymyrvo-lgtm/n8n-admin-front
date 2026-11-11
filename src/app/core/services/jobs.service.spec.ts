@@ -56,6 +56,9 @@ function makeFormValue(overrides: Partial<CreateJobFormValue> = {}): CreateJobFo
     glossaryId: null,
     llm: 'claude_sonnet_5',
     isBannerUpdate: false,
+    shortJobType: null,
+    shortMessageType: null,
+    language: null,
     isTesting: false,
     ...overrides,
   };
