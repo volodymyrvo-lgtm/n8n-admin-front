@@ -33,7 +33,8 @@
     "designSection": "Design Generation",
     "banners": "Banners",
     "emailGeneration": "Email Generation",
-    "updatedEmails": "Updated emails"
+    "updatedEmails": "Updated emails",
+    "blogAiSection": "Blog AI assistant"
   },
   "login": {
     "title": "Sign in to the console",
@@ -411,6 +412,10 @@
     "errors": {
       "title": "Error Logs",
       "description": "Failures reported by n8n for jobs, with the job's details."
+    },
+    "blogAi": {
+      "title": "Blog AI assistant",
+      "description": "Glossaries and prompts for the blog assistant."
     }
   },
   "usage": {

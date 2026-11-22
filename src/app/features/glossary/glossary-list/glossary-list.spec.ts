@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -159,5 +159,43 @@ describe('GlossaryListComponent (view modal)', () => {
     fixture.detectChanges();
     expect(el.querySelector('app-view-modal')).toBeNull();
     httpMock.verify();
+  });
+});
+
+describe('GlossaryListComponent (Blog AI)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [GlossaryListComponent],
+      providers: [
+        provideTranslateService(),
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { kind: 'blog_ai' } } } },
+      ],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(ADMIN_USER);
+  });
+
+  afterEach(() => httpMock.verify());
+
+  it('lists the Blog AI glossaries (?kind=blog_ai) and links to the Blog AI pages', () => {
+    const fixture = TestBed.createComponent(GlossaryListComponent);
+    fixture.detectChanges();
+    const req = httpMock.expectOne((r) => r.url === `${environment.apiBaseUrl}/glossaries`);
+    expect(req.request.params.get('kind')).toBe('blog_ai');
+    req.flush([makeGlossary({ id: 'g-9', glossaryName: 'blog_glossary', kind: 'blog_ai' })]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('blog_glossary');
+    expect((el.querySelector('a.page-btn') as HTMLAnchorElement).getAttribute('href')).toBe('/blog-ai/glossary/new');
+    expect((el.querySelector('a.data-table__cell-primary') as HTMLAnchorElement).getAttribute('href')).toBe('/blog-ai/glossary/g-9');
+    expect((el.querySelector('a.icon-btn') as HTMLAnchorElement).getAttribute('href')).toBe('/blog-ai/glossary/g-9/edit');
+    expect(TestBed.inject(GlossariesService).blogAiGlossaries().length).toBe(1);
+    expect(TestBed.inject(GlossariesService).glossaries()).toEqual([]);
   });
 });

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -254,5 +254,42 @@ describe('PromptsComponent (view modal)', () => {
     fixture.detectChanges();
     expect(el.querySelector('app-view-modal')).toBeNull();
     httpMock.verify();
+  });
+});
+
+describe('PromptsComponent (Blog AI)', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PromptsComponent],
+      providers: [
+        provideTranslateService(),
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { kind: 'blog_ai' } } } },
+      ],
+    }).compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(AuthService).currentUser.set(ADMIN_USER);
+  });
+
+  afterEach(() => httpMock.verify());
+
+  it('lists the Blog AI prompts (?kind=blog_ai) and links to the Blog AI form pages', () => {
+    const fixture = TestBed.createComponent(PromptsComponent);
+    fixture.detectChanges();
+    const req = httpMock.expectOne((r) => r.url === 'http://localhost:3000/prompts');
+    expect(req.request.params.get('kind')).toBe('blog_ai');
+    req.flush([{ id: 'b-1', name: 'Intro', message: 'Write an intro', kind: 'blog_ai' }]);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.textContent).toContain('Intro');
+    expect((el.querySelector('a.icon-btn') as HTMLAnchorElement).getAttribute('href')).toBe('/blog-ai/prompts/b-1/edit');
+    expect((el.querySelector('a.page-btn') as HTMLAnchorElement).getAttribute('href')).toBe('/blog-ai/prompts/new');
+    expect(TestBed.inject(PromptsService).blogAiPrompts().length).toBe(1);
+    expect(TestBed.inject(PromptsService).prompts()).toEqual([]);
   });
 });

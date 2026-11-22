@@ -5,7 +5,7 @@
       <p class="page-subtitle">{{ 'glossary.subtitle' | translate }}</p>
     </div>
     @if (authService.isAdmin()) {
-      <a routerLink="/glossary/new" class="page-btn">
+      <a [routerLink]="basePath + '/new'" class="page-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14"></path><path d="M5 12h14"></path>
         </svg>
@@ -16,7 +16,7 @@
 
   @if (glossariesService.loading()) {
     <app-spinner [label]="'common.loading' | translate" />
-  } @else if (glossariesService.glossaries().length > 0) {
+  } @else if (glossaries().length > 0) {
     <div class="data-table">
       <div class="data-table__head" style="grid-template-columns: 1.6fr 1fr 1fr 1fr auto;">
         <span class="field-label">{{ 'glossary.columnName' | translate }}</span>
@@ -25,10 +25,10 @@
         <span class="field-label">{{ 'glossary.columnUpdated' | translate }}</span>
         <span class="field-label">{{ 'glossary.columnActions' | translate }}</span>
       </div>
-      @for (glossary of glossariesService.glossaries(); track glossary.id) {
+      @for (glossary of glossaries(); track glossary.id) {
         <div class="data-table__row" style="grid-template-columns: 1.6fr 1fr 1fr 1fr auto;">
           <span class="name-cell">
-            <a class="data-table__cell-primary" [routerLink]="['/glossary', glossary.id]">{{ glossary.glossaryName }}</a>
+            <a class="data-table__cell-primary" [routerLink]="[basePath, glossary.id]">{{ glossary.glossaryName }}</a>
             <app-view-button [label]="'common.view' | translate" (opened)="viewed.set(glossary)" />
           </span>
           <span class="data-table__cell-muted">{{ glossary.allGlossRules.language_pair }}</span>
@@ -38,7 +38,7 @@
             @if (authService.isAdmin()) {
               <a
                 class="icon-btn"
-                [routerLink]="['/glossary', glossary.id, 'edit']"
+                [routerLink]="[basePath, glossary.id, 'edit']"
                 [attr.aria-label]="'glossary.edit.title' | translate"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

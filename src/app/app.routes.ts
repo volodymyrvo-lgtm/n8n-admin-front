@@ -140,6 +140,87 @@ export const routes: Routes = [
           },
         ],
       },
+      // Blog AI assistant: its own section (the same sidebar layout, told by
+      // `data.section` to show the Blog AI menu) with just two lists, the
+      // glossaries and the prompts. They reuse the Content pages - `data.kind`
+      // makes them list/create/edit `blog_ai` ones instead (see
+      // PromptsService / GlossariesService). Read-only for everyone who may
+      // see documents, editing is admin-only, as everywhere else.
+      {
+        path: 'blog-ai',
+        canActivate: [areaGuard('documents')],
+        data: { section: 'blog-ai' },
+        loadComponent: () =>
+          import('./layout/dashboard-layout/dashboard-layout').then((m) => m.DashboardLayoutComponent),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'glossary' },
+          {
+            path: 'glossary',
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-list/glossary-list').then((m) => m.GlossaryListComponent),
+          },
+          {
+            path: 'glossary/new',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-form/glossary-form').then((m) => m.GlossaryFormComponent),
+          },
+          {
+            path: 'glossary/:id/edit',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-form/glossary-form').then((m) => m.GlossaryFormComponent),
+          },
+          {
+            path: 'glossary/:id',
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-entries-list/glossary-entries-list').then(
+                (m) => m.GlossaryEntriesListComponent,
+              ),
+          },
+          {
+            path: 'glossary/:id/entries/new',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-entry-form/glossary-entry-form').then(
+                (m) => m.GlossaryEntryFormComponent,
+              ),
+          },
+          {
+            path: 'glossary/:id/entries/:entryId/edit',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/glossary/glossary-entry-form/glossary-entry-form').then(
+                (m) => m.GlossaryEntryFormComponent,
+              ),
+          },
+          {
+            path: 'prompts',
+            data: { kind: 'blog_ai' },
+            loadComponent: () => import('./features/prompts/prompts').then((m) => m.PromptsComponent),
+          },
+          {
+            path: 'prompts/new',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/prompts/prompt-form/prompt-form').then((m) => m.PromptFormComponent),
+          },
+          {
+            path: 'prompts/:id/edit',
+            canActivate: [adminGuard],
+            data: { kind: 'blog_ai' },
+            loadComponent: () =>
+              import('./features/prompts/prompt-form/prompt-form').then((m) => m.PromptFormComponent),
+          },
+        ],
+      },
       {
         path: '',
         canActivate: [areaGuard('jobs', 'documents', 'users')],

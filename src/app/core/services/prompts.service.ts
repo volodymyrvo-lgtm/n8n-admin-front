@@ -16,12 +16,13 @@ export interface PromptCallbacks {
  * go through HTTP now (see the /prompts routes on the NestJS side), the
  * same shape as JobsService/RuleSetsService/UsersService.
  *
- * Prompts come in two kinds (see PromptKind): `communication` (CRM
- * mailings, `prompts`) and `seo` (SEO generation, `seoPrompts`). The
- * communication list is fetched with a plain `GET /prompts`, exactly as
- * before the kinds existed; the SEO one with `GET /prompts?kind=seo`.
+ * Prompts come in three kinds (see PromptKind): `communication` (CRM
+ * mailings, `prompts`), `seo` (SEO generation, `seoPrompts`) and `blog_ai`
+ * (the Blog AI assistant, `blogAiPrompts`). The communication list is
+ * fetched with a plain `GET /prompts`, exactly as before the kinds
+ * existed; the others with `GET /prompts?kind=seo` / `?kind=blog_ai`.
  * They're kept in separate signals so one section never shows (or
- * flashes) the other's prompts.
+ * flashes) another's prompts.
  */
 @Injectable({ providedIn: 'root' })
 export class PromptsService {
@@ -30,27 +31,36 @@ export class PromptsService {
   readonly prompts = signal<Prompt[]>([]);
   /** SEO prompts. */
   readonly seoPrompts = signal<Prompt[]>([]);
+  /** Blog AI assistant prompts. */
+  readonly blogAiPrompts = signal<Prompt[]>([]);
   readonly loading = signal<boolean>(false);
 
   /** The list for a kind - lets a page that serves both sections pick its own. */
   promptsFor(kind: PromptKind): WritableSignal<Prompt[]> {
-    return kind === 'seo' ? this.seoPrompts : this.prompts;
+    switch (kind) {
+      case 'seo':
+        return this.seoPrompts;
+      case 'blog_ai':
+        return this.blogAiPrompts;
+      default:
+        return this.prompts;
+    }
   }
 
   loadPrompts(kind: PromptKind = 'communication'): void {
     this.loading.set(true);
     // Communication prompts keep the original, parameterless request.
     const request =
-      kind === 'seo'
-        ? this.http.get<Prompt[]>(PROMPTS_URL, { params: new HttpParams().set('kind', 'seo') })
-        : this.http.get<Prompt[]>(PROMPTS_URL);
+      kind === 'communication'
+        ? this.http.get<Prompt[]>(PROMPTS_URL)
+        : this.http.get<Prompt[]>(PROMPTS_URL, { params: new HttpParams().set('kind', kind) });
 
     request.pipe(finalize(() => this.loading.set(false))).subscribe({
       next: (prompts) => this.promptsFor(kind).set(prompts),
     });
   }
 
-  /** Creates a prompt; `input.kind` (omitted for communication, `'seo'` for SEO) decides which list it joins. */
+  /** Creates a prompt; `input.kind` (omitted for communication, `'seo'` / `'blog_ai'` otherwise) decides which list it joins. */
   addPrompt(input: CreatePromptInput, callbacks?: PromptCallbacks): void {
     this.http.post<Prompt>(PROMPTS_URL, input).subscribe({
       next: (created) => {
@@ -69,6 +79,7 @@ export class PromptsService {
         const replace = (prompts: Prompt[]) => prompts.map((prompt) => (prompt.id === id ? updated : prompt));
         this.prompts.update(replace);
         this.seoPrompts.update(replace);
+        this.blogAiPrompts.update(replace);
         callbacks?.onSuccess?.(updated);
       },
       error: () => callbacks?.onError?.(),
@@ -81,6 +92,7 @@ export class PromptsService {
         const remove = (prompts: Prompt[]) => prompts.filter((prompt) => prompt.id !== id);
         this.prompts.update(remove);
         this.seoPrompts.update(remove);
+        this.blogAiPrompts.update(remove);
         callbacks?.onSuccess?.();
       },
       error: () => callbacks?.onError?.(),

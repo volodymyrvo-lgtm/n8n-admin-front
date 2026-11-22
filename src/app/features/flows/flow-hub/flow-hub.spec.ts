@@ -63,7 +63,7 @@ describe('FlowHubComponent', () => {
     expect(fixture.componentInstance['userInitials']()).toBe('?');
   });
 
-  it('links the content, design, SEO, dashboard and error logs cards to /jobs, /design, /seo, /usage and /job-errors, and renders the other two flows as disabled buttons', async () => {
+  it('links the content, design, SEO, dashboard, error logs and Blog AI cards to /jobs, /design, /seo, /usage, /job-errors and /blog-ai, and renders the other two flows as disabled buttons', async () => {
     configure({ id: 'u-1', username: 'volodymyr.vo@royale.team', role: 'admin' }, authServiceStub);
     await TestBed.compileComponents();
 
@@ -72,8 +72,15 @@ describe('FlowHubComponent', () => {
     const el: HTMLElement = fixture.nativeElement;
 
     const activeLinks = Array.from(el.querySelectorAll('.flow-card--active'));
-    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A', 'A', 'A', 'A']);
-    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual(['/jobs', '/design', '/seo', '/usage', '/job-errors']);
+    expect(activeLinks.map((link) => link.tagName)).toEqual(['A', 'A', 'A', 'A', 'A', 'A']);
+    expect(activeLinks.map((link) => link.getAttribute('href'))).toEqual([
+      '/jobs',
+      '/design',
+      '/seo',
+      '/usage',
+      '/job-errors',
+      '/blog-ai',
+    ]);
 
     const soonButtons = el.querySelectorAll('.flow-card--soon');
     expect(soonButtons.length).toBe(2);
@@ -108,13 +115,13 @@ describe('FlowHubComponent', () => {
 
     const hrefs = (el: HTMLElement) => Array.from(el.querySelectorAll('a.flow-card')).map((a) => a.getAttribute('href'));
 
-    it('a reader gets the Content and SEO tiles pointing straight at the documents, the Design tile (banners) and the Error Logs tile', async () => {
+    it('a reader gets the Content and SEO tiles pointing straight at the documents, the Design tile (banners), the Error Logs tile and Blog AI', async () => {
       const el = await render('reader');
-      expect(hrefs(el)).toEqual(['/rule-sets', '/design', '/seo/rule-sets', '/job-errors']);
+      expect(hrefs(el)).toEqual(['/rule-sets', '/design', '/seo/rule-sets', '/job-errors', '/blog-ai']);
       expect(el.querySelectorAll('button.flow-card--soon').length).toBe(0);
     });
 
-    it('an analyst only gets the Dashboard tile', async () => {
+    it('an analyst only gets the Dashboard tile (no Blog AI, which is documents)', async () => {
       const el = await render('analyst');
       expect(hrefs(el)).toEqual(['/usage']);
       expect(el.querySelectorAll('button.flow-card--soon').length).toBe(0);

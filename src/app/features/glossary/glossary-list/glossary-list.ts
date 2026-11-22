@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Glossary } from '../../../core/models/glossary.model';
+import { Glossary, GLOSSARY_BASE_PATHS, glossaryKindOf } from '../../../core/models/glossary.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -16,6 +16,10 @@ import { ViewModalComponent } from '../../../shared/components/view-modal/view-m
  * glossaries). Opening a glossary (GlossaryEntriesListComponent) is
  * where its terms are managed - this page only covers the glossaries
  * themselves (create/edit/delete).
+ *
+ * Shared by the Content section (`/glossary`) and the Blog AI assistant
+ * (`/blog-ai/glossary`): the route's `data.kind` says which kind of
+ * glossary to list (see GlossariesService) and where its pages live.
  */
 @Component({
   selector: 'app-glossary-list',
@@ -28,6 +32,13 @@ export class GlossaryListComponent implements OnInit {
   protected readonly authService = inject(AuthService);
   private readonly translate = inject(TranslateService);
   private readonly toast = inject(ToastService);
+  private readonly route = inject(ActivatedRoute);
+
+  private readonly kind = glossaryKindOf(this.route.snapshot.data?.['kind']);
+  /** Where this list's own routes live - `<basePath>/new`, `<basePath>/:id`, `<basePath>/:id/edit`. */
+  protected readonly basePath = GLOSSARY_BASE_PATHS[this.kind];
+  /** This section's glossaries. */
+  protected readonly glossaries = this.glossariesService.glossariesFor(this.kind);
 
   /** The glossary open in the read-only view modal (any user can open it). */
   protected readonly viewed = signal<Glossary | null>(null);
@@ -37,7 +48,7 @@ export class GlossaryListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.glossariesService.loadGlossaries();
+    this.glossariesService.loadGlossaries(this.kind);
   }
 
   protected deleteGlossary(glossary: Glossary): void {

@@ -7,7 +7,7 @@ import { vi } from 'vitest';
 import { PromptsService } from '../../../core/services/prompts.service';
 import { PromptFormComponent } from './prompt-form';
 
-function configure(routeId: string | null, kind?: 'seo'): void {
+function configure(routeId: string | null, kind?: 'seo' | 'blog_ai'): void {
   TestBed.configureTestingModule({
     imports: [PromptFormComponent],
     providers: [
@@ -284,5 +284,54 @@ describe('PromptFormComponent (SEO section)', () => {
 
     expect(navigateSpy).toHaveBeenCalledWith('/seo/prompts');
     httpMock.verify();
+  });
+});
+
+describe('PromptFormComponent (Blog AI)', () => {
+  let httpMock: HttpTestingController;
+
+  afterEach(() => httpMock.verify());
+
+  it('creates a Blog AI prompt with kind: "blog_ai" in the body and goes back to the Blog AI prompts list', async () => {
+    configure(null, 'blog_ai');
+    await TestBed.compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(PromptFormComponent);
+    const promptsService = TestBed.inject(PromptsService);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentInstance['form'].setValue({ name: 'Intro', message: 'Write an intro' });
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne('http://localhost:3000/prompts');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ name: 'Intro', message: 'Write an intro', kind: 'blog_ai' });
+    req.flush({ id: 'b-1', name: 'Intro', message: 'Write an intro', kind: 'blog_ai' });
+
+    expect(promptsService.blogAiPrompts().map((prompt) => prompt.id)).toEqual(['b-1']);
+    expect(promptsService.prompts()).toEqual([]);
+    expect(navigateSpy).toHaveBeenCalledWith('/blog-ai/prompts');
+  });
+
+  it('edits a Blog AI prompt: PATCH carries its kind, then back to the Blog AI prompts list', async () => {
+    configure('b-1', 'blog_ai');
+    await TestBed.compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    const promptsService = TestBed.inject(PromptsService);
+    promptsService.blogAiPrompts.set([{ id: 'b-1', name: 'Intro', message: 'Write an intro', kind: 'blog_ai' }]);
+    const fixture = TestBed.createComponent(PromptFormComponent);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    expect(fixture.componentInstance['form'].getRawValue()).toEqual({ name: 'Intro', message: 'Write an intro' });
+    fixture.componentInstance['form'].setValue({ name: 'Intro v2', message: 'Write a better intro' });
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne('http://localhost:3000/prompts/b-1');
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ name: 'Intro v2', message: 'Write a better intro', kind: 'blog_ai' });
+    req.flush({ id: 'b-1', name: 'Intro v2', message: 'Write a better intro', kind: 'blog_ai' });
+
+    expect(promptsService.blogAiPrompts()[0].name).toBe('Intro v2');
+    expect(navigateSpy).toHaveBeenCalledWith('/blog-ai/prompts');
   });
 });

@@ -176,29 +176,54 @@
         }
 
       </div>
-      @if (authService.canAccess('errors')) {
+      @if (authService.canAccess('errors') || showFlows()) {
         <div class="cards-row cards-row--3" [class.cards-row--2]="!authService.canAccess('jobs')">
-          <a routerLink="/job-errors" class="flow-card flow-card--active">
-            <div class="flow-card__top">
-              <div class="flow-card__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path>
-                  <path d="M12 9v4"></path><path d="M12 17h.01"></path>
+          @if (authService.canAccess('errors')) {
+            <a routerLink="/job-errors" class="flow-card flow-card--active">
+              <div class="flow-card__top">
+                <div class="flow-card__icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path>
+                    <path d="M12 9v4"></path><path d="M12 17h.01"></path>
+                  </svg>
+                </div>
+                <span class="flow-card__badge flow-card__badge--active">{{ 'flowHub.badge.active' | translate }}</span>
+              </div>
+              <div>
+                <h2 class="flow-card__title">{{ 'flowHub.errors.title' | translate }}</h2>
+                <p class="flow-card__desc">{{ 'flowHub.errors.description' | translate }}</p>
+              </div>
+              <div class="flow-card__cta">
+                <span>{{ 'flowHub.cta' | translate }}</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path>
                 </svg>
               </div>
-              <span class="flow-card__badge flow-card__badge--active">{{ 'flowHub.badge.active' | translate }}</span>
-            </div>
-            <div>
-              <h2 class="flow-card__title">{{ 'flowHub.errors.title' | translate }}</h2>
-              <p class="flow-card__desc">{{ 'flowHub.errors.description' | translate }}</p>
-            </div>
-            <div class="flow-card__cta">
-              <span>{{ 'flowHub.cta' | translate }}</span>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path>
-              </svg>
-            </div>
-          </a>
+            </a>
+          }
+          @if (showFlows()) {
+            <a routerLink="/blog-ai" class="flow-card flow-card--active">
+              <div class="flow-card__top">
+                <div class="flow-card__icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                  </svg>
+                </div>
+                <span class="flow-card__badge flow-card__badge--active">{{ 'flowHub.badge.active' | translate }}</span>
+              </div>
+              <div>
+                <h2 class="flow-card__title">{{ 'flowHub.blogAi.title' | translate }}</h2>
+                <p class="flow-card__desc">{{ 'flowHub.blogAi.description' | translate }}</p>
+              </div>
+              <div class="flow-card__cta">
+                <span>{{ 'flowHub.cta' | translate }}</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path>
+                </svg>
+              </div>
+            </a>
+          }
         </div>
       }
     </div>

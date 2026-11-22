@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Prompt, PromptKind } from '../../core/models/prompt.model';
+import { Prompt, PROMPT_BASE_PATHS, PromptKind, promptKindOf } from '../../core/models/prompt.model';
 import { AuthService } from '../../core/services/auth.service';
 import { PromptsService } from '../../core/services/prompts.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -15,8 +15,8 @@ import { ViewModalComponent } from '../../shared/components/view-modal/view-moda
 const PAGE_SIZE = 20;
 
 /**
- * The prompts list - shared by the Content section (`/prompts`) and the
- * SEO section (`/seo/prompts`): the route's `data.kind` says which kind of
+ * The prompts list - shared by the Content section (`/prompts`), the SEO
+ * section (`/seo/prompts`) and the Blog AI assistant (`/blog-ai/prompts`): the route's `data.kind` says which kind of
  * prompt to list (see PromptsService), and where its "new"/"edit" pages
  * live.
  */
@@ -33,9 +33,9 @@ export class PromptsComponent implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
 
-  private readonly kind: PromptKind = this.route.snapshot.data?.['kind'] === 'seo' ? 'seo' : 'communication';
+  private readonly kind: PromptKind = promptKindOf(this.route.snapshot.data?.['kind']);
   /** Where this list's own routes live - the form pages are `<basePath>/new` and `<basePath>/:id/edit`. */
-  protected readonly basePath = this.kind === 'seo' ? '/seo/prompts' : '/prompts';
+  protected readonly basePath = PROMPT_BASE_PATHS[this.kind];
   /** This section's prompts. */
   protected readonly prompts = this.promptsService.promptsFor(this.kind);
 

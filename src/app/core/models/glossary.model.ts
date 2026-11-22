@@ -39,10 +39,26 @@ export interface GlossaryRules {
   target_language: string;
 }
 
+/** Glossaries are split by the flow that uses them: the Content section's (the default, no `kind`) or the Blog AI assistant's. */
+export type GlossaryKind = 'communication' | 'blog_ai';
+
+/** Where each kind's own pages live (see app.routes.ts): `<base>`, `<base>/new`, `<base>/:id`, `<base>/:id/edit`, `<base>/:id/entries/...`. */
+export const GLOSSARY_BASE_PATHS: Record<GlossaryKind, string> = {
+  communication: '/glossary',
+  blog_ai: '/blog-ai/glossary',
+};
+
+/** Reads a route's `data.kind`; anything but `blog_ai` is the default communication kind. */
+export function glossaryKindOf(value: unknown): GlossaryKind {
+  return value === 'blog_ai' ? 'blog_ai' : 'communication';
+}
+
 /** GET /glossaries item. */
 export interface Glossary {
   id: string;
   glossaryName: string;
+  /** Which part of the app the glossary belongs to; absent/`communication` for the Content ones. */
+  kind?: GlossaryKind;
   setType: string[];
   allGlossRules: GlossaryRules;
   createdAt: string;
@@ -68,6 +84,8 @@ export interface CreateGlossaryInput {
   glossaryName: string;
   setType: string[];
   allGlossRules: GlossaryRulesInput;
+  /** Optional - left out for a Content glossary (the backend's default); a Blog AI one sends `'blog_ai'`. */
+  kind?: GlossaryKind;
 }
 
 /**

@@ -1,7 +1,12 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { GlossaryEntry, targetLanguageFieldKey } from '../../../core/models/glossary.model';
+import {
+  GLOSSARY_BASE_PATHS,
+  glossaryKindOf,
+  GlossaryEntry,
+  targetLanguageFieldKey,
+} from '../../../core/models/glossary.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -16,6 +21,10 @@ import { ViewModalComponent } from '../../../shared/components/view-modal/view-m
  * own fields (name, language pair, purpose, instructions) happens on a
  * separate page (`/glossary/:id/edit`, linked from here) since those
  * are a different resource from its terms.
+ *
+ * Shared by the Content section and the Blog AI assistant: the route's
+ * `data.kind` says which list the glossary is looked up in and where the
+ * links lead.
  */
 @Component({
   selector: 'app-glossary-entries-list',
@@ -30,9 +39,13 @@ export class GlossaryEntriesListComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly toast = inject(ToastService);
 
+  private readonly kind = glossaryKindOf(this.route.snapshot.data?.['kind']);
+  /** The glossary list page of this section - the base of every link on this page. */
+  protected readonly basePath = GLOSSARY_BASE_PATHS[this.kind];
+
   protected readonly glossaryId = this.route.snapshot.paramMap.get('id')!;
   protected readonly glossary = computed(() =>
-    this.glossariesService.glossaries().find((glossary) => glossary.id === this.glossaryId),
+    this.glossariesService.glossariesFor(this.kind)().find((glossary) => glossary.id === this.glossaryId),
   );
 
   /** The term open in the read-only view modal (any user can open it). */
@@ -43,7 +56,7 @@ export class GlossaryEntriesListComponent implements OnInit {
     // reload it here too, so a direct navigation/refresh on this page
     // still resolves the glossary's own fields for the header, not
     // just its entries.
-    this.glossariesService.loadGlossaries();
+    this.glossariesService.loadGlossaries(this.kind);
     this.glossariesService.loadEntries(this.glossaryId);
   }
 

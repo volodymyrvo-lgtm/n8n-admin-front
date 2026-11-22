@@ -12,8 +12,9 @@ import { LanguageSwitcherComponent } from '../../shared/components/language-swit
 })
 /**
  * The sidebar shell shared by the flows that have one: Content Generation
- * (the default menu), SEO Generation and Design Generation. The route's
- * `data.section` ('seo' / 'design') picks which menu is shown.
+ * (the default menu), SEO Generation, Design Generation and the Blog AI
+ * assistant. The route's `data.section` ('seo' / 'design' / 'blog-ai') picks
+ * which menu is shown.
  */
 export class DashboardLayoutComponent {
   protected readonly authService = inject(AuthService);
@@ -22,6 +23,7 @@ export class DashboardLayoutComponent {
 
   protected readonly isSeo = this.route.snapshot.data?.['section'] === 'seo';
   protected readonly isDesign = this.route.snapshot.data?.['section'] === 'design';
+  protected readonly isBlogAi = this.route.snapshot.data?.['section'] === 'blog-ai';
 
   logout(): void {
     this.authService.logout();

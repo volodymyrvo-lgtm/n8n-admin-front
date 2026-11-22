@@ -2,7 +2,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { CreateGlossaryInput, Glossary, UpdateGlossaryInput } from '../../../core/models/glossary.model';
+import {
+  CreateGlossaryInput,
+  Glossary,
+  GLOSSARY_BASE_PATHS,
+  glossaryKindOf,
+  UpdateGlossaryInput,
+} from '../../../core/models/glossary.model';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
 import {
@@ -17,6 +23,10 @@ import {
  * pair, purpose and the free-form `instructions` guidance. Its terms
  * are a separate nested resource, managed from
  * GlossaryEntryFormComponent instead - see glossary.model.ts.
+ *
+ * Shared by the Content section and the Blog AI assistant: the route's
+ * `data.kind` says which kind of glossary this edits (what a new one is
+ * created as, which list "edit" looks it up in, where to go back to).
  */
 @Component({
   selector: 'app-glossary-form',
@@ -33,6 +43,10 @@ export class GlossaryFormComponent {
   private readonly toast = inject(ToastService);
   private readonly translate = inject(TranslateService);
   private readonly cd = inject(ChangeDetectorRef);
+
+  private readonly kind = glossaryKindOf(this.route.snapshot.data?.['kind']);
+  /** The list page this form belongs to - where Cancel and the redirects after saving go. */
+  protected readonly basePath = GLOSSARY_BASE_PATHS[this.kind];
 
   private readonly editingId = this.route.snapshot.paramMap.get('id');
   protected readonly isEditMode = !!this.editingId;
@@ -59,11 +73,11 @@ export class GlossaryFormComponent {
       return;
     }
 
-    const existing = this.glossariesService.glossaries().find((glossary) => glossary.id === this.editingId);
+    const existing = this.glossariesService.glossariesFor(this.kind)().find((glossary) => glossary.id === this.editingId);
     if (!existing) {
       // Not found locally (e.g. a direct navigation before the list has
       // loaded) - there is nothing to edit, so go back to the list.
-      this.router.navigateByUrl('/glossary');
+      this.router.navigateByUrl(this.basePath);
       return;
     }
 
@@ -117,17 +131,18 @@ export class GlossaryFormComponent {
       this.glossariesService.updateGlossary(this.editingId, updateInput, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('glossary.toast.updated'));
-          this.router.navigateByUrl(`/glossary/${this.editingId}`);
+          this.router.navigateByUrl(`${this.basePath}/${this.editingId}`);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));
         },
       });
     } else {
-      this.glossariesService.addGlossary(input, {
+      // Only a Blog AI glossary says its kind; a Content one is created exactly as before (the backend defaults it).
+      this.glossariesService.addGlossary(this.kind === 'blog_ai' ? { ...input, kind: 'blog_ai' } : input, {
         onSuccess: (created) => {
           this.toast.success(this.translate.instant('glossary.toast.created'));
-          this.router.navigateByUrl(`/glossary/${created.id}`);
+          this.router.navigateByUrl(`${this.basePath}/${created.id}`);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));

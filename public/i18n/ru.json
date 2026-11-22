@@ -33,7 +33,8 @@
     "designSection": "Генерация дизайна",
     "banners": "Баннеры",
     "emailGeneration": "Генерация email",
-    "updatedEmails": "Обновлённые письма"
+    "updatedEmails": "Обновлённые письма",
+    "blogAiSection": "Blog AI assistant"
   },
   "login": {
     "title": "Вход в консоль",
@@ -411,6 +412,10 @@
     "errors": {
       "title": "Логи ошибок",
       "description": "Сбои, о которых сообщил n8n, с деталями джобы."
+    },
+    "blogAi": {
+      "title": "Blog AI assistant",
+      "description": "Глоссарии и промпты для блог-ассистента."
     }
   },
   "usage": {

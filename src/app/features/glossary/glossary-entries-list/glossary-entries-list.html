@@ -1,5 +1,5 @@
 <div class="page">
-  <a routerLink="/glossary" class="link-muted">{{ 'glossary.backToList' | translate }}</a>
+  <a [routerLink]="basePath" class="link-muted">{{ 'glossary.backToList' | translate }}</a>
 
   <div class="page__header-row">
     <div class="page-header">
@@ -8,14 +8,14 @@
     </div>
     <div class="header-actions">
       @if (authService.isAdmin()) {
-        <a [routerLink]="['/glossary', glossaryId, 'edit']" class="page-btn">
+        <a [routerLink]="[basePath, glossaryId, 'edit']" class="page-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 20h9"></path>
             <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
           </svg>
           {{ 'glossary.editGlossary' | translate }}
         </a>
-        <a [routerLink]="['/glossary', glossaryId, 'entries', 'new']" class="page-btn">
+        <a [routerLink]="[basePath, glossaryId, 'entries', 'new']" class="page-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 5v14"></path><path d="M5 12h14"></path>
           </svg>
@@ -49,7 +49,7 @@
             @if (authService.isAdmin()) {
               <a
                 class="icon-btn"
-                [routerLink]="['/glossary', glossaryId, 'entries', entry.id, 'edit']"
+                [routerLink]="[basePath, glossaryId, 'entries', entry.id, 'edit']"
                 [attr.aria-label]="'glossary.entry.edit.title' | translate"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

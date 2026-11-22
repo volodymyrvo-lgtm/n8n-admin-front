@@ -79,7 +79,7 @@
       <button type="submit" class="btn-primary" [disabled]="form.invalid">
         {{ (isEditMode ? 'glossary.edit.submit' : 'glossary.add.submit') | translate }}
       </button>
-      <a routerLink="/glossary" class="link-muted">{{ 'glossary.add.cancel' | translate }}</a>
+      <a [routerLink]="basePath" class="link-muted">{{ 'glossary.add.cancel' | translate }}</a>
     </div>
   </form>
 </div>

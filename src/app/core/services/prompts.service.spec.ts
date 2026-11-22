@@ -88,4 +88,51 @@ describe('PromptsService', () => {
     expect(service.promptsFor('seo')).toBe(service.seoPrompts);
     expect(service.promptsFor('communication')).toBe(service.prompts);
   });
+
+  it('loads Blog AI prompts with ?kind=blog_ai into their own list, leaving the others alone', () => {
+    service.prompts.set([prompt('a')]);
+    service.seoPrompts.set([prompt('s1', { kind: 'seo' })]);
+    service.loadPrompts('blog_ai');
+
+    const req = httpMock.expectOne((r) => r.url === API);
+    expect(req.request.method).toBe('GET');
+    expect(req.request.params.get('kind')).toBe('blog_ai');
+    req.flush([prompt('b1', { kind: 'blog_ai' })]);
+
+    expect(service.blogAiPrompts().map((p) => p.id)).toEqual(['b1']);
+    expect(service.prompts().map((p) => p.id)).toEqual(['a']);
+    expect(service.seoPrompts().map((p) => p.id)).toEqual(['s1']);
+  });
+
+  it('sends kind: "blog_ai" when creating a Blog AI prompt and files it under the Blog AI list', () => {
+    service.addPrompt({ name: 'N', message: 'M', kind: 'blog_ai' });
+
+    const req = httpMock.expectOne(API);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ name: 'N', message: 'M', kind: 'blog_ai' });
+    req.flush(prompt('b2', { kind: 'blog_ai' }));
+
+    expect(service.blogAiPrompts().map((p) => p.id)).toEqual(['b2']);
+    expect(service.prompts()).toEqual([]);
+    expect(service.seoPrompts()).toEqual([]);
+  });
+
+  it('patches a Blog AI prompt with its kind and updates / deletes it in the Blog AI list', () => {
+    service.blogAiPrompts.set([prompt('b1', { kind: 'blog_ai' })]);
+
+    service.updatePrompt('b1', { name: 'Renamed', message: 'M2', kind: 'blog_ai' });
+    const patch = httpMock.expectOne(`${API}/b1`);
+    expect(patch.request.method).toBe('PATCH');
+    expect(patch.request.body).toEqual({ name: 'Renamed', message: 'M2', kind: 'blog_ai' });
+    patch.flush(prompt('b1', { name: 'Renamed', kind: 'blog_ai' }));
+    expect(service.blogAiPrompts()[0].name).toBe('Renamed');
+
+    service.deletePrompt('b1');
+    httpMock.expectOne(`${API}/b1`).flush(null);
+    expect(service.blogAiPrompts()).toEqual([]);
+  });
+
+  it('promptsFor returns the Blog AI list for blog_ai', () => {
+    expect(service.promptsFor('blog_ai')).toBe(service.blogAiPrompts);
+  });
 });

@@ -39,7 +39,7 @@ function makeGlossary(overrides: Partial<Glossary> = {}): Glossary {
   };
 }
 
-function configure(routeId: string | null): void {
+function configure(routeId: string | null, kind?: 'blog_ai'): void {
   TestBed.configureTestingModule({
     imports: [GlossaryFormComponent],
     providers: [
@@ -49,7 +49,9 @@ function configure(routeId: string | null): void {
       provideHttpClientTesting(),
       {
         provide: ActivatedRoute,
-        useValue: { snapshot: { paramMap: convertToParamMap(routeId ? { id: routeId } : {}) } },
+        useValue: {
+          snapshot: { paramMap: convertToParamMap(routeId ? { id: routeId } : {}), data: kind ? { kind } : {} },
+        },
       },
     ],
   });
@@ -160,5 +162,55 @@ describe('GlossaryFormComponent (edit mode)', () => {
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/glossaries/g-1`);
     expect(req.request.body.allGlossRules.entries).toEqual(makeGlossary().allGlossRules.entries);
     req.flush(makeGlossary());
+  });
+});
+
+describe('GlossaryFormComponent (Blog AI)', () => {
+  let httpMock: HttpTestingController;
+
+  afterEach(() => httpMock.verify());
+
+  it('creates a Blog AI glossary with kind: "blog_ai" in the body and opens it under /blog-ai/glossary', async () => {
+    configure(null, 'blog_ai');
+    await TestBed.compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(GlossaryFormComponent);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    fixture.componentInstance['form'].patchValue({
+      glossaryName: 'blog_en_az',
+      languagePair: 'en_az',
+      sourceLanguage: 'EN',
+      targetLanguage: 'AZ',
+    });
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/glossaries`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body.kind).toBe('blog_ai');
+    expect(req.request.body.glossaryName).toBe('blog_en_az');
+    req.flush(makeGlossary({ id: 'g-9', glossaryName: 'blog_en_az', kind: 'blog_ai' }));
+
+    expect(TestBed.inject(GlossariesService).blogAiGlossaries().map((g) => g.id)).toEqual(['g-9']);
+    expect(TestBed.inject(GlossariesService).glossaries()).toEqual([]);
+    expect(navigateSpy).toHaveBeenCalledWith('/blog-ai/glossary/g-9');
+  });
+
+  it('edits a Blog AI glossary from the Blog AI list and goes back to it', async () => {
+    configure('g-9', 'blog_ai');
+    await TestBed.compileComponents();
+    httpMock = TestBed.inject(HttpTestingController);
+    TestBed.inject(GlossariesService).blogAiGlossaries.set([makeGlossary({ id: 'g-9', glossaryName: 'blog_en_az', kind: 'blog_ai' })]);
+    const fixture = TestBed.createComponent(GlossaryFormComponent);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+
+    expect(fixture.componentInstance['form'].controls.glossaryName.value).toBe('blog_en_az');
+    fixture.componentInstance.submit();
+
+    const req = httpMock.expectOne(`${environment.apiBaseUrl}/glossaries/g-9`);
+    expect(req.request.method).toBe('PATCH');
+    req.flush(makeGlossary({ id: 'g-9', glossaryName: 'blog_en_az', kind: 'blog_ai' }));
+
+    expect(navigateSpy).toHaveBeenCalledWith('/blog-ai/glossary/g-9');
   });
 });

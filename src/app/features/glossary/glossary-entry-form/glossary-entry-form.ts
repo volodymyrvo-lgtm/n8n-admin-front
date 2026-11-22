@@ -2,7 +2,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { GLOSSARY_STATUSES, GlossaryEntryInput, targetLanguageFieldKey } from '../../../core/models/glossary.model';
+import {
+  GLOSSARY_BASE_PATHS,
+  GLOSSARY_STATUSES,
+  glossaryKindOf,
+  GlossaryEntryInput,
+  targetLanguageFieldKey,
+} from '../../../core/models/glossary.model';
 import { GlossariesService } from '../../../core/services/glossaries.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -13,6 +19,9 @@ import { ToastService } from '../../../core/services/toast.service';
  * do_not_use_* / recommended_* field name suffix differs), so this one
  * form covers both, driven by the parent glossary's `target_language`
  * (see `langKey` below and targetLanguageFieldKey() in glossary.model.ts).
+ *
+ * Shared by the Content section and the Blog AI assistant: the route's
+ * `data.kind` says which list the glossary is looked up in and where to go back to.
  */
 @Component({
   selector: 'app-glossary-entry-form',
@@ -30,12 +39,16 @@ export class GlossaryEntryFormComponent {
   private readonly translate = inject(TranslateService);
   private readonly cd = inject(ChangeDetectorRef);
 
+  private readonly kind = glossaryKindOf(this.route.snapshot.data?.['kind']);
+  /** The glossary list page of this section - the base of every link and redirect here. */
+  protected readonly basePath = GLOSSARY_BASE_PATHS[this.kind];
+
   protected readonly glossaryId = this.route.snapshot.paramMap.get('id')!;
   private readonly editingId = this.route.snapshot.paramMap.get('entryId');
   protected readonly isEditMode = !!this.editingId;
   protected readonly statuses = GLOSSARY_STATUSES;
 
-  private readonly glossary = this.glossariesService.glossaries().find((item) => item.id === this.glossaryId);
+  private readonly glossary = this.glossariesService.glossariesFor(this.kind)().find((item) => item.id === this.glossaryId);
   /** e.g. "azerbaijani" for the EN -> AZ glossary - drives the do_not_use_* / recommended_* field names below. */
   protected readonly langKey = this.glossary ? targetLanguageFieldKey(this.glossary.allGlossRules.target_language) : '';
 
@@ -53,7 +66,7 @@ export class GlossaryEntryFormComponent {
       // Not found locally (e.g. a direct navigation before the
       // glossaries list has loaded) - there is nothing to build the
       // language-specific form around, so go back to the list.
-      this.router.navigateByUrl('/glossary');
+      this.router.navigateByUrl(this.basePath);
       return;
     }
 
@@ -65,7 +78,7 @@ export class GlossaryEntryFormComponent {
     if (!existing) {
       // Not found locally (e.g. a direct navigation before the entries
       // list has loaded) - there is nothing to edit.
-      this.router.navigateByUrl(`/glossary/${this.glossaryId}`);
+      this.router.navigateByUrl(`${this.basePath}/${this.glossaryId}`);
       return;
     }
 
@@ -101,7 +114,7 @@ export class GlossaryEntryFormComponent {
       this.glossariesService.updateEntry(this.glossaryId, this.editingId, input, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('glossary.entry.toast.updated'));
-          this.router.navigateByUrl(`/glossary/${this.glossaryId}`);
+          this.router.navigateByUrl(`${this.basePath}/${this.glossaryId}`);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));
@@ -111,7 +124,7 @@ export class GlossaryEntryFormComponent {
       this.glossariesService.addEntry(this.glossaryId, input, {
         onSuccess: () => {
           this.toast.success(this.translate.instant('glossary.entry.toast.created'));
-          this.router.navigateByUrl(`/glossary/${this.glossaryId}`);
+          this.router.navigateByUrl(`${this.basePath}/${this.glossaryId}`);
         },
         onError: () => {
           this.toast.error(this.translate.instant('toast.genericError'));

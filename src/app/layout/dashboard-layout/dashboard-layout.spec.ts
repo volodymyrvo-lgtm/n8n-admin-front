@@ -108,6 +108,30 @@ describe('DashboardLayoutComponent', () => {
     });
   });
 
+  describe('in the Blog AI assistant section', () => {
+    function blogAiHrefs(role: string): (string | null)[] {
+      authServiceStub.canAccess = (area) => areasOf(role).includes(area);
+      TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { data: { section: 'blog-ai' } } } });
+      const fixture = TestBed.createComponent(DashboardLayoutComponent);
+      fixture.detectChanges();
+      return Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.sidebar__nav a')).map((a) =>
+        a.getAttribute('href'),
+      );
+    }
+
+    it('shows only two items: the glossaries and the prompts', () => {
+      expect(blogAiHrefs('admin')).toEqual(['/blog-ai/glossary', '/blog-ai/prompts']);
+    });
+
+    it('shows them to a reader as well', () => {
+      expect(blogAiHrefs('reader')).toEqual(['/blog-ai/glossary', '/blog-ai/prompts']);
+    });
+
+    it('shows nothing to a role without the documents area', () => {
+      expect(blogAiHrefs('analyst')).toEqual([]);
+    });
+  });
+
   function menuHrefs(role: string, seo: boolean): (string | null)[] {
     authServiceStub.canAccess = (area) => areasOf(role).includes(area);
     TestBed.overrideProvider(ActivatedRoute, { useValue: { snapshot: { data: seo ? { section: 'seo' } : {} } } });
