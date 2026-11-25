@@ -159,8 +159,8 @@ export type ShortCommunicationLanguage = (typeof SHORT_COMMUNICATION_LANGUAGE_OP
 export type MessageTypeOption = JobTypeOption;
 export const MESSAGE_TYPE_OPTIONS: readonly MessageTypeOption[] = JOB_TYPE_OPTIONS;
 
-export type BoardOption = 'ONBOARDING' | 'onboarding_comms' | 'CHURN_15';
-export const BOARD_OPTIONS: readonly BoardOption[] = ['ONBOARDING', 'onboarding_comms', 'CHURN_15'];
+export type BoardOption = 'ONBOARDING' | 'onboarding_comms' | 'CHURN_15' | 'CHURN_30';
+export const BOARD_OPTIONS: readonly BoardOption[] = ['ONBOARDING', 'onboarding_comms', 'CHURN_15', 'CHURN_30'];
 
 /** The LLM that runs the job - required on every task status, sent to both our backend and n8n as `llm`. */
 export type LlmOption = 'claude_sonnet_5' | 'gpt_5_6_sol' | 'gpt_6_astra' | 'gpt_6_sol';
